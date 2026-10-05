@@ -9,18 +9,11 @@ namespace Abgerechnet.UI;
 internal static class DataFolderDialogs
 {
     /// <summary>
-    /// Opens the folder remembered in the settings; if there is none or it cannot be opened, lets the user choose
-    /// one. Returns <c>null</c> when the user gives up (the app then ends).
+    /// Opens the folder remembered in the settings; if it cannot be opened, lets the user choose another one.
+    /// Returns <c>null</c> when the user gives up (the app then ends).
     /// </summary>
     public static DataFolder? OpenAtStartup(AppSettings settings)
     {
-        if (string.IsNullOrWhiteSpace(settings.DataFolder))
-        {
-            // Until the welcome wizard exists (issue #11), a short note explains the folder dialog.
-            MessageBox.Show(UiText.ChooseFolderFirstStart, UiText.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
-            return ChooseAndOpen(owner: null, initialPath: null);
-        }
-
         try
         {
             return DataFolder.Open(settings.DataFolder);
@@ -67,7 +60,8 @@ internal static class DataFolderDialogs
         }
     }
 
-    private static string Describe(Exception ex, string? folderPath) => ex switch
+    /// <summary>A plain-language message for a folder that cannot be opened.</summary>
+    public static string Describe(Exception ex, string? folderPath) => ex switch
     {
         DataFileException { Problem: DataFileProblem.Corrupt } data =>
             UiText.DataFileCorrupt(data.FileName, data.Line, File.Exists(JsonDataFile.BackupPath(data.FilePath))

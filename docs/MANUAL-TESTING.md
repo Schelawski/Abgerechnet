@@ -16,15 +16,15 @@ Namen von Schaltflächen und Menüs beziehen sich auf die deutsche Oberfläche.
 |---------|----------|
 | Ordner `C:\Temp\Abgerechnet\` ansehen. | Nur `Abgerechnet.exe`, keine DLLs oder weiteren Dateien. |
 | Rechtsklick auf `Abgerechnet.exe` → Eigenschaften → Details. | Produktname „Abgerechnet“, Copyright mit Hinweis auf GPL-3.0 und `github.com/Schelawski/Abgerechnet`. |
-| `Abgerechnet.exe` starten. | Ein Hinweis erklärt den Rechnungsordner, danach öffnet sich die Ordnerauswahl. |
-| Ordnerauswahl mit **Abbrechen** schließen. | Die App beendet sich ohne Fehlermeldung. `Abgerechnet.settings.json` existiert nicht. |
-| Erneut starten, einen neuen Ordner `C:\Temp\Meine Rechnungen` anlegen und wählen. | Das Hauptfenster öffnet sich mittig. Fenstertitel `Abgerechnet 1.0.0` (bzw. die Version des Tags). Die Statusleiste zeigt den Rechnungsordner. |
+| `Abgerechnet.exe` starten. | Der Einrichtungsassistent öffnet sich („Schritt 1 von 5“). |
+| Assistent mit **Abbrechen** schließen. | Die App beendet sich ohne Fehlermeldung. `Abgerechnet.settings.json` existiert nicht. |
+| Erneut starten, im Assistenten den Ordner `C:\Temp\Meine Rechnungen` eintragen, die Daten mit **Später eintragen** überspringen, Vorlage lassen, **Fertig** (ohne Haken bei „kopieren“). | Das Hauptfenster öffnet sich mittig. Fenstertitel `Abgerechnet 1.0.0` (bzw. die Version des Tags). Die Statusleiste zeigt den Rechnungsordner. |
 | Klick auf den Ordner in der Statusleiste. | Der Explorer öffnet `C:\Temp\Meine Rechnungen` mit `abgerechnet.json`, `kunden.json`, `rechnungen.json`, `Vorlagen` und `PDF`. |
 | `rechnungen.json` im Editor öffnen. | Eingerücktes JSON mit `"version": 1` und `"rechnungen": []`. |
 | **Hilfe → Über Abgerechnet…** | Version, Hinweis „kostenlos“ und die offizielle Quelle werden angezeigt. |
 | Fenster verkleinern. | Es lässt sich nicht kleiner als die Mindestgröße ziehen, nichts wird abgeschnitten. |
 | Fenster verschieben und vergrößern, **Datei → Beenden**. | Die App schließt sich. `Abgerechnet.settings.json` liegt neben der exe. |
-| Erneut starten. | Kein Hinweis, keine Ordnerauswahl: Das Fenster öffnet sich mit demselben Ordner an derselben Stelle in derselben Größe. |
+| Erneut starten. | Kein Assistent: Das Fenster öffnet sich mit demselben Ordner an derselben Stelle in derselben Größe. |
 | Auf einem Monitor mit 150 % Skalierung wiederholen. | Texte scharf, nichts abgeschnitten. |
 
 ## 2. Rechnungsordner
@@ -154,3 +154,29 @@ eingebettete WebView2-Bibliothek geprüft wird.
 | **Vorlagen → Mit KI anpassen…** | Thema „Vorlage mit KI anpassen“; unten der Text für die KI im grauen Kasten und die Schaltfläche **Prompt mit Vorlage kopieren**. |
 | **Prompt mit Vorlage kopieren**, dann in den Editor einfügen. | Meldung nennt die Standardvorlage. Eingefügt wird der Prompt, am Ende die vollständige HTML-Vorlage (keine persönlichen Daten). |
 | Hilfe mit **Esc** schließen. | Das Fenster schließt sich. |
+
+## 10. Einrichtungsassistent
+
+Vorher `Abgerechnet.settings.json` neben der exe löschen (oder die exe in einen neuen Ordner kopieren).
+
+| Schritt | Erwartet |
+|---------|----------|
+| `Abgerechnet.exe` aus dem Ordner `Downloads` starten. | „Schritt 1 von 5“, Willkommen, grüner Kasten „Ihre Daten bleiben auf Ihrem Computer…“. Kein Zurück-Knopf. |
+| F1 auf jeder Seite. | Die Hilfe öffnet ein passendes Thema (Was ist Abgerechnet?, Rechnungsordner, Meine Daten, Vorlagen, Erste Schritte). |
+| **Weiter**. | Vorschlag `Dokumente\Rechnungen` mit „Dieser Ordner wird neu angelegt.“ (bzw. „Rechnungen (Abgerechnet)“, wenn `Rechnungen` schon andere Dateien enthält). Tipp zur Sicherung. |
+| Pfad leeren, **Weiter**. | Hinweis „Bitte wählen Sie einen Ordner.“ |
+| **Ändern…** → einen Ordner mit anderen Dateien wählen. | Orangefarbener Hinweis, dass Abgerechnet seine Dateien dazulegt. |
+| Neuen Ordner eintragen, **Weiter**. | Der Ordner ist angelegt, „Schritt 3 von 5“: Ihre Daten mit den Seiten „Absender“ und „Steuer und Bank“ (ohne „Rechnungen“), Cursor im Feld Firma. |
+| Nur Firma eintragen, **Weiter**. | Hinweis auf die fehlende Anschrift, die Seite bleibt. |
+| Anschrift ergänzen, Kleinunternehmer ankreuzen, **Weiter** (Rückfrage zur Steuernummer mit Ja). | „Schritt 4 von 5“: drei Vorlagen, rechts nach kurzer Zeit eine ganze A4-Seite mit Ihrer Firma und „Nordlicht GmbH“, ohne Werkzeugleiste. Kleinunternehmer: keine Umsatzsteuer, Hinweis auf § 19 UStG. |
+| Vorlage „Modern“ und „Schlicht“ wählen, schnell hin und her klicken. | Die Vorschau zeigt am Ende die gewählte Vorlage. |
+| **Logo wählen…** → ein JPG wählen. | „logo.png“, **Logo entfernen** erscheint, die Vorschau zeigt das Logo. Im Ordner `Vorlagen` liegt `logo.png`. |
+| **Logo entfernen**. | Logo verschwindet aus der Vorschau und dem Ordner. |
+| **Zurück**, **Zurück**. | Der Ordner wird mit „Der Ordner ist leer – gut geeignet.“ angezeigt (nicht als vorhandener Rechnungsordner); **Weiter** zeigt die eingetragenen Daten wieder. |
+| Bis „Fertig!“ weiter. | „Schritt 5 von 5“, **Erste Rechnung erstellen** und **Fertig**, kein Abbrechen. Ankreuzfeld „Abgerechnet in meinen Benutzerordner kopieren…“ ist gesetzt. |
+| **Erste Rechnung erstellen**. | Der Assistent schließt sich, Abgerechnet startet aus `%LOCALAPPDATA%\Abgerechnet` mit demselben Rechnungsordner und öffnet sofort eine neue Rechnung. Auf dem Desktop und im Startmenü gibt es „Abgerechnet“. Die gewählte Vorlage steht in „Meine Daten“ → „Rechnungen“. |
+| Abgerechnet aus einem Ordner außerhalb von Downloads/Desktop erneut einrichten. | Das Ankreuzfeld ist nicht gesetzt; ohne Haken öffnet sich das Hauptfenster aus diesem Ordner. |
+| Mit leeren Einstellungen starten und einen vorhandenen Rechnungsordner wählen. | „In diesem Ordner liegen schon Daten…“, **Weiter** springt zu „Schritt 3 von 3“; **Fertig** (ohne „Erste Rechnung erstellen“, wenn es schon Rechnungen gibt). |
+| Assistent nach der Ordnerseite schließen (X). | Das Hauptfenster öffnet sich mit dem gewählten Ordner; ohne Daten erscheint der gelbe Hinweis. |
+| **Datei → Einrichtungsassistent…** im Hauptfenster. | Der Assistent startet mit dem offenen Ordner („vorhandene Daten“). Ein anderer Ordner wird nach **Fertig** im Hauptfenster geöffnet. |
+| Ohne WebView2 Runtime (falls testbar). | Die Vorlagen-Seite erklärt, dass die Vorschau nicht möglich ist; Weiter funktioniert. |

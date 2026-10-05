@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Abgerechnet.Core;
 using Abgerechnet.Core.Storage;
+using Abgerechnet.UI.Einrichtung;
 
 namespace Abgerechnet.UI;
 
@@ -33,8 +34,12 @@ internal sealed class MainForm : Form
 
     private readonly RechnungenView _rechnungen = new();
 
-    public MainForm(SettingsStore settingsStore, AppSettings settings, DataFolder folder)
+    private bool _neueRechnungBeimStart;
+
+    /// <param name="neueRechnung">Open a new invoice as soon as the window is visible ("Erste Rechnung erstellen").</param>
+    public MainForm(SettingsStore settingsStore, AppSettings settings, DataFolder folder, bool neueRechnung = false)
     {
+        _neueRechnungBeimStart = neueRechnung;
         _settingsStore = settingsStore;
         _settings = settings;
         Folder = folder;
@@ -77,6 +82,7 @@ internal sealed class MainForm : Form
         fileMenu.DropDownItems.Add(new ToolStripSeparator());
         fileMenu.DropDownItems.Add(new ToolStripMenuItem(UiText.MenuChangeFolder, null, (_, _) => ChangeFolder()));
         fileMenu.DropDownItems.Add(new ToolStripMenuItem(UiText.MenuOpenFolder, null, (_, _) => OpenFolderInExplorer()));
+        fileMenu.DropDownItems.Add(new ToolStripMenuItem(UiText.MenuEinrichtung, null, (_, _) => Einrichten()));
         fileMenu.DropDownItems.Add(new ToolStripSeparator());
         fileMenu.DropDownItems.Add(new ToolStripMenuItem(UiText.MenuExit, null, (_, _) => Close()));
 
@@ -109,6 +115,34 @@ internal sealed class MainForm : Form
 
         Folder = folder;
         OnFolderChanged();
+    }
+
+    protected override void OnShown(EventArgs e)
+    {
+        base.OnShown(e);
+        if (_neueRechnungBeimStart)
+        {
+            _neueRechnungBeimStart = false;
+            BeginInvoke(_rechnungen.NeueRechnung);
+        }
+    }
+
+    /// <summary>"Datei → Einrichtungsassistent…": may open another folder and change the data.</summary>
+    private void Einrichten()
+    {
+        using var wizard = new EinrichtungsAssistent(_settingsStore, _settings, Folder);
+        wizard.ShowDialog(this);
+        if (wizard.Ergebnis == EinrichtungsErgebnis.KopieGestartet)
+        {
+            Close(); // the copy in the user folder is running now
+            return;
+        }
+
+        if (wizard.Folder is { } folder)
+            Folder = folder;
+        OnFolderChanged();
+        if (wizard.ErsteRechnung)
+            _rechnungen.NeueRechnung();
     }
 
     private void BuildMeineDatenBar()

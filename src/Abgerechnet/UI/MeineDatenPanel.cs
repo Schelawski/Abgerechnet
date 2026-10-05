@@ -4,7 +4,7 @@ namespace Abgerechnet.UI;
 
 /// <summary>
 /// Input for the sender's data and the invoice settings (<c>abgerechnet.json</c>). Used by the dialog
-/// "Meine Daten" and later by the welcome wizard (issue #11).
+/// "Meine Daten" and – without the tab "Rechnungen" – by the welcome wizard (issue #11).
 /// </summary>
 internal sealed class MeineDatenPanel : UserControl
 {
@@ -54,14 +54,17 @@ internal sealed class MeineDatenPanel : UserControl
 
     private readonly ToolTip _toolTip = new() { AutoPopDelay = 15000 };
 
-    public MeineDatenPanel()
+    /// <param name="mitRechnungen">False in the wizard: only sender, tax and bank; the invoice settings keep their values.</param>
+    public MeineDatenPanel(bool mitRechnungen = true)
     {
         Dock = DockStyle.Fill;
         foreach (var box in new[] { _umsatzsteuersatz, _zahlungsziel, _einzelpreis })
             UiStyle.SelectAllOnEnter(box);
         _tabs.TabPages.Add(CreatePage(UiText.TabAbsender, BuildAbsender()));
         _tabs.TabPages.Add(CreatePage(UiText.TabSteuerBank, BuildSteuerBank()));
-        _tabs.TabPages.Add(CreatePage(UiText.TabRechnungen, BuildRechnungen()));
+        var rechnungen = CreatePage(UiText.TabRechnungen, BuildRechnungen());
+        if (mitRechnungen)
+            _tabs.TabPages.Add(rechnungen);
         Controls.Add(_tabs);
 
         _einheit.Items.AddRange(UiText.Einheiten);
@@ -287,8 +290,8 @@ internal sealed class MeineDatenPanel : UserControl
 
     private string Fail(Control control, string message)
     {
-        var page = _tabs.TabPages.Cast<TabPage>().First(p => p.Contains(control));
-        _tabs.SelectedTab = page;
+        if (_tabs.TabPages.Cast<TabPage>().FirstOrDefault(p => p.Contains(control)) is { } page)
+            _tabs.SelectedTab = page;
         control.Focus();
         return message;
     }

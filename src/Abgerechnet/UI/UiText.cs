@@ -24,11 +24,6 @@ internal static class UiText
 
     // ----- Invoice folder -----
 
-    public const string ChooseFolderFirstStart =
-        "Abgerechnet speichert alles in einem Ordner Ihrer Wahl: Rechnungen, Kunden, Vorlagen und PDFs.\n\n" +
-        "Wählen Sie im nächsten Schritt einen Ordner – zum Beispiel einen neuen Ordner „Rechnungen“ in Ihren " +
-        "Dokumenten oder in OneDrive, dann sind Ihre Daten automatisch gesichert.";
-
     public const string ChooseFolderDescription = "Rechnungsordner wählen (ein neuer, leerer Ordner oder ein vorhandener Rechnungsordner)";
 
     public const string ChooseOtherFolderQuestion = "Möchten Sie einen anderen Rechnungsordner wählen?";
@@ -57,6 +52,94 @@ internal static class UiText
     public static string DataFileNotWritable(string path, string reason) =>
         $"„{path}“ kann nicht gespeichert werden. Ist der Ordner schreibgeschützt oder die Datei in einem anderen " +
         $"Programm geöffnet?\n\n{reason}";
+
+    // ----- Einrichtungsassistent -----
+
+    public const string MenuEinrichtung = "Einrichtungs&assistent…";
+    public const string EinrichtungTitle = "Abgerechnet einrichten";
+    public static string EinrichtungSchritt(int nummer, int anzahl) => $"Schritt {nummer} von {anzahl}";
+    public const string EinrichtungWeiter = "&Weiter";
+    public const string EinrichtungZurueck = "&Zurück";
+
+    public const string WillkommenTitel = "Willkommen bei Abgerechnet";
+    public const string WillkommenText =
+        "Mit Abgerechnet schreiben Sie Rechnungen für Ihre selbstständige Arbeit. Sie tragen ein, was Sie geleistet " +
+        "haben, und Abgerechnet macht daraus eine fertige Rechnung als PDF-Datei. Eine Liste zeigt Ihnen jederzeit, " +
+        "welche Rechnungen noch offen und welche schon bezahlt sind.";
+    public const string WillkommenDatenschutz =
+        "Ihre Daten bleiben auf Ihrem Computer. Abgerechnet stellt keine Verbindung zum Internet her – " +
+        "kein Konto, kein Abo, keine Cloud.";
+    public const string WillkommenSchritte =
+        "In wenigen Schritten richten Sie alles ein:\n" +
+        "• einen Ordner für Ihre Rechnungen wählen\n" +
+        "• Ihren Namen, Ihre Anschrift und Ihre Bankverbindung eintragen\n" +
+        "• das Aussehen Ihrer Rechnungen wählen\n\n" +
+        "Alles lässt sich später jederzeit ändern.";
+
+    public const string OrdnerTitel = "Wo sollen Ihre Rechnungen liegen?";
+    public const string OrdnerText =
+        "Abgerechnet speichert alles in einem Ordner: Ihre Daten, Kunden, Rechnungen, Vorlagen und die fertigen PDFs. " +
+        "Sie können den vorgeschlagenen Ordner übernehmen oder einen anderen wählen – auch einen Rechnungsordner, " +
+        "den Sie schon mit Abgerechnet benutzt haben.";
+    public const string OrdnerLabel = "Rechnungsordner:";
+    public const string OrdnerAendern = "&Ändern…";
+    public const string OrdnerNeu = "Dieser Ordner wird neu angelegt.";
+    public const string OrdnerLeer = "Der Ordner ist leer – gut geeignet.";
+    public const string OrdnerAndereDateien =
+        "In diesem Ordner liegen schon andere Dateien. Abgerechnet legt seine Dateien dazu. Übersichtlicher ist ein " +
+        "eigener Ordner nur für Abgerechnet.";
+    public const string OrdnerVorhanden =
+        "In diesem Ordner liegen schon Daten von Abgerechnet. Sie werden geöffnet – Ihre Daten und Vorlagen sind " +
+        "schon da, deshalb geht es gleich zum letzten Schritt.";
+    public const string OrdnerSichern =
+        "Tipp: Liegt der Ordner in OneDrive oder Dropbox, werden Ihre Rechnungen automatisch gesichert. Oder kopieren " +
+        "Sie ihn ab und zu auf einen USB-Stick. Rechnungen müssen Sie in der Regel zehn Jahre aufbewahren.";
+    public const string OrdnerLeerFehler = "Bitte wählen Sie einen Ordner.";
+    public static string OrdnerFehler(string grund) => $"Der Ordner kann nicht angelegt werden:\n\n{grund}";
+
+    public const string MeineDatenSeiteTitel = "Ihre Daten";
+    public const string MeineDatenSeiteText =
+        "Diese Angaben stehen auf jeder Rechnung. Pflicht sind Name oder Firma und Ihre Anschrift. Steuernummer, " +
+        "Kleinunternehmer-Regelung und Bankverbindung finden Sie auf der Seite „Steuer und Bank“.";
+    public const string MeineDatenSpaeter = "&Später eintragen";
+
+    public const string VorlageSeiteTitel = "Wie sollen Ihre Rechnungen aussehen?";
+    public const string VorlageSeiteText =
+        "Wählen Sie eine Vorlage. Die Vorschau zeigt eine erfundene Rechnung mit Ihren Daten. Sie können die Vorlage " +
+        "später für jede Rechnung ändern und auch selbst anpassen.";
+    public const string LogoLabel = "Logo (freiwillig):";
+    public const string LogoWaehlen = "&Logo wählen…";
+    public const string LogoEntfernen = "Logo &entfernen";
+    public const string LogoKeins = "kein Logo";
+    public const string LogoVorhanden = "logo.png";
+    public const string LogoDialogTitel = "Logo wählen";
+    public const string LogoDialogFilter = "Bilder (*.png;*.jpg;*.jpeg;*.gif;*.bmp)|*.png;*.jpg;*.jpeg;*.gif;*.bmp";
+    public static string LogoFehler(string grund) => $"Das Bild konnte nicht als Logo übernommen werden:\n\n{grund}";
+    public const string VorschauWirdErstellt = "Vorschau wird erstellt…";
+    public const string VorschauNichtMoeglich =
+        "Die Vorschau ist nicht möglich, weil die Microsoft Edge WebView2 Runtime fehlt. Sie können trotzdem eine " +
+        "Vorlage wählen. Zum Erzeugen der PDFs wird die Runtime gebraucht – Abgerechnet erklärt dann, wie Sie sie " +
+        "bekommen.";
+
+    public const string FertigTitel = "Fertig!";
+    public const string FertigUeberschrift = "Abgerechnet ist eingerichtet.";
+    public const string FertigText =
+        "Als Nächstes schreiben Sie Ihre erste Rechnung. Den Kunden legen Sie direkt im Rechnungsformular an – mit " +
+        "„Kunden verwalten…“ neben dem Feld „Kunde“.\n\n" +
+        "Hilfe bekommen Sie jederzeit mit der Taste F1. Diesen Assistenten finden Sie wieder unter " +
+        "„Datei → Einrichtungsassistent…“.";
+    public const string FertigVorhanden =
+        "Ihr Rechnungsordner ist geöffnet. Hilfe bekommen Sie jederzeit mit der Taste F1.";
+    public const string FertigMeineDatenFehlen =
+        "Ihre Daten fehlen noch. Tragen Sie sie vor der ersten Rechnung unter „Datei → Meine Daten…“ ein.";
+    public const string ErsteRechnung = "&Erste Rechnung erstellen";
+    public const string ZumHauptfenster = "&Fertig";
+    public const string KopierenOption = "Abgerechnet in meinen Benutzerordner kopieren und Verknüpfungen anlegen";
+    public static string KopierenHinweis(string ziel) =>
+        $"Abgerechnet wird nach „{ziel}“ kopiert. Auf dem Desktop und im Startmenü erscheint „Abgerechnet“. " +
+        "Sinnvoll, wenn die Datei noch im Download-Ordner liegt. Die Datei hier können Sie danach löschen.";
+    public static string KopierenFehler(string grund) =>
+        $"Abgerechnet konnte nicht kopiert werden:\n{grund}\n\nKlicken Sie noch einmal, um ohne Kopie weiterzumachen.";
 
     // ----- Meine Daten -----
 

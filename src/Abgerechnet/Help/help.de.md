@@ -21,12 +21,24 @@ Für Selbstständige und Freiberufler in Deutschland, die regelmäßig Rechnunge
 
 # start | Erste Schritte
 
-1. **Rechnungsordner wählen:** Beim ersten Start fragt Abgerechnet nach einem Ordner. Legen Sie am besten einen neuen Ordner an, zum Beispiel „Rechnungen“ in Ihren Dokumenten. Mehr dazu unter „Ihr Rechnungsordner“.
-2. **Ihre Daten eintragen:** Klicken Sie auf **Meine Daten eintragen…** (oder **Datei → Meine Daten…**). Tragen Sie Ihren Namen, Ihre Anschrift, Ihre Steuernummer und Ihre Bankverbindung ein. Das steht später auf jeder Rechnung.
-3. **Kunden anlegen:** Unter **Datei → Kunden…** tragen Sie die Anschriften Ihrer Kunden ein.
-4. **Rechnung schreiben:** Klicken Sie auf **+ Neue Rechnung**. Wählen Sie den Kunden und tragen Sie ein, was Sie geleistet haben.
-5. **PDF erzeugen:** Klicken Sie auf **PDF erzeugen…** – Sie sehen die fertige Rechnung. Mit **PDF speichern** legen Sie sie im Ordner `PDF` ab.
-6. **Verschicken:** Hängen Sie die PDF-Datei an eine E-Mail an Ihren Kunden. Abgerechnet verschickt nichts selbst.
+Beim ersten Start führt Sie ein kurzer **Einrichtungsassistent** durch alles Nötige:
+
+1. **Rechnungsordner wählen:** Abgerechnet schlägt „Rechnungen“ in Ihren Dokumenten vor. Sie können auch einen anderen Ordner wählen – oder einen Rechnungsordner, den Sie schon mit Abgerechnet benutzt haben. Mehr dazu unter „Ihr Rechnungsordner“.
+2. **Ihre Daten eintragen:** Name, Anschrift, Steuernummer und Bankverbindung. Das steht später auf jeder Rechnung. Wenn Sie Kleinunternehmer sind, setzen Sie auf der Seite „Steuer und Bank“ den Haken. Keine Zeit? Mit **Später eintragen** geht es weiter.
+3. **Aussehen wählen:** Die Vorschau zeigt eine erfundene Rechnung mit Ihren Daten in jeder Vorlage. Wenn Sie möchten, wählen Sie hier gleich Ihr Logo.
+4. **Fertig:** Mit **Erste Rechnung erstellen** geht es los.
+
+Haben Sie Abgerechnet aus dem Download-Ordner gestartet? Dann bietet der letzte Schritt an, Abgerechnet in Ihren Benutzerordner zu kopieren und Verknüpfungen auf dem Desktop und im Startmenü anzulegen. Die Datei im Download-Ordner können Sie danach löschen.
+
+Den Assistenten finden Sie jederzeit wieder unter **Datei → Einrichtungsassistent…**. Ihre Daten ändern Sie unter **Datei → Meine Daten…**.
+
+## Danach
+
+1. **Rechnung schreiben:** Klicken Sie auf **+ Neue Rechnung**. Wählen Sie den Kunden und tragen Sie ein, was Sie geleistet haben. Einen neuen Kunden legen Sie mit **Kunden verwalten…** direkt neben dem Feld „Kunde“ an.
+2. **PDF erzeugen:** Klicken Sie auf **PDF erzeugen…** – Sie sehen die fertige Rechnung. Mit **PDF speichern** legen Sie sie im Ordner `PDF` ab.
+3. **Verschicken:** Hängen Sie die PDF-Datei an eine E-Mail an Ihren Kunden. Abgerechnet verschickt nichts selbst.
+
+Fehlen noch Ihre Daten, zeigt das Hauptfenster oben einen gelben Hinweis mit der Schaltfläche **Meine Daten eintragen…**. Ihre Kunden verwalten Sie auch unter **Datei → Kunden…**.
 
 ## Jeden Monat dieselbe Rechnung?
 
@@ -59,7 +71,7 @@ Vor jedem Speichern legt Abgerechnet eine Kopie der vorigen Fassung an, zum Beis
 
 ## Auf einen anderen Computer umziehen
 
-Kopieren Sie den ganzen Rechnungsordner und `Abgerechnet.exe` auf den neuen Computer. Starten Sie Abgerechnet und wählen Sie unter **Datei → Rechnungsordner wechseln…** den kopierten Ordner.
+Kopieren Sie den ganzen Rechnungsordner und `Abgerechnet.exe` auf den neuen Computer. Starten Sie Abgerechnet und wählen Sie im Einrichtungsassistenten den kopierten Ordner – Ihre Daten und Vorlagen sind dann sofort da. Läuft Abgerechnet schon, geht es auch mit **Datei → Rechnungsordner wechseln…**.
 
 ## Den Ordner wechseln oder öffnen
 

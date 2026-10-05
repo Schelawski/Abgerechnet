@@ -184,6 +184,10 @@ public class EmbeddedHelpTests
             "Vorlagen → " + Bare(UiText.MenuOriginalWiederherstellen),
             UiText.PromptKopieren,
             UiText.TabRechnungen,
+            UiText.TabSteuerBank,
+            "Datei → " + Bare(UiText.MenuEinrichtung),
+            Bare(UiText.MeineDatenSpaeter),
+            Bare(UiText.ErsteRechnung),
         ];
         var help = AllText;
         Assert.All(names, name => Assert.Contains(name, help));

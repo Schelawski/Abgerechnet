@@ -16,12 +16,6 @@ namespace Abgerechnet.UI;
 /// </summary>
 internal sealed class VorschauForm : Form
 {
-    /// <summary>Virtual host that maps the template folder, so the template can load "logo.png" and own CSS files.</summary>
-    private const string VorlagenHost = "vorlage.abgerechnet.example";
-
-    private static readonly string AppDatenOrdner =
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Abgerechnet");
-
     private readonly DataFolder _folder;
     private readonly Guid _rechnungId;
     private readonly WebView2 _webView = new() { Dock = DockStyle.Fill };
@@ -32,13 +26,15 @@ internal sealed class VorschauForm : Form
     private readonly Button _pdfOeffnen = UiStyle.CreateButton(UiText.PdfOeffnenButton);
     private readonly Button _imOrdner = UiStyle.CreateButton(UiText.ImOrdnerZeigenButton);
     private readonly Button _schliessen = UiStyle.CreateButton(UiText.Close);
-    private readonly string _vorschauPdf = Path.Combine(AppDatenOrdner, "Vorschau", $"{Guid.NewGuid():N}.pdf");
+    private readonly PdfDrucker _drucker;
+    private readonly string _vorschauPdf = PdfDrucker.NeueVorschauDatei();
     private string? _pdfPfad;
 
     public VorschauForm(DataFolder folder, Guid rechnungId)
     {
         _folder = folder;
         _rechnungId = rechnungId;
+        _drucker = new PdfDrucker(_webView);
 
         SuspendLayout();
         AutoScaleDimensions = new SizeF(96F, 96F);
@@ -114,7 +110,7 @@ internal sealed class VorschauForm : Form
         var empfaenger = rechnung.EmpfaengerAus(_folder.Kunden);
         var gewuenscht = MitgelieferteVorlagen.NameFuer(rechnung, _folder.Einstellungen);
         var vorlage = MitgelieferteVorlagen.Laden(_folder, gewuenscht);
-        var ergebnis = Vorlage.Ausfuellen(vorlage.Html, new RechnungsDaten(_folder.Einstellungen, rechnung, empfaenger), new Uri($"https://{VorlagenHost}/"));
+        var ergebnis = Vorlage.Ausfuellen(vorlage.Html, new RechnungsDaten(_folder.Einstellungen, rechnung, empfaenger), PdfDrucker.Basis);
         _vorlageInfo.Text = UiText.VorlageInfo(vorlage.Name, mitgeliefert: vorlage.Datei is null);
 
         // Not blocking: the user decides whether the invoice may go out like this.
@@ -129,45 +125,12 @@ internal sealed class VorschauForm : Form
             _hinweise.Visible = true;
         }
 
-        // 1. Render the HTML, 2. print it to the temporary PDF, 3. show that PDF.
-        await NavigierenAsync(() => _webView.CoreWebView2.NavigateToString(ergebnis.Html));
-        Directory.CreateDirectory(Path.GetDirectoryName(_vorschauPdf)!);
-        if (!await _webView.CoreWebView2.PrintToPdfAsync(_vorschauPdf, DruckEinstellungen()))
-            throw new IOException(_vorschauPdf);
-        await NavigierenAsync(() => _webView.CoreWebView2.Navigate(new Uri(_vorschauPdf).AbsoluteUri));
+        // 1. Render the HTML and print it to the temporary PDF, 2. show that PDF.
+        await _drucker.DruckenAsync(ergebnis.Html, _vorschauPdf);
+        await _drucker.PdfZeigenAsync(_vorschauPdf);
 
         _speichern.Enabled = true;
         _speichern.Focus();
-    }
-
-    /// <summary>Starts a navigation and waits until the page has loaded.</summary>
-    private async Task NavigierenAsync(Action navigation)
-    {
-        var geladen = new TaskCompletionSource();
-        void OnCompleted(object? sender, CoreWebView2NavigationCompletedEventArgs args) => geladen.TrySetResult();
-        _webView.CoreWebView2.NavigationCompleted += OnCompleted;
-        try
-        {
-            navigation();
-            await geladen.Task;
-        }
-        finally
-        {
-            _webView.CoreWebView2.NavigationCompleted -= OnCompleted;
-        }
-    }
-
-    /// <summary>DIN A4 portrait; the margins come from the template's <c>@page</c> rule.</summary>
-    private CoreWebView2PrintSettings DruckEinstellungen()
-    {
-        var settings = _webView.CoreWebView2.Environment.CreatePrintSettings();
-        settings.PageWidth = 8.27;   // DIN A4 in inches
-        settings.PageHeight = 11.69;
-        settings.MarginTop = settings.MarginBottom = settings.MarginLeft = settings.MarginRight = 0;
-        settings.ShouldPrintBackgrounds = true;
-        settings.ShouldPrintHeaderAndFooter = false;
-        settings.Orientation = CoreWebView2PrintOrientation.Portrait;
-        return settings;
     }
 
     /// <summary>Creates the WebView2 with its own data folder; explains what to do when the runtime is missing.</summary>
@@ -175,8 +138,7 @@ internal sealed class VorschauForm : Form
     {
         try
         {
-            var umgebung = await CoreWebView2Environment.CreateAsync(browserExecutableFolder: null, userDataFolder: Path.Combine(AppDatenOrdner, "WebView2"));
-            await _webView.EnsureCoreWebView2Async(umgebung);
+            await _drucker.StartenAsync(_folder.VorlagenPath);
         }
         catch (WebView2RuntimeNotFoundException)
         {
@@ -192,24 +154,6 @@ internal sealed class VorschauForm : Form
             return false;
         }
 
-        var core = _webView.CoreWebView2;
-        Directory.CreateDirectory(_folder.VorlagenPath);
-        core.SetVirtualHostNameToFolderMapping(VorlagenHost, _folder.VorlagenPath, CoreWebView2HostResourceAccessKind.Allow);
-        core.Settings.IsStatusBarEnabled = false;
-        // A link in the invoice opens in the normal browser instead of replacing the preview.
-        core.NavigationStarting += (_, args) =>
-        {
-            if (args.Uri.StartsWith("http", StringComparison.OrdinalIgnoreCase))
-            {
-                args.Cancel = true;
-                Oeffnen(args.Uri);
-            }
-        };
-        core.NewWindowRequested += (_, args) =>
-        {
-            args.Handled = true;
-            Oeffnen(args.Uri);
-        };
         return true;
     }
 
@@ -261,14 +205,7 @@ internal sealed class VorschauForm : Form
         base.OnFormClosed(e);
         // The viewer holds the temporary PDF open until the WebView2 is gone.
         _webView.Dispose();
-        try
-        {
-            File.Delete(_vorschauPdf);
-        }
-        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
-        {
-            // Left in %LOCALAPPDATA%\Abgerechnet\Vorschau; harmless.
-        }
+        PdfDrucker.Loeschen(_vorschauPdf);
     }
 
     private void ImOrdnerZeigen()
@@ -277,9 +214,5 @@ internal sealed class VorschauForm : Form
             Process.Start("explorer.exe", $"/select,\"{_pdfPfad}\"")?.Dispose();
     }
 
-    private static void Oeffnen(string? ziel)
-    {
-        if (!string.IsNullOrEmpty(ziel))
-            Process.Start(new ProcessStartInfo { FileName = ziel, UseShellExecute = true })?.Dispose();
-    }
+    private static void Oeffnen(string? ziel) => PdfDrucker.Oeffnen(ziel);
 }

@@ -56,5 +56,11 @@ GitHub (siehe [Release erstellen](README.md#release-erstellen)). Versionen folge
   Computer bleiben und Abgerechnet keine Verbindung zum Internet herstellt. **Vorlage mit KI anpassen:** ein
   fertiger Text für eine KI, den **Prompt mit Vorlage kopieren** zusammen mit Ihrer Vorlage in die Zwischenablage
   legt (auch über **Vorlagen → Mit KI anpassen…**).
+- **Einrichtungsassistent** beim ersten Start: Willkommen (Ihre Daten bleiben auf Ihrem Computer), Rechnungsordner
+  wählen (Vorschlag `Dokumente\Rechnungen`, ein vorhandener Rechnungsordner wird erkannt und geöffnet), Ihre Daten
+  mit Kleinunternehmer-Regelung, Vorlage mit PDF-Vorschau einer erfundenen Rechnung und Logo, fertig mit **Erste
+  Rechnung erstellen**. Auf Wunsch kopiert er Abgerechnet aus dem Download-Ordner nach `%LOCALAPPDATA%\Abgerechnet`
+  und legt Verknüpfungen auf dem Desktop und im Startmenü an. Wieder erreichbar über **Datei →
+  Einrichtungsassistent…**.
 - Jede Rechnung merkt sich Umsatzsteuersatz und Kleinunternehmer-Regelung, damit spätere Änderungen in „Meine
   Daten“ ihre Beträge nicht verändern. Beträge werden je Position und für die Steuer kaufmännisch gerundet.

@@ -10,6 +10,7 @@ internal static class UiStyle
     public static readonly Color MutedText = Color.FromArgb(75, 85, 99);
     public static readonly Color GridLine = Color.FromArgb(229, 231, 235);
     public static readonly Color Success = Color.FromArgb(22, 101, 52);
+    public static readonly Color SuccessBack = Color.FromArgb(220, 252, 231);
     public static readonly Color Danger = Color.FromArgb(153, 27, 27);
     public static readonly Color HintBack = Color.FromArgb(254, 243, 199);
 

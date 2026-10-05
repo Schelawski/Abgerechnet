@@ -55,12 +55,11 @@ Wer den Download prüfen möchte: Zu jeder Version gibt es die Datei `Abgerechne
 
 ## So fangen Sie an
 
-1. `Abgerechnet.exe` starten und einen Ordner für Ihre Rechnungen wählen, zum Beispiel „Rechnungen“ in Ihren
-   Dokumenten.
-2. **Meine Daten eintragen…** klicken und Ihre Angaben ausfüllen.
-3. Unter **Datei → Kunden…** Ihre Kunden anlegen.
-4. **+ Neue Rechnung** klicken, Kunde und Positionen eintragen.
-5. **PDF erzeugen…** und **PDF speichern** – die Rechnung liegt im Ordner `PDF`. Per E-Mail an Ihren Kunden
+1. `Abgerechnet.exe` starten. Ein kurzer Assistent hilft Ihnen beim Einrichten: Ordner für Ihre Rechnungen wählen,
+   Ihre Daten eintragen, Aussehen und Logo wählen. Auf Wunsch kopiert er Abgerechnet aus dem Download-Ordner in Ihren
+   Benutzerordner und legt Verknüpfungen auf dem Desktop und im Startmenü an.
+2. **Erste Rechnung erstellen** klicken, Kunde und Positionen eintragen.
+3. **PDF erzeugen…** und **PDF speichern** – die Rechnung liegt im Ordner `PDF`. Per E-Mail an Ihren Kunden
    schicken, fertig.
 
 Alles Weitere erklärt die Hilfe im Programm.
