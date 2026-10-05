@@ -43,8 +43,13 @@ GitHub (siehe [Release erstellen](README.md#release-erstellen)). Versionen folge
   **PDF speichern** legt es im Ordner `PDF` ab (Dateiname nach Muster, Rückfrage bei vorhandener Datei); danach ist
   die Rechnung „Offen“ und behält die Anschrift, mit der sie gestellt wurde. **PDF öffnen** und **Im Ordner
   zeigen** direkt in der Vorschau.
-- Mitgelieferte Vorlage „Schlicht“: DIN A4, Fußzeile mit Bankverbindung und Steuernummer auf jeder Seite,
-  Tabellenkopf wiederholt sich bei mehrseitigen Rechnungen, eigenes Logo als `Vorlagen\logo.png`.
+- **Drei mitgelieferte Vorlagen:** „Klassisch“ (wie die Rechnungen des bisherigen Web-Tools: Titelbalken, Tabelle
+  mit Rahmen und Zebrastreifen, dreispaltige Fußzeile), „Modern“ (Akzentfarbe, viel Weißraum) und „Schlicht“
+  (schwarzweiß). Sie liegen in einem neuen Rechnungsordner unter `Vorlagen\` zum Anpassen; Fußzeile und
+  Tabellenkopf stehen auf jeder Seite; eigenes Logo als `Vorlagen\logo.png`. Menü **Vorlagen → Vorlagen-Ordner
+  öffnen** und **Original wiederherstellen** (die eigene Fassung bleibt als `*.bak.html`). Standardvorlage in
+  „Meine Daten“, abweichende Vorlage pro Rechnung im Rechnungsformular; eigene `.html`-Dateien erscheinen
+  automatisch in der Auswahl.
 - Fenster passen sich bei hoher Bildschirmskalierung an den Bildschirm an.
 - Jede Rechnung merkt sich Umsatzsteuersatz und Kleinunternehmer-Regelung, damit spätere Änderungen in „Meine
   Daten“ ihre Beträge nicht verändern. Beträge werden je Position und für die Steuer kaufmännisch gerundet.
