@@ -217,6 +217,60 @@ internal static class UiText
 
     private static readonly System.Globalization.CultureInfo German = System.Globalization.CultureInfo.GetCultureInfo("de-DE");
 
+    // ----- Rechnungsformular -----
+
+    public const string MenuNeueRechnung = "&Neue Rechnung";
+    public const string NeueRechnungButton = "+ Neue Rechnung";
+    public const string MenuOeffnen = "Ö&ffnen";
+    public const string MenuKopieren = "Als neue Rechnung &kopieren";
+
+    public static string RechnungTitle(string nummer) => nummer.Trim().Length > 0 ? $"Rechnung {nummer.Trim()}" : "Neue Rechnung";
+
+    public const string Nummer = "Nr.";
+    public const string Rechnungsdatum = "Datum";
+    public const string Leistungszeitraum = "Leistungszeitraum";
+    public const string Projekt = "Projekt / Betreff";
+    public const string Status = "Status";
+    public const string Kunde = "Kunde";
+    public const string KundenVerwalten = "Kunden verwalten…";
+    public const string KeinKunde = "Bitte wählen Sie einen Kunden – oder legen Sie mit „Kunden verwalten…“ einen an.";
+
+    public const string Positionen = "Positionen";
+    public const string PositionZeitraum = "Zeitraum";
+    public const string PositionBeschreibung = "Beschreibung";
+    public const string PositionDetail = "Zusatz (optional)";
+    public const string PositionMenge = "Menge";
+    public const string PositionEinheit = "Einheit";
+    public const string PositionEinzelpreis = "Einzelpreis";
+    public const string PositionBetrag = "Betrag";
+    public const string PositionHinzufuegen = "+ Position hinzufügen";
+    public const string PositionNachOben = "Nach oben";
+    public const string PositionNachUnten = "Nach unten";
+    public const string PositionEntfernen = "Position entfernen";
+    public const string LetztePosition = "Die letzte Position kann nicht entfernt werden.";
+    public static string ZeitraumPlatzhalter(string zeitraum) => zeitraum.Trim().Length > 0 ? zeitraum.Trim() : "wie Rechnung";
+
+    public const string SummeNetto = "Nettobetrag";
+    public static string SummeUmsatzsteuer(decimal satz) => $"Umsatzsteuer {satz.ToString("0.##", German)} %";
+    public const string SummeBrutto = "Rechnungsbetrag";
+    public const string KleinunternehmerSumme = "Keine Umsatzsteuer (Kleinunternehmer nach § 19 UStG)";
+
+    public const string SaveAndClose = "Speichern";
+    public const string Close = "Schließen";
+
+    public const string NummerFehlt = "Bitte geben Sie eine Rechnungsnummer ein.";
+    public static string NummerVergeben(string nummer) =>
+        $"Die Rechnungsnummer „{nummer}“ ist bereits vergeben. Jede Nummer darf nur einmal vorkommen.";
+
+    public const string UngespeichertFrage = "Die Rechnung hat ungespeicherte Änderungen. Speichern?";
+
+    public const string GestelltHinweis = "Diese Rechnung wurde bereits gestellt und ist schreibgeschützt.";
+    public const string Bearbeiten = "Bearbeiten…";
+    public static string BearbeitenFrage(string nummer) =>
+        $"Rechnung {nummer} wurde bereits gestellt.\n\n" +
+        "Wenn Sie sie ändern, müssen Sie das PDF neu erzeugen und dem Kunden die korrigierte Rechnung erneut " +
+        "schicken. Trotzdem bearbeiten?";
+
     // ----- About -----
 
     public static string AboutText(string version) =>

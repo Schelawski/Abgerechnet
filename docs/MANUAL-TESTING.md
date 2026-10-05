@@ -70,7 +70,7 @@ Namen von Schaltflächen und Menüs beziehen sich auf die deutsche Oberfläche.
 
 ## 5. Rechnungsliste
 
-Vorbereitung: In `rechnungen.json` einige Rechnungen von Hand anlegen (bis das Rechnungsformular aus #6 da ist),
+Vorbereitung: Einige Rechnungen mit dem Rechnungsformular anlegen (Abschnitt 6) oder von Hand in `rechnungen.json`,
 z. B. je eine mit Status `entwurf`, `offen`, `bezahlt` und `storniert`, eine davon im Vorjahr, Positionen mit
 `menge`, `einheit` und `einzelpreis`, `umsatzsteuersatz: 19`. Für eine Rechnung eine Datei in `PDF\` ablegen und
 ihren Namen als `pdfDatei` eintragen.
@@ -91,3 +91,20 @@ ihren Namen als `pdfDatei` eintragen.
 | Mehrere Rechnungen mit Strg+Klick markieren, **Status ändern → Bezahlt**. | Alle, bei denen das erlaubt ist, werden bezahlt. |
 | Rechnung mit PDF: **PDF öffnen** / **Im Ordner zeigen**. | PDF öffnet sich im Standardprogramm bzw. Explorer mit markierter Datei. |
 | Unter **Datei → Kunden…** einen Kunden umbenennen und speichern. | Entwürfe zeigen den neuen Namen sofort. |
+
+## 6. Rechnung erstellen und bearbeiten
+
+| Schritt | Erwartet |
+|---------|----------|
+| In „Meine Daten“ als Vorgabe Beschreibung `Softwareentwicklung`, Einheit `Std.`, Einzelpreis `88` eintragen. **+ Neue Rechnung** (oder Strg+N). | Formular „Rechnung …“: Nummer = höchste vorhandene + 1 (bzw. „Nächste Rechnungsnummer“ aus den Einstellungen, in einem leeren Ordner `JJJJ-001`), Datum heute, Leistungszeitraum Vormonat (z. B. „September 2026“), Status „Entwurf“. Eine Position mit den Vorgaben. |
+| Kunde wählen. | Anschrift erscheint darunter. |
+| **Kunden verwalten…**, neuen Kunden anlegen, **Speichern**. | Der neue Kunde ist in der Rechnung ausgewählt. |
+| Mit Tab in **Menge** springen, `12,5` tippen. | Der Inhalt wird ersetzt (nicht „12,50,00“). Betrag der Position und Summen ändern sich bei jedem Tastendruck. |
+| **+ Position hinzufügen** zweimal. | Neue Positionen mit den Vorgaben, gleich groß wie die erste (auch bei 150 % Skalierung); der Cursor steht in der Beschreibung. Zeitraum leer zeigt grau den Leistungszeitraum der Rechnung. |
+| ▲ / ▼ / ✕ an den Positionen. | Reihenfolge ändert sich; die letzte Position lässt sich nicht entfernen (▲ der ersten und ▼ der letzten ausgegraut). |
+| Summen prüfen: 12,5 × 95 €. | Netto 1.187,50 €, USt 19 % 225,63 €, Rechnungsbetrag 1.413,13 €. Bei Kleinunternehmer (Rechnung neu anlegen, nachdem der Schalter in „Meine Daten“ gesetzt wurde): nur Rechnungsbetrag und Hinweis „Keine Umsatzsteuer …“. |
+| Nummer auf eine vorhandene Nummer ändern, **Speichern**. | Meldung „… ist bereits vergeben“. |
+| Nummer zurück, Strg+S. | Formular schließt, die Rechnung ist in der Liste markiert; Jahr-/Statusfilter wechseln, falls sie sonst nicht sichtbar wäre. |
+| Rechnung erneut öffnen (Doppelklick), etwas ändern, **Abbrechen**. | Rückfrage „Speichern?“ (Ja / Nein / Abbrechen). Ohne Änderung schließt das Formular ohne Rückfrage. |
+| Offene oder bezahlte Rechnung öffnen. | Gelber Hinweis „bereits gestellt … schreibgeschützt“, alle Felder gesperrt, Kunde mit Namen, **Schließen** statt Speichern. **Bearbeiten…** fragt nach; danach editierbar. |
+| Rechtsklick auf eine Rechnung → **Als neue Rechnung kopieren**. | Formular mit neuer Nummer, heutigem Datum, Vormonat, Entwurf; Kunde, Projekt und Positionen übernommen (ohne eigene Positions-Zeiträume). Erst **Speichern** legt sie an. |

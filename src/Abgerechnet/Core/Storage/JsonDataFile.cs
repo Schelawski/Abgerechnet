@@ -90,6 +90,14 @@ public static class JsonDataFile
         return copy;
     }
 
+    /// <summary>A deep copy of a single object, e.g. an invoice edited in a form.</summary>
+    public static T CloneObject<T>(T value)
+        where T : class =>
+        JsonSerializer.Deserialize<T>(JsonSerializer.Serialize(value, Options), Options)!;
+
+    /// <summary>The JSON text of an object as it would be stored, e.g. to detect unsaved changes.</summary>
+    public static string ToJson<T>(T value) => JsonSerializer.Serialize(value, Options);
+
     /// <summary>Saves the data, keeping the previous file as <c>*.bak.json</c>.</summary>
     /// <exception cref="DataFileException">The file cannot be written.</exception>
     public static void Save<T>(string path, T data)

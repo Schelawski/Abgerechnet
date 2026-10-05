@@ -69,6 +69,8 @@ internal sealed class MainForm : Form
     private MenuStrip CreateMenu()
     {
         var fileMenu = new ToolStripMenuItem(UiText.MenuFile);
+        fileMenu.DropDownItems.Add(new ToolStripMenuItem(UiText.MenuNeueRechnung, null, (_, _) => _rechnungen.NeueRechnung(), Keys.Control | Keys.N));
+        fileMenu.DropDownItems.Add(new ToolStripSeparator());
         fileMenu.DropDownItems.Add(new ToolStripMenuItem(UiText.MenuMeineDaten, null, (_, _) => EditMeineDaten()));
         fileMenu.DropDownItems.Add(new ToolStripMenuItem(UiText.MenuKunden, null, (_, _) => EditKunden()));
         fileMenu.DropDownItems.Add(new ToolStripSeparator());

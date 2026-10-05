@@ -66,6 +66,43 @@ public sealed class Rechnung
 
     public List<Position> Positionen { get; set; } = [];
 
+    /// <summary>
+    /// A new draft with the next number, today's date, last month as period, the tax rule from the settings and one
+    /// line item with the default values.
+    /// </summary>
+    public static Rechnung Neu(Einstellungen einstellungen, IReadOnlyCollection<Rechnung> vorhandene, DateOnly heute, Guid? kundeId = null) => new()
+    {
+        Nummer = Nummernkreis.Naechste(einstellungen, vorhandene, heute.Year),
+        Datum = heute,
+        Zeitraum = Leistungszeitraum.Vormonat(heute),
+        KundeId = kundeId,
+        Umsatzsteuersatz = einstellungen.Rechnung.Umsatzsteuersatz,
+        Kleinunternehmer = einstellungen.Rechnung.Kleinunternehmer,
+        Positionen = [Position.Neu(einstellungen.NeuePosition)],
+    };
+
+    /// <summary>
+    /// "Als neue Rechnung kopieren" – the usual month-end: same customer, project and line items, but the next
+    /// number, today's date, last month as period and status draft. Line items lose their own period (it belonged
+    /// to the old month); the tax rule comes from the current settings.
+    /// </summary>
+    public Rechnung AlsNeueRechnung(Einstellungen einstellungen, IReadOnlyCollection<Rechnung> vorhandene, DateOnly heute)
+    {
+        var kopie = Neu(einstellungen, vorhandene, heute, KundeId);
+        kopie.Projekt = Projekt;
+        kopie.Positionen = Positionen.Select(p => new Position
+        {
+            Beschreibung = p.Beschreibung,
+            Detail = p.Detail,
+            Menge = p.Menge,
+            Einheit = p.Einheit,
+            Einzelpreis = p.Einzelpreis,
+        }).ToList();
+        if (kopie.Positionen.Count == 0)
+            kopie.Positionen.Add(Position.Neu(einstellungen.NeuePosition));
+        return kopie;
+    }
+
     /// <summary>Only drafts may be deleted; issued invoices are cancelled, so the number sequence has no gaps.</summary>
     [JsonIgnore]
     public bool KannGeloeschtWerden => Status == RechnungsStatus.Entwurf;
@@ -153,6 +190,14 @@ public sealed class Position
 
     /// <summary>Net price per unit.</summary>
     public decimal Einzelpreis { get; set; }
+
+    /// <summary>A new line item with the default values from the settings (quantity 0).</summary>
+    public static Position Neu(PositionsVorgaben vorgaben) => new()
+    {
+        Beschreibung = vorgaben.Beschreibung,
+        Einheit = vorgaben.Einheit,
+        Einzelpreis = vorgaben.Einzelpreis,
+    };
 
     internal void Normalize()
     {

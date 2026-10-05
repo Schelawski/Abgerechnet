@@ -59,6 +59,7 @@ internal sealed class RechnungenView : UserControl
         _list.ColumnClick += (_, e) => SortBy(e.Column);
         _list.Resize += (_, _) => FitKundeColumn();
         _list.KeyDown += OnListKeyDown;
+        _list.ItemActivate += (_, _) => OpenSelected(); // double click or Enter
         _list.ContextMenuStrip = _menu;
 
         _statusBox.Items.Add(UiText.AlleStatus);
@@ -94,6 +95,21 @@ internal sealed class RechnungenView : UserControl
         filters.Controls.Add(new Label { Text = UiText.FilterStatus, AutoSize = true, Margin = new Padding(18, 7, 6, 0) });
         filters.Controls.Add(_statusBox);
 
+        // "Neue Rechnung" at the right end of the filter row, as in the web tool.
+        var neu = UiStyle.CreateButton(UiText.NeueRechnungButton);
+        UiStyle.MakePrimary(neu);
+        neu.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+        neu.Margin = new Padding(3, 0, 0, 8);
+        neu.Click += (_, _) => NeueRechnung();
+        _toolTip.SetToolTip(neu, "Strg+N");
+        var filterRow = new TableLayoutPanel { Dock = DockStyle.Top, AutoSize = true, ColumnCount = 2, RowCount = 1, Margin = Padding.Empty };
+        filterRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+        filterRow.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+        filters.Dock = DockStyle.None;
+        filters.Anchor = AnchorStyles.Left | AnchorStyles.Top;
+        filterRow.Controls.Add(filters, 0, 0);
+        filterRow.Controls.Add(neu, 1, 0);
+
         var tiles = new TableLayoutPanel { Dock = DockStyle.Top, ColumnCount = 4, RowCount = 1, Height = 78, Margin = Padding.Empty };
         tiles.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3f));
         tiles.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3f));
@@ -112,11 +128,18 @@ internal sealed class RechnungenView : UserControl
         Controls.Add(listHost);
         Controls.Add(spacer);
         Controls.Add(tiles);
-        Controls.Add(filters);
+        Controls.Add(filterRow);
     }
 
     private void BuildMenu()
     {
+        var oeffnenItem = new ToolStripMenuItem(UiText.MenuOeffnen) { Font = new Font(_menu.Font, FontStyle.Bold), ShortcutKeyDisplayString = "Enter" };
+        var kopierenItem = new ToolStripMenuItem(UiText.MenuKopieren);
+        oeffnenItem.Click += (_, _) => OpenSelected();
+        kopierenItem.Click += (_, _) => KopiereSelected();
+        _menu.Items.AddRange([oeffnenItem, kopierenItem, new ToolStripSeparator()]);
+        _menu.Opening += (_, _) => oeffnenItem.Enabled = kopierenItem.Enabled = _list.SelectedItems.Count == 1;
+
         _pdfItem.Click += (_, _) => OpenPdf();
         _ordnerItem.Click += (_, _) => ShowInFolder();
         foreach (var status in new[] { RechnungsStatus.Offen, RechnungsStatus.Bezahlt, RechnungsStatus.Storniert })
@@ -266,6 +289,69 @@ internal sealed class RechnungenView : UserControl
                 item.Selected = true;
             e.Handled = true;
         }
+    }
+
+    /// <summary>Opens the invoice form for a new draft (button, Ctrl+N).</summary>
+    public void NeueRechnung()
+    {
+        if (_folder is null)
+            return;
+        var rechnung = Rechnung.Neu(_folder.Einstellungen, _folder.Rechnungen.Rechnungen, DateOnly.FromDateTime(DateTime.Today));
+        Bearbeiten(rechnung);
+    }
+
+    /// <summary>Opens the selected invoice; with several selected, the one with the keyboard focus.</summary>
+    private void OpenSelected()
+    {
+        if (SelectedRechnungen() is [var rechnung])
+            Bearbeiten(rechnung);
+        else if (_list.FocusedItem is { Selected: true, Tag: Rechnung focused })
+            Bearbeiten(focused);
+    }
+
+    /// <summary>"Als neue Rechnung kopieren" – the usual month-end.</summary>
+    private void KopiereSelected()
+    {
+        if (_folder is null || SelectedRechnungen() is not [var vorlage])
+            return;
+        var kopie = vorlage.AlsNeueRechnung(_folder.Einstellungen, _folder.Rechnungen.Rechnungen, DateOnly.FromDateTime(DateTime.Today));
+        Bearbeiten(kopie);
+    }
+
+    private void Bearbeiten(Rechnung rechnung)
+    {
+        if (_folder is null)
+            return;
+        using var form = new RechnungForm(_folder, rechnung);
+        form.ShowDialog(FindForm());
+        // Customers may have been added in the form as well.
+        UpdateYears(selectYear: null);
+        if (form.GespeicherteRechnung is { } id)
+            ZeigeRechnung(id);
+        else
+            RefreshList();
+    }
+
+    /// <summary>Selects the invoice in the list, switching the year and status filter if it would be hidden.</summary>
+    private void ZeigeRechnung(Guid id)
+    {
+        if (_folder?.Rechnungen.Rechnungen.Find(r => r.Id == id) is not { } rechnung)
+            return;
+
+        _updatingFilters = true;
+        if (_jahrBox.SelectedItem is int jahr && jahr != AlleJahre && jahr != rechnung.Datum.Year)
+            _jahrBox.SelectedItem = rechnung.Datum.Year;
+        if (_statusBox.SelectedIndex > 0 && _statusBox.SelectedIndex - 1 != (int)rechnung.Status)
+            _statusBox.SelectedIndex = 0;
+        _updatingFilters = false;
+
+        RefreshList([id]);
+        if (_list.SelectedItems.Count > 0)
+        {
+            _list.SelectedItems[0].Focused = true;
+            _list.SelectedItems[0].EnsureVisible();
+        }
+        _list.Focus();
     }
 
     private void OpenPdf()

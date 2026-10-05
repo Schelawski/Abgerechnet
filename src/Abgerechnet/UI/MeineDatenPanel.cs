@@ -56,6 +56,8 @@ internal sealed class MeineDatenPanel : UserControl
     public MeineDatenPanel()
     {
         Dock = DockStyle.Fill;
+        foreach (var box in new[] { _umsatzsteuersatz, _zahlungsziel, _einzelpreis })
+            UiStyle.SelectAllOnEnter(box);
         _tabs.TabPages.Add(CreatePage(UiText.TabAbsender, BuildAbsender()));
         _tabs.TabPages.Add(CreatePage(UiText.TabSteuerBank, BuildSteuerBank()));
         _tabs.TabPages.Add(CreatePage(UiText.TabRechnungen, BuildRechnungen()));

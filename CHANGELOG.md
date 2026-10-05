@@ -26,5 +26,13 @@ GitHub (siehe [Release erstellen](README.md#release-erstellen)). Versionen folge
   Status. Kontextmenü: PDF öffnen, im Ordner zeigen, Status ändern (auch für mehrere Rechnungen), Löschen.
   Nur Entwürfe lassen sich löschen; gestellte Rechnungen werden storniert, damit der Nummernkreis lückenlos
   bleibt.
+- **Rechnung erstellen und bearbeiten:** **+ Neue Rechnung** (Strg+N) bzw. Doppelklick öffnet das Formular mit
+  Nummer (automatisch fortlaufend, änderbar, keine Doppelten), Datum, Leistungszeitraum (Standard: Vormonat),
+  Projekt, Kunde mit **Kunden verwalten…** daneben und Anschrift darunter, Positionen mit Zeitraum, Beschreibung,
+  Zusatz, Menge, Einheit und Einzelpreis (Vorgaben aus „Meine Daten“) sowie live berechneten Summen. Positionen
+  lassen sich hinzufügen, verschieben und entfernen (die letzte bleibt). Rückfrage bei ungespeicherten
+  Änderungen. Gestellte Rechnungen öffnen schreibgeschützt; Bearbeiten nach Rückfrage.
+- **Als neue Rechnung kopieren** (Kontextmenü) für den Monatsabschluss: übernimmt Kunde, Projekt und Positionen,
+  setzt neue Nummer, heutiges Datum, Vormonat und Status Entwurf.
 - Jede Rechnung merkt sich Umsatzsteuersatz und Kleinunternehmer-Regelung, damit spätere Änderungen in „Meine
   Daten“ ihre Beträge nicht verändern. Beträge werden je Position und für die Steuer kaufmännisch gerundet.

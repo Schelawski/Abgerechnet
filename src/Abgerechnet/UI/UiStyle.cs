@@ -27,6 +27,17 @@ internal static class UiStyle
         _ => StatusEntwurf,
     };
 
+    /// <summary>
+    /// Selects the whole number when the box is entered, so typing replaces it. Without this the cursor stands
+    /// before "0,00" after Tab, and typing "12,5" gives "12,50,00".
+    /// </summary>
+    public static T SelectAllOnEnter<T>(T box)
+        where T : NumericUpDown
+    {
+        box.Enter += (_, _) => box.BeginInvoke(() => box.Select(0, box.Text.Length));
+        return box;
+    }
+
     /// <summary>Filled blue button for the main action.</summary>
     public static void MakePrimary(Button button)
     {
