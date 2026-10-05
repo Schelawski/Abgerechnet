@@ -38,6 +38,21 @@ internal static class UiStyle
         return box;
     }
 
+    /// <summary>
+    /// Shrinks a window that is larger than the screen's working area (e.g. at 150 % scaling on a laptop) and moves it
+    /// fully onto the screen, so its buttons at the bottom stay reachable. Call it from OnLoad.
+    /// </summary>
+    public static void FitToScreen(Form form)
+    {
+        var area = Screen.FromControl(form).WorkingArea;
+        var size = new Size(Math.Min(form.Width, area.Width), Math.Min(form.Height, area.Height));
+        if (size != form.Size)
+            form.Size = size;
+        var x = Math.Clamp(form.Left, area.Left, area.Right - form.Width);
+        var y = Math.Clamp(form.Top, area.Top, area.Bottom - form.Height);
+        form.Location = new Point(x, y);
+    }
+
     /// <summary>Filled blue button for the main action.</summary>
     public static void MakePrimary(Button button)
     {

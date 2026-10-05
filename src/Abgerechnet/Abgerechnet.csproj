@@ -47,4 +47,19 @@
     <EmbeddedResource Include="Help\help.*.md" LogicalName="Abgerechnet.Help.%(Filename)%(Extension)" WithCulture="false" />
   </ItemGroup>
 
+  <!-- The invoice templates shipped with Abgerechnet (see Core/Vorlagen/MitgelieferteVorlagen.cs). -->
+  <ItemGroup>
+    <EmbeddedResource Include="Vorlagen\*.html" LogicalName="Abgerechnet.Vorlagen.%(Filename)%(Extension)" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4258.31" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <!-- Do not copy the XML documentation of referenced packages next to the exe (only Abgerechnet.exe is shipped). -->
+    <AllowedReferenceRelatedFileExtensions>.pdb</AllowedReferenceRelatedFileExtensions>
+  </PropertyGroup>
+
+  <!-- The WPF assembly of the WebView2 package is removed in Directory.Build.targets. -->
+
 </Project>

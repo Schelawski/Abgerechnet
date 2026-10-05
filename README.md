@@ -155,3 +155,7 @@ lesen.
 ## Lizenz
 
 © 2026 A. Schelawski – [GNU General Public License v3.0](LICENSE)
+
+Fremdkomponenten:
+- [Microsoft Edge WebView2 SDK](https://www.nuget.org/packages/Microsoft.Web.WebView2) (© Microsoft, BSD-Lizenz) –
+  zeigt die Vorschau an und erzeugt das PDF; die WebView2 Runtime selbst ist Teil von Windows.

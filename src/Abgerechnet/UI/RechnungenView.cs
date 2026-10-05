@@ -135,10 +135,12 @@ internal sealed class RechnungenView : UserControl
     {
         var oeffnenItem = new ToolStripMenuItem(UiText.MenuOeffnen) { Font = new Font(_menu.Font, FontStyle.Bold), ShortcutKeyDisplayString = "Enter" };
         var kopierenItem = new ToolStripMenuItem(UiText.MenuKopieren);
+        var pdfErzeugenItem = new ToolStripMenuItem(UiText.MenuPdfErzeugen);
         oeffnenItem.Click += (_, _) => OpenSelected();
         kopierenItem.Click += (_, _) => KopiereSelected();
-        _menu.Items.AddRange([oeffnenItem, kopierenItem, new ToolStripSeparator()]);
-        _menu.Opening += (_, _) => oeffnenItem.Enabled = kopierenItem.Enabled = _list.SelectedItems.Count == 1;
+        pdfErzeugenItem.Click += (_, _) => PdfErzeugenSelected();
+        _menu.Items.AddRange([oeffnenItem, kopierenItem, pdfErzeugenItem, new ToolStripSeparator()]);
+        _menu.Opening += (_, _) => oeffnenItem.Enabled = kopierenItem.Enabled = pdfErzeugenItem.Enabled = _list.SelectedItems.Count == 1;
 
         _pdfItem.Click += (_, _) => OpenPdf();
         _ordnerItem.Click += (_, _) => ShowInFolder();
@@ -316,6 +318,16 @@ internal sealed class RechnungenView : UserControl
             return;
         var kopie = vorlage.AlsNeueRechnung(_folder.Einstellungen, _folder.Rechnungen.Rechnungen, DateOnly.FromDateTime(DateTime.Today));
         Bearbeiten(kopie);
+    }
+
+    private void PdfErzeugenSelected()
+    {
+        if (_folder is null || SelectedRechnungen() is not [var rechnung])
+            return;
+        using var vorschau = new VorschauForm(_folder, rechnung.Id);
+        vorschau.ShowDialog(FindForm());
+        if (vorschau.PdfErzeugt)
+            ZeigeRechnung(rechnung.Id);
     }
 
     private void Bearbeiten(Rechnung rechnung)

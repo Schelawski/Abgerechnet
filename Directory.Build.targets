@@ -1,0 +1,12 @@
+<Project>
+
+  <!-- The WebView2 package always references its WPF assembly, also in projects that reference Abgerechnet (the
+       tests). Abgerechnet is WinForms only: removing the reference avoids the WindowsBase version conflict (MSB3277)
+       and keeps the WPF assembly out of Abgerechnet.exe. -->
+  <Target Name="RemoveWebView2Wpf" BeforeTargets="ResolveAssemblyReferences">
+    <ItemGroup>
+      <Reference Remove="@(Reference)" Condition="'%(Filename)' == 'Microsoft.Web.WebView2.Wpf'" />
+    </ItemGroup>
+  </Target>
+
+</Project>

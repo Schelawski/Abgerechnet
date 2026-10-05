@@ -55,6 +55,12 @@ internal sealed class MeineDatenDialog : Form
         _panel.LoadFrom(folder.Einstellungen);
     }
 
+    protected override void OnLoad(EventArgs e)
+    {
+        base.OnLoad(e);
+        UiStyle.FitToScreen(this);
+    }
+
     protected override void OnShown(EventArgs e)
     {
         base.OnShown(e);

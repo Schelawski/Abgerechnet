@@ -38,5 +38,13 @@ GitHub (siehe [Release erstellen](README.md#release-erstellen)). Versionen folge
   Beträge sowie die Blöcke `{{positionen_tabelle}}` und `{{summen_tabelle}}` mit sprechenden CSS-Klassen. Werte
   werden HTML-sicher eingesetzt, Platzhalter in HTML-Kommentaren bleiben unberührt, unbekannte Platzhalter werden
   gemeldet, relative Pfade beziehen sich auf den Vorlagen-Ordner.
+- **PDF erzeugen** (im Rechnungsformular oder per Rechtsklick in der Liste): Die Vorschau zeigt genau das PDF, das
+  gespeichert wird, dazu Hinweise auf fehlende Pflichtangaben (§ 14 UStG) und unbekannte Platzhalter.
+  **PDF speichern** legt es im Ordner `PDF` ab (Dateiname nach Muster, Rückfrage bei vorhandener Datei); danach ist
+  die Rechnung „Offen“ und behält die Anschrift, mit der sie gestellt wurde. **PDF öffnen** und **Im Ordner
+  zeigen** direkt in der Vorschau.
+- Mitgelieferte Vorlage „Schlicht“: DIN A4, Fußzeile mit Bankverbindung und Steuernummer auf jeder Seite,
+  Tabellenkopf wiederholt sich bei mehrseitigen Rechnungen, eigenes Logo als `Vorlagen\logo.png`.
+- Fenster passen sich bei hoher Bildschirmskalierung an den Bildschirm an.
 - Jede Rechnung merkt sich Umsatzsteuersatz und Kleinunternehmer-Regelung, damit spätere Änderungen in „Meine
   Daten“ ihre Beträge nicht verändern. Beträge werden je Position und für die Steuer kaufmännisch gerundet.

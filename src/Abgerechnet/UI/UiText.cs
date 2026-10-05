@@ -271,6 +271,47 @@ internal static class UiText
         "Wenn Sie sie ändern, müssen Sie das PDF neu erzeugen und dem Kunden die korrigierte Rechnung erneut " +
         "schicken. Trotzdem bearbeiten?";
 
+    // ----- PDF und Vorschau -----
+
+    public const string PdfErzeugenButton = "&PDF erzeugen…";
+    public const string MenuPdfErzeugen = "PDF &erzeugen…";
+    public static string VorschauTitle(string nummer) => $"Vorschau – Rechnung {nummer}";
+    public const string PdfSpeichern = "PDF &speichern";
+    public const string PdfOeffnenButton = "PDF öffnen";
+    public const string ImOrdnerZeigenButton = "Im Ordner zeigen";
+    public static string VorlageInfo(string name, bool mitgeliefert) =>
+        mitgeliefert ? $"Vorlage: {name} (mitgeliefert)" : $"Vorlage: {name}.html aus dem Vorlagen-Ordner";
+    public static string PdfGespeichert(string datei) => $"Gespeichert: {datei}";
+
+    public const string HinweiseTitel = "Bitte prüfen Sie vor dem Versand:";
+    public static string Pflichtangabe(Core.Model.Pflichtangabe angabe) => angabe switch
+    {
+        Core.Model.Pflichtangabe.AbsenderName => "Ihre Firma oder Ihr Name fehlt (Meine Daten).",
+        Core.Model.Pflichtangabe.AbsenderAnschrift => "Ihre Anschrift ist unvollständig (Meine Daten).",
+        Core.Model.Pflichtangabe.Steuernummer => "Steuernummer oder USt-IdNr. fehlt (Meine Daten).",
+        Core.Model.Pflichtangabe.EmpfaengerName => "Es ist kein Kunde gewählt.",
+        Core.Model.Pflichtangabe.EmpfaengerAnschrift => "Die Anschrift des Kunden ist unvollständig.",
+        Core.Model.Pflichtangabe.Rechnungsnummer => "Die Rechnungsnummer fehlt.",
+        Core.Model.Pflichtangabe.Leistungszeitraum => "Der Leistungszeitraum fehlt.",
+        Core.Model.Pflichtangabe.Leistungsbeschreibung => "Mindestens eine Position hat keine Beschreibung.",
+        Core.Model.Pflichtangabe.KleinunternehmerHinweis => "Der Hinweis für Kleinunternehmer ist leer (Meine Daten).",
+        _ => angabe.ToString(),
+    };
+    public static string UnbekanntePlatzhalter(IEnumerable<string> platzhalter) =>
+        $"Die Vorlage enthält unbekannte Platzhalter: {string.Join(", ", platzhalter)}";
+
+    public static string PdfExistiert(string datei) => $"Die Datei „{datei}“ gibt es bereits im PDF-Ordner. Überschreiben?";
+    public static string PdfFehler(string grund) =>
+        $"Das PDF konnte nicht gespeichert werden. Ist die Datei gerade in einem anderen Programm geöffnet?\n\n{grund}";
+    public static string VorlageFehler(string grund) => $"Die Vorlage konnte nicht gelesen werden:\n\n{grund}";
+
+    public const string WebView2Fehlt =
+        "Für die Vorschau und das PDF braucht Abgerechnet die „Microsoft Edge WebView2 Runtime“. Sie ist auf " +
+        "Windows 10 und 11 normalerweise vorinstalliert, fehlt auf diesem Computer aber.\n\n" +
+        "Möchten Sie die Download-Seite von Microsoft öffnen? Nach der Installation starten Sie Abgerechnet neu.";
+    public const string WebView2DownloadUrl = "https://developer.microsoft.com/microsoft-edge/webview2/";
+    public static string WebView2Fehler(string grund) => $"Die Vorschau konnte nicht gestartet werden:\n\n{grund}";
+
     // ----- About -----
 
     public static string AboutText(string version) =>

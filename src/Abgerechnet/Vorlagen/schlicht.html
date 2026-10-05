@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<!--
+  Abgerechnet – Rechnungsvorlage „Schlicht“
+
+  Reiner Text ohne Farben und Rahmen, gut für den Schwarzweißdruck.
+
+  So passen Sie die Vorlage an:
+  • Schrift, Größen und Abstände stehen ganz oben im <style> als CSS-Variablen (:root).
+  • Ihr Logo: Legen Sie eine Datei „logo.png“ in denselben Ordner wie diese Vorlage. Ohne Datei wird nichts
+    angezeigt. Ein anderer Dateiname? Ändern Sie unten src="logo.png".
+  • Platzhalter in doppelten geschweiften Klammern, z. B. {{absender_firma}}, setzt Abgerechnet beim Erzeugen
+    des PDFs ein. Die vollständige Liste steht in der Hilfe („Vorlage anpassen“).
+  • {{positionen_tabelle}} und {{summen_tabelle}} sind fertige Tabellen. Ihr Aussehen steuern die CSS-Klassen
+    weiter unten (.positionen, .pos-beschreibung, .summen .brutto …).
+  • Zeilen mit der Klasse „wenn-gefuellt“ verschwinden, wenn ihr Wert (class="wert") leer ist – z. B. ohne
+    Telefonnummer keine „Tel.“-Zeile.
+
+  Platzhalter in Kommentaren wie diesem werden nicht ersetzt.
+-->
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Rechnung {{rechnung_nummer}}</title>
+<style>
+  :root {
+    --schrift: "Segoe UI", Arial, sans-serif;
+    --schriftgroesse: 10pt;
+    --textfarbe: #000;
+    --grau: #555;
+    --linie: #999;
+  }
+
+  /* DIN A4; die Ränder gelten für jede Seite. */
+  @page { size: A4; margin: 18mm 18mm 12mm 22mm; }
+
+  /* Seitenrahmen: Die Tabelle .seitenrahmen umschließt den ganzen Inhalt. Ihr tfoot wiederholt sich auf jeder
+     Seite und hält unten Platz für die Fußzeile frei (.fuss-platz) – so überlappen lange Rechnungen die Fußzeile
+     nicht. Wird die Fußzeile höher, .fuss-platz entsprechend vergrößern. */
+  .seitenrahmen { width: 100%; border-collapse: collapse; }
+  .seitenrahmen > tbody > tr > td, .seitenrahmen > tfoot > tr > td { padding: 0; }
+  .fuss-platz { height: 24mm; }
+
+  body { font-family: var(--schrift); font-size: var(--schriftgroesse); color: var(--textfarbe); margin: 0; line-height: 1.35; }
+  .wenn-gefuellt:has(.wert:empty) { display: none; }
+
+  /* ---------- Kopf: Logo und Absender rechts, Anschrift des Kunden links ---------- */
+  .kopf { display: flex; justify-content: space-between; align-items: flex-start; min-height: 45mm; }
+  .empfaenger { margin-top: 18mm; }
+  .ruecksendezeile { font-size: 7.5pt; color: var(--grau); margin-bottom: 3mm; }
+  .absender { text-align: right; }
+  .absender .firma { font-size: 13pt; font-weight: 600; }
+  .absender .unterzeile { color: var(--grau); margin-bottom: 2mm; }
+  .logo { max-width: 45mm; max-height: 22mm; margin-bottom: 3mm; }
+
+  /* ---------- Rechnungsdaten ---------- */
+  .rechnungsdaten { margin: 10mm 0 6mm auto; border-collapse: collapse; }
+  .rechnungsdaten th { text-align: left; font-weight: normal; color: var(--grau); padding: 0 6mm 0 0; }
+  .rechnungsdaten td { text-align: right; padding: 0; }
+  h1 { font-size: 15pt; font-weight: 600; margin: 0 0 1mm; }
+  .projekt { margin-bottom: 6mm; }
+
+  /* ---------- Positionen ---------- */
+  .positionen { width: 100%; border-collapse: collapse; margin-bottom: 4mm; }
+  .positionen th { text-align: left; font-weight: 600; border-bottom: 0.3mm solid var(--linie); padding: 1.5mm 2mm 1.5mm 0; }
+  .positionen td { vertical-align: top; padding: 2mm 2mm 2mm 0; }
+  .positionen tr { break-inside: avoid; }
+  .pos-nr { display: none; }                         /* Positionsnummer ausgeblendet; zum Einblenden diese Zeile löschen */
+  .pos-zeitraum { width: 24mm; white-space: nowrap; }
+  .pos-detail { color: var(--grau); font-size: 0.9em; margin-top: 0.5mm; }
+  .pos-menge, .pos-preis, .pos-betrag { text-align: right !important; white-space: nowrap; }
+  .pos-einheit { white-space: nowrap; }
+
+  /* ---------- Summen ---------- */
+  .summen { margin-left: auto; border-collapse: collapse; min-width: 70mm; }
+  .summen th { text-align: left; font-weight: normal; padding: 0.8mm 8mm 0.8mm 0; }
+  .summen td { text-align: right; padding: 0.8mm 0; white-space: nowrap; }
+  .summen .brutto th, .summen .brutto td { font-weight: 600; border-top: 0.3mm solid var(--linie); padding-top: 1.5mm; }
+  .steuerhinweis { margin-top: 4mm; }
+  .zahlung { margin-top: 8mm; }
+
+  /* ---------- Fußzeile: steht auf jeder Seite unten ---------- */
+  .fuss { position: fixed; bottom: 0; left: 0; right: 0; display: flex; justify-content: space-between;
+          font-size: 7.5pt; color: var(--grau); border-top: 0.2mm solid var(--linie); padding-top: 2mm; }
+  .fuss div { flex: 1; }
+  .fuss div + div { padding-left: 4mm; }
+</style>
+</head>
+<body>
+
+<table class="seitenrahmen">
+<tfoot><tr><td><div class="fuss-platz"></div></td></tr></tfoot>
+<tbody><tr><td>
+
+<div class="kopf">
+  <div class="empfaenger">
+    <div class="ruecksendezeile">{{absender_firma}} · {{absender_strasse}} · {{absender_plz}} {{absender_ort}}</div>
+    <div>{{kunde_anschrift}}</div>
+  </div>
+  <div class="absender">
+    <img class="logo" src="logo.png" alt="" onerror="this.remove()">
+    <div class="firma">{{absender_firma}}</div>
+    <div class="unterzeile">{{absender_unterzeile}}</div>
+    <div>{{absender_name}}</div>
+    <div>{{absender_strasse}}</div>
+    <div>{{absender_plz}} {{absender_ort}}</div>
+    <div class="wenn-gefuellt">Tel. <span class="wert">{{absender_telefon}}</span></div>
+    <div class="wenn-gefuellt"><span class="wert">{{absender_email}}</span></div>
+    <div class="wenn-gefuellt"><span class="wert">{{absender_web}}</span></div>
+  </div>
+</div>
+
+<table class="rechnungsdaten">
+  <tr><th>Rechnungsnummer</th><td>{{rechnung_nummer}}</td></tr>
+  <tr><th>Rechnungsdatum</th><td>{{rechnung_datum}}</td></tr>
+  <tr class="wenn-gefuellt"><th>Leistungszeitraum</th><td class="wert">{{leistungszeitraum}}</td></tr>
+  <tr class="wenn-gefuellt"><th>Zahlbar bis</th><td class="wert">{{faellig_am}}</td></tr>
+</table>
+
+<h1>Rechnung {{rechnung_nummer}}</h1>
+<div class="projekt">{{projekt}}</div>
+
+{{positionen_tabelle}}
+
+{{summen_tabelle}}
+
+<div class="steuerhinweis">{{steuerhinweis}}</div>
+
+<div class="zahlung">
+  Bitte überweisen Sie den Rechnungsbetrag unter Angabe der Rechnungsnummer auf das unten genannte Konto.
+  Vielen Dank für die gute Zusammenarbeit.
+</div>
+
+</td></tr></tbody>
+</table>
+
+<div class="fuss">
+  <div>
+    {{absender_firma}}<br>
+    {{absender_strasse}}, {{absender_plz}} {{absender_ort}}
+  </div>
+  <div>
+    <span class="wenn-gefuellt">Steuernummer: <span class="wert">{{steuernummer}}</span><br></span>
+    <span class="wenn-gefuellt">USt-IdNr.: <span class="wert">{{ust_idnr}}</span></span>
+  </div>
+  <div>
+    {{bank}}<br>
+    IBAN: {{iban}}<br>
+    <span class="wenn-gefuellt">BIC: <span class="wert">{{bic}}</span></span>
+  </div>
+</div>
+
+</body>
+</html>

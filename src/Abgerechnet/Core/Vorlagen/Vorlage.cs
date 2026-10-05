@@ -32,7 +32,14 @@ public static partial class Vorlage
     /// Folder of the template. Relative paths in the template (logo, own CSS file) are resolved against it with a
     /// <c>&lt;base&gt;</c> element, unless the template sets its own.
     /// </param>
-    public static VorlagenErgebnis Ausfuellen(string vorlage, RechnungsDaten daten, string? vorlagenOrdner = null)
+    public static VorlagenErgebnis Ausfuellen(string vorlage, RechnungsDaten daten, string? vorlagenOrdner = null) =>
+        Ausfuellen(vorlage, daten, vorlagenOrdner is null ? null : OrdnerUri(vorlagenOrdner));
+
+    /// <param name="basis">
+    /// Address relative paths are resolved against, e.g. a virtual host that maps the template folder (WebView2 does
+    /// not load file:// resources into a page that was loaded from a string).
+    /// </param>
+    public static VorlagenErgebnis Ausfuellen(string vorlage, RechnungsDaten daten, Uri? basis)
     {
         ArgumentNullException.ThrowIfNull(vorlage);
         var werte = Platzhalter.Werte(daten);
@@ -50,9 +57,18 @@ public static partial class Vorlage
         result.Append(Ersetzen(vorlage[position..], werte, unbekannt));
 
         var html = result.ToString();
-        if (vorlagenOrdner is not null)
-            html = BasisSetzen(html, vorlagenOrdner);
+        if (basis is not null)
+            html = BasisSetzen(html, basis);
         return new VorlagenErgebnis(html, unbekannt.Distinct(StringComparer.OrdinalIgnoreCase).ToList());
+    }
+
+    /// <summary>"C:\Daten\Vorlagen" → file:///C:/Daten/Vorlagen/ (with the trailing slash a base needs).</summary>
+    private static Uri OrdnerUri(string ordner)
+    {
+        var pfad = Path.GetFullPath(ordner);
+        if (!pfad.EndsWith(Path.DirectorySeparatorChar))
+            pfad += Path.DirectorySeparatorChar;
+        return new Uri(pfad);
     }
 
     private static string Ersetzen(string text, IReadOnlyDictionary<string, string> werte, List<string> unbekannt) =>
@@ -64,16 +80,13 @@ public static partial class Vorlage
             return match.Value;
         });
 
-    /// <summary>Inserts <c>&lt;base href="file:///…/Vorlagen/"&gt;</c> at the start of the head.</summary>
-    internal static string BasisSetzen(string html, string ordner)
+    /// <summary>Inserts <c>&lt;base href="…"&gt;</c> at the start of the head, unless the template has its own.</summary>
+    internal static string BasisSetzen(string html, Uri basisUri)
     {
         if (BaseRegex().IsMatch(html))
             return html;
 
-        var pfad = Path.GetFullPath(ordner);
-        if (!pfad.EndsWith(Path.DirectorySeparatorChar))
-            pfad += Path.DirectorySeparatorChar;
-        var basis = $"<base href=\"{new Uri(pfad).AbsoluteUri}\">";
+        var basis = $"<base href=\"{basisUri.AbsoluteUri}\">";
 
         var head = HeadRegex().Match(html);
         return head.Success

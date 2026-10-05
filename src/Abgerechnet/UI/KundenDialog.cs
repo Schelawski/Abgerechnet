@@ -267,6 +267,12 @@ internal sealed class KundenDialog : Form
         kunde.UstIdNr = kunde.UstIdNr.Trim().ToUpperInvariant();
     }
 
+    protected override void OnLoad(EventArgs e)
+    {
+        base.OnLoad(e);
+        UiStyle.FitToScreen(this);
+    }
+
     protected override void OnFormClosing(FormClosingEventArgs e)
     {
         if (DialogResult != DialogResult.OK && _changed

@@ -48,6 +48,7 @@ internal sealed class RechnungForm : Form
     private readonly Panel _gestelltBar = new() { Dock = DockStyle.Top, Height = 44, BackColor = UiStyle.HintBack, Padding = new Padding(12, 6, 12, 6), Visible = false };
     private readonly Button _speichern = UiStyle.CreateButton(UiText.SaveAndClose);
     private readonly Button _schliessen = UiStyle.CreateButton(UiText.Cancel);
+    private readonly Button _pdfErzeugen = UiStyle.CreateButton(UiText.PdfErzeugenButton);
 
     /// <param name="folder">The open invoice folder.</param>
     /// <param name="rechnung">The invoice to edit; a copy is edited. A new invoice is not yet in the folder.</param>
@@ -78,6 +79,7 @@ internal sealed class RechnungForm : Form
         // The form has been scaled to the screen's DPI by now; the line item editors convert their sizes with the
         // same DPI themselves (see PositionEditor), so items shown now and items added later look the same.
         base.OnLoad(e);
+        UiStyle.FitToScreen(this);
 
         _positionenKopf = PositionEditor.CreateHeader(DeviceDpi);
         _loading = true;
@@ -166,6 +168,8 @@ internal sealed class RechnungForm : Form
         var buttons = new FlowLayoutPanel { AutoSize = true, FlowDirection = FlowDirection.RightToLeft, Anchor = AnchorStyles.Right, Margin = new Padding(3, 8, 3, 3) };
         buttons.Controls.Add(_schliessen);
         buttons.Controls.Add(_speichern);
+        buttons.Controls.Add(_pdfErzeugen);
+        _pdfErzeugen.Click += (_, _) => PdfErzeugen();
 
         var fuss = new TableLayoutPanel { Dock = DockStyle.Bottom, AutoSize = true, ColumnCount = 1, RowCount = 2, Padding = new Padding(12, 6, 12, 10), BackColor = Color.FromArgb(249, 250, 251) };
         fuss.Controls.Add(summen, 0, 0);
@@ -429,6 +433,25 @@ internal sealed class RechnungForm : Form
         _gespeichertJson = JsonDataFile.ToJson(_rechnung);
         GespeicherteRechnung = _rechnung.Id;
         return true;
+    }
+
+    /// <summary>
+    /// Saves the invoice (unless it is read-only) and opens the preview. When a PDF was created the invoice is no
+    /// longer a draft, so the form closes.
+    /// </summary>
+    private void PdfErzeugen()
+    {
+        if (!_readOnly && !Speichern())
+            return;
+
+        using var vorschau = new VorschauForm(_folder, _rechnung.Id);
+        vorschau.ShowDialog(this);
+        if (!vorschau.PdfErzeugt)
+            return;
+
+        GespeicherteRechnung = _rechnung.Id;
+        _readOnly = true; // nothing left to ask about when closing
+        Close();
     }
 
     private bool Fehler(Control control, string message)

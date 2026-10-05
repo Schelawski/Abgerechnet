@@ -134,6 +134,20 @@ public sealed class Rechnung
     }
 
     /// <summary>
+    /// Records a created PDF: remembers its file name, freezes the recipient's address and turns a draft into an open
+    /// invoice (paid or cancelled invoices keep their status when the PDF is created again).
+    /// </summary>
+    public void PdfErzeugt(string pdfDatei, Kunde? empfaenger)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(pdfDatei);
+        PdfDatei = pdfDatei;
+        if (empfaenger is not null)
+            EmpfaengerFestschreiben(empfaenger);
+        if (Status == RechnungsStatus.Entwurf)
+            Status = RechnungsStatus.Offen;
+    }
+
+    /// <summary>
     /// The recipient to show or print: the copy taken when the PDF was created, otherwise the current customer.
     /// </summary>
     public Kunde? EmpfaengerAus(KundenDatei kunden) => Empfaenger ?? kunden.Finden(KundeId);

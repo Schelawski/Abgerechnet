@@ -108,3 +108,22 @@ ihren Namen als `pdfDatei` eintragen.
 | Rechnung erneut öffnen (Doppelklick), etwas ändern, **Abbrechen**. | Rückfrage „Speichern?“ (Ja / Nein / Abbrechen). Ohne Änderung schließt das Formular ohne Rückfrage. |
 | Offene oder bezahlte Rechnung öffnen. | Gelber Hinweis „bereits gestellt … schreibgeschützt“, alle Felder gesperrt, Kunde mit Namen, **Schließen** statt Speichern. **Bearbeiten…** fragt nach; danach editierbar. |
 | Rechtsklick auf eine Rechnung → **Als neue Rechnung kopieren**. | Formular mit neuer Nummer, heutigem Datum, Vormonat, Entwurf; Kunde, Projekt und Positionen übernommen (ohne eigene Positions-Zeiträume). Erst **Speichern** legt sie an. |
+
+## 7. PDF erzeugen
+
+Mit der veröffentlichten exe testen (`dotnet publish src/Abgerechnet -c Release`), damit auch die in die exe
+eingebettete WebView2-Bibliothek geprüft wird.
+
+| Schritt | Erwartet |
+|---------|----------|
+| Entwurf öffnen, **PDF erzeugen…** (Alt+P). | Die Rechnung wird gespeichert, die Vorschau öffnet sich und passt auf den Bildschirm. Nach wenigen Sekunden erscheint das PDF (Seitenzahl im Viewer „1 von 1“). Fehlen Angaben (z. B. Steuernummer), steht oben ein gelber Hinweis. |
+| Unten links. | „Vorlage: schlicht (mitgeliefert)“. |
+| PDF ansehen. | DIN A4 mit Rändern, Umlaute und € korrekt, Anschrift des Kunden links, Absender rechts, Fußzeile mit Bank und Steuernummer unten. |
+| `logo.png` in den Ordner `Vorlagen` legen, Vorschau erneut öffnen. | Das Logo erscheint oben rechts. |
+| **PDF speichern** (Alt+S). | Unten „Gespeichert: …pdf“, **PDF öffnen** und **Im Ordner zeigen** erscheinen. Die Datei liegt im Ordner `PDF` mit dem Namen nach Muster. |
+| Vorschau schließen. | Das Formular schließt; in der Liste steht die Rechnung auf **Offen**. In `rechnungen.json` stehen `pdfDatei` und `empfaenger` (Kopie der Anschrift). |
+| Kundenanschrift ändern, gestellte Rechnung öffnen. | Die Rechnung zeigt weiterhin die alte Anschrift. |
+| Rechtsklick → **PDF erzeugen…** auf dieselbe Rechnung, **PDF speichern**. | Rückfrage „gibt es bereits … Überschreiben?“. Der Status bleibt (z. B. Bezahlt). |
+| PDF in einem PDF-Programm geöffnet lassen, erneut speichern und überschreiben. | Verständliche Meldung, falls das Programm die Datei sperrt; nichts halb Geschriebenes. |
+| Eine Rechnung mit 30+ Positionen erzeugen. | Mehrere Seiten; Tabellenkopf und Fußzeile auf jeder Seite, keine Überlappung, keine Position wird zerrissen. |
+| `%LOCALAPPDATA%\Abgerechnet` ansehen. | Ordner `WebView2` (Browserdaten); im Ordner `Vorschau` bleiben nach dem Schließen keine PDFs liegen. Neben der exe liegen keine neuen Dateien außer `Abgerechnet.settings.json`. |
