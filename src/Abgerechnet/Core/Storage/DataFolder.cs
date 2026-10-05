@@ -37,7 +37,7 @@ public sealed class DataFolder
 
     public KundenDatei Kunden { get; private set; }
 
-    public RechnungenDatei Rechnungen { get; }
+    public RechnungenDatei Rechnungen { get; private set; }
 
     public string EinstellungenPath => Path.Combine(FolderPath, EinstellungenFileName);
 
@@ -122,4 +122,20 @@ public sealed class DataFolder
 
     /// <exception cref="DataFileException">The file cannot be written.</exception>
     public void SaveRechnungen() => JsonDataFile.Save(RechnungenPath, Rechnungen);
+
+    /// <summary>
+    /// Saves changed invoices and uses them from now on. If saving fails, <see cref="Rechnungen"/> keeps the
+    /// previous values.
+    /// </summary>
+    /// <exception cref="DataFileException">The file cannot be written.</exception>
+    public void SaveRechnungen(RechnungenDatei changed)
+    {
+        ArgumentNullException.ThrowIfNull(changed);
+        JsonDataFile.Save(RechnungenPath, changed);
+        Rechnungen = changed;
+    }
+
+    /// <summary>Full path of the invoice's PDF, or <c>null</c> when none was created.</summary>
+    public string? PdfPfad(Rechnung rechnung) =>
+        string.IsNullOrWhiteSpace(rechnung.PdfDatei) ? null : Path.Combine(PdfPath, rechnung.PdfDatei);
 }

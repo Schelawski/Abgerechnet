@@ -17,8 +17,6 @@ internal static class UiText
     public const string MenuHelp = "&Hilfe";
     public const string MenuAbout = "Ü&ber Abgerechnet…";
 
-    public const string EmptyState =
-        "Willkommen bei Abgerechnet.\n\nHier erscheint bald die Liste Ihrer Rechnungen.";
 
     public static string FolderStatus(string path) => $"Rechnungsordner: {path}";
 
@@ -153,6 +151,71 @@ internal static class UiText
         "bereits erzeugte Rechnungen behalten die Anschrift, mit der sie gestellt wurden.";
 
     public const string AenderungenVerwerfen = "Ihre Änderungen an den Kunden wurden nicht gespeichert. Verwerfen?";
+
+    // ----- Rechnungsliste -----
+
+    public const string FilterJahr = "Jahr";
+    public const string FilterStatus = "Status";
+    public const string AlleJahre = "Alle Jahre";
+    public const string AlleStatus = "Alle";
+
+    public const string KachelOffen = "Offen";
+    public const string KachelBezahlt = "Bezahlt";
+    public const string KachelGesamt = "Gesamt";
+    public const string KachelGesamtTooltip = "Offene und bezahlte Rechnungen. Entwürfe und stornierte Rechnungen zählen nicht mit.";
+    public static string Anzahl(int count) => count == 1 ? "1 Rechnung" : $"{count} Rechnungen";
+    public static string Entwuerfe(int count) => count switch
+    {
+        0 => string.Empty,
+        1 => "1 Entwurf",
+        _ => $"{count} Entwürfe",
+    };
+
+    public const string SpalteNummer = "Nr.";
+    public const string SpalteKunde = "Kunde";
+    public const string SpalteZeitraum = "Zeitraum";
+    public const string SpalteDatum = "Datum";
+    public const string SpalteStatus = "Status";
+    public const string SpalteBetrag = "Betrag (brutto)";
+
+    public static string StatusName(Core.Model.RechnungsStatus status) => status switch
+    {
+        Core.Model.RechnungsStatus.Entwurf => "Entwurf",
+        Core.Model.RechnungsStatus.Offen => "Offen",
+        Core.Model.RechnungsStatus.Bezahlt => "Bezahlt",
+        Core.Model.RechnungsStatus.Storniert => "Storniert",
+        _ => status.ToString(),
+    };
+
+    public const string KeineRechnungen = "Noch keine Rechnungen in diesem Ordner.";
+    public const string KeineRechnungenFilter = "Keine Rechnungen für diese Auswahl.";
+    public const string KundeUnbekannt = "–";
+
+    public const string MenuPdfOeffnen = "&PDF öffnen";
+    public const string MenuImOrdnerZeigen = "Im &Ordner zeigen";
+    public const string MenuStatusAendern = "&Status ändern";
+    public const string MenuLoeschen = "&Löschen";
+
+    public static string PdfFehlt(string path) => $"Die PDF-Datei wurde nicht gefunden:\n{path}";
+
+    public static string StornierenFrage(IReadOnlyList<string> nummern) =>
+        (nummern.Count == 1 ? $"Rechnung {nummern[0]} stornieren?" : $"{nummern.Count} Rechnungen stornieren ({string.Join(", ", nummern)})?") +
+        "\n\nStornierte Rechnungen bleiben in der Liste und behalten ihre Nummer, zählen aber nicht mehr zu " +
+        "„Offen“, „Bezahlt“ und „Gesamt“.";
+
+    public static string LoeschenFrage(IReadOnlyList<string> nummern) =>
+        nummern.Count == 1 ? $"Den Entwurf {nummern[0]} löschen?" : $"{nummern.Count} Entwürfe löschen ({string.Join(", ", nummern)})?";
+
+    public const string NurEntwuerfeLoeschen =
+        "Nur Entwürfe können gelöscht werden.\n\n" +
+        "Eine gestellte Rechnung muss erhalten bleiben, sonst entsteht eine Lücke im Nummernkreis. " +
+        "Wählen Sie stattdessen „Status ändern → Storniert“.";
+
+    public static string Betrag(decimal betrag) => betrag.ToString("#,##0.00", German) + " €";
+
+    public static string Datum(DateOnly datum) => datum.ToString("dd.MM.yyyy", German);
+
+    private static readonly System.Globalization.CultureInfo German = System.Globalization.CultureInfo.GetCultureInfo("de-DE");
 
     // ----- About -----
 

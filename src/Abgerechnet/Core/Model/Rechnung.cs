@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Abgerechnet.Core.Model;
 
 /// <summary>
@@ -53,7 +55,46 @@ public sealed class Rechnung
     /// <summary>File name of the created PDF, relative to the <c>PDF</c> folder.</summary>
     public string? PdfDatei { get; set; }
 
+    /// <summary>
+    /// VAT rate in percent for this invoice. Taken from the settings when the invoice is created, so a later change
+    /// of the settings does not change existing invoices.
+    /// </summary>
+    public decimal Umsatzsteuersatz { get; set; } = RechnungsEinstellungen.DefaultUmsatzsteuersatz;
+
+    /// <summary>Invoice of a small business (§ 19 UStG): no VAT. Taken from the settings like the rate.</summary>
+    public bool Kleinunternehmer { get; set; }
+
     public List<Position> Positionen { get; set; } = [];
+
+    /// <summary>Only drafts may be deleted; issued invoices are cancelled, so the number sequence has no gaps.</summary>
+    [JsonIgnore]
+    public bool KannGeloeschtWerden => Status == RechnungsStatus.Entwurf;
+
+    /// <summary>
+    /// Status the user may choose by hand. A draft becomes open only by creating its PDF (issue #8); an issued
+    /// invoice can be paid, cancelled, or set back to open.
+    /// </summary>
+    public IReadOnlyList<RechnungsStatus> ErlaubteStatuswechsel() => Status switch
+    {
+        RechnungsStatus.Entwurf => [],
+        RechnungsStatus.Offen => [RechnungsStatus.Bezahlt, RechnungsStatus.Storniert],
+        RechnungsStatus.Bezahlt => [RechnungsStatus.Offen, RechnungsStatus.Storniert],
+        RechnungsStatus.Storniert => [RechnungsStatus.Offen],
+        _ => [],
+    };
+
+    /// <summary>
+    /// Changes the status by hand. "Bezahlt" records the payment date; leaving "Bezahlt" clears it.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">The change is not allowed (see <see cref="ErlaubteStatuswechsel"/>).</exception>
+    public void StatusAendern(RechnungsStatus neu, DateOnly bezahltAm)
+    {
+        if (!ErlaubteStatuswechsel().Contains(neu))
+            throw new InvalidOperationException($"Status change {Status} → {neu} is not allowed.");
+
+        Status = neu;
+        BezahltAm = neu == RechnungsStatus.Bezahlt ? bezahltAm : null;
+    }
 
     /// <summary>
     /// The recipient to show or print: the copy taken when the PDF was created, otherwise the current customer.
@@ -81,6 +122,10 @@ public sealed class Rechnung
         Projekt ??= string.Empty;
         if (!Enum.IsDefined(Status))
             Status = RechnungsStatus.Entwurf;
+        if (Status != RechnungsStatus.Bezahlt)
+            BezahltAm = null;
+        if (Umsatzsteuersatz is < 0 or > 100)
+            Umsatzsteuersatz = RechnungsEinstellungen.DefaultUmsatzsteuersatz;
         Empfaenger?.Normalize();
         Positionen = (Positionen ?? []).Where(p => p is not null).ToList();
         foreach (var position in Positionen)

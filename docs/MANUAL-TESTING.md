@@ -67,3 +67,27 @@ Namen von Schaltflächen und Menüs beziehen sich auf die deutsche Oberfläche.
 | Dialog erneut öffnen. | Kunden alphabetisch sortiert; `kunden.json` enthält beide lesbar, daneben `kunden.bak.json`. |
 | Kunden auswählen, **Löschen** → **Ja**, dann **Abbrechen** → **Ja**. | Nach dem erneuten Öffnen ist der Kunde noch da – Abbrechen verwirft alle Änderungen. |
 | App schließen, in `rechnungen.json` eine Rechnung mit `"kundeId"` eines Kunden eintragen, App starten, diesen Kunden löschen. | Hinweis, dass der Kunde Rechnungen hat und nicht gelöscht werden kann. |
+
+## 5. Rechnungsliste
+
+Vorbereitung: In `rechnungen.json` einige Rechnungen von Hand anlegen (bis das Rechnungsformular aus #6 da ist),
+z. B. je eine mit Status `entwurf`, `offen`, `bezahlt` und `storniert`, eine davon im Vorjahr, Positionen mit
+`menge`, `einheit` und `einzelpreis`, `umsatzsteuersatz: 19`. Für eine Rechnung eine Datei in `PDF\` ablegen und
+ihren Namen als `pdfDatei` eintragen.
+
+| Schritt | Erwartet |
+|---------|----------|
+| App starten. | Jahr = aktuelles Jahr. Kacheln Offen / Bezahlt / Gesamt mit Summe (brutto) und Anzahl; Gesamt = Offen + Bezahlt. Rechts daneben „2 Entwürfe“ o. ä. Stornierte Rechnungen sind grau. Neueste oben. |
+| Beträge nachrechnen. | Menge × Einzelpreis je Position auf Cent gerundet, plus 19 % USt (gerundet). |
+| Bei 150 % Skalierung. | Alle Spalten lesbar, Datum nicht abgeschnitten; die Spalte Kunde füllt die Breite. |
+| Jahr auf das Vorjahr bzw. **Alle Jahre**. | Liste und Kacheln passen sich an. |
+| Status-Filter **Offen**. | Nur offene Rechnungen; Kacheln bleiben für das ganze Jahr. Filter ohne Treffer: „Keine Rechnungen für diese Auswahl.“ |
+| Spaltenköpfe Nr., Kunde, Betrag anklicken, jeweils zweimal. | Sortierung wechselt; Nr. natürlich sortiert (9 vor 10). |
+| Rechtsklick auf eine offene Rechnung. | Menü: PDF öffnen (nur aktiv, wenn es ein PDF gibt), Im Ordner zeigen, Status ändern ▸ (Offen ausgegraut), Löschen. |
+| **Status ändern → Bezahlt**. | Status grün, Kacheln aktualisiert; in `rechnungen.json` `"bezahltAm"` mit heutigem Datum. Zurück auf **Offen** entfernt `bezahltAm`. |
+| **Status ändern → Storniert**. | Rückfrage mit Erklärung; danach grau, zählt nicht mehr in den Kacheln. |
+| Offene Rechnung markieren, **Entf**. | Hinweis „Nur Entwürfe können gelöscht werden …“. |
+| Entwurf markieren, **Entf** → **Ja**. | Entwurf verschwindet, Entwurfsanzahl sinkt. |
+| Mehrere Rechnungen mit Strg+Klick markieren, **Status ändern → Bezahlt**. | Alle, bei denen das erlaubt ist, werden bezahlt. |
+| Rechnung mit PDF: **PDF öffnen** / **Im Ordner zeigen**. | PDF öffnet sich im Standardprogramm bzw. Explorer mit markierter Datei. |
+| Unter **Datei → Kunden…** einen Kunden umbenennen und speichern. | Entwürfe zeigen den neuen Namen sofort. |

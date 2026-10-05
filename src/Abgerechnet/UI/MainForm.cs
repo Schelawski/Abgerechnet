@@ -5,7 +5,7 @@ using Abgerechnet.Core.Storage;
 namespace Abgerechnet.UI;
 
 /// <summary>
-/// Main window. For now the frame: menu, a placeholder where the invoice list will go (issue #5) and the
+/// Main window: menu, a hint while the sender data is missing, the invoice list (issue #5) and the
 /// invoice folder in the status bar.
 /// </summary>
 internal sealed class MainForm : Form
@@ -31,6 +31,8 @@ internal sealed class MainForm : Form
         Visible = false,
     };
 
+    private readonly RechnungenView _rechnungen = new();
+
     public MainForm(SettingsStore settingsStore, AppSettings settings, DataFolder folder)
     {
         _settingsStore = settingsStore;
@@ -44,22 +46,13 @@ internal sealed class MainForm : Form
         ClientSize = new Size(1000, 680);
         MinimumSize = new Size(760, 500);
 
-        var emptyState = new Label
-        {
-            Text = UiText.EmptyState,
-            Dock = DockStyle.Fill,
-            TextAlign = ContentAlignment.MiddleCenter,
-            ForeColor = UiStyle.MutedText,
-            Font = new Font(Font.FontFamily, 11f),
-        };
-
         var statusStrip = new StatusStrip { SizingGrip = true };
         statusStrip.Items.Add(_folderLabel);
         _folderLabel.Click += (_, _) => OpenFolderInExplorer();
 
         BuildMeineDatenBar();
 
-        Controls.Add(emptyState);
+        Controls.Add(_rechnungen);
         Controls.Add(_meineDatenBar);
         Controls.Add(statusStrip);
         Controls.Add(CreateMenu());
@@ -126,7 +119,8 @@ internal sealed class MainForm : Form
     private void EditKunden()
     {
         using var dialog = new KundenDialog(Folder);
-        dialog.ShowDialog(this);
+        if (dialog.ShowDialog(this) == DialogResult.OK)
+            _rechnungen.Aktualisieren(); // customer names in the list
     }
 
     /// <summary>Window title and hint bar follow the sender's data.</summary>
@@ -142,6 +136,7 @@ internal sealed class MainForm : Form
     private void OnFolderChanged()
     {
         OnEinstellungenChanged();
+        _rechnungen.SetFolder(Folder);
         _folderLabel.Text = UiText.FolderStatus(Folder.FolderPath);
         if (!string.Equals(_settings.DataFolder, Folder.FolderPath, StringComparison.OrdinalIgnoreCase))
         {

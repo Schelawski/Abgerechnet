@@ -20,3 +20,11 @@ GitHub (siehe [Release erstellen](README.md#release-erstellen)). Versionen folge
   Firma vorgeschlagen), Ansprechpartner, Anschrift und USt-IdNr. sowie einer Vorschau der Anschrift. Kunden mit
   Rechnungen lassen sich nicht löschen. Beim Erzeugen des PDFs wird die Anschrift in die Rechnung kopiert, damit
   spätere Änderungen gestellte Rechnungen nicht verändern.
+- **Rechnungsliste** im Hauptfenster: Kacheln **Offen**, **Bezahlt** und **Gesamt** (Summe und Anzahl) für das
+  gewählte Jahr – Gesamt zählt nur Offen und Bezahlt, Entwürfe werden getrennt gezählt. Tabelle mit Nr., Kunde,
+  Zeitraum, Datum, Status und Bruttobetrag, neueste oben, Sortierung per Spaltenkopf, Filter nach Jahr und
+  Status. Kontextmenü: PDF öffnen, im Ordner zeigen, Status ändern (auch für mehrere Rechnungen), Löschen.
+  Nur Entwürfe lassen sich löschen; gestellte Rechnungen werden storniert, damit der Nummernkreis lückenlos
+  bleibt.
+- Jede Rechnung merkt sich Umsatzsteuersatz und Kleinunternehmer-Regelung, damit spätere Änderungen in „Meine
+  Daten“ ihre Beträge nicht verändern. Beträge werden je Position und für die Steuer kaufmännisch gerundet.

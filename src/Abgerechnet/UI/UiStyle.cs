@@ -13,6 +13,20 @@ internal static class UiStyle
     public static readonly Color Danger = Color.FromArgb(153, 27, 27);
     public static readonly Color HintBack = Color.FromArgb(254, 243, 199);
 
+    /// <summary>Text colors of the invoice status in the list and the tiles.</summary>
+    public static readonly Color StatusEntwurf = Color.FromArgb(107, 114, 128);
+    public static readonly Color StatusOffen = Color.FromArgb(180, 83, 9);
+    public static readonly Color StatusBezahlt = Color.FromArgb(21, 128, 61);
+    public static readonly Color StatusStorniert = Color.FromArgb(156, 163, 175);
+
+    public static Color StatusColor(Core.Model.RechnungsStatus status) => status switch
+    {
+        Core.Model.RechnungsStatus.Offen => StatusOffen,
+        Core.Model.RechnungsStatus.Bezahlt => StatusBezahlt,
+        Core.Model.RechnungsStatus.Storniert => StatusStorniert,
+        _ => StatusEntwurf,
+    };
+
     /// <summary>Filled blue button for the main action.</summary>
     public static void MakePrimary(Button button)
     {
