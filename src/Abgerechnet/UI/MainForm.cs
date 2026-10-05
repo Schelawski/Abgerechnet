@@ -60,6 +60,7 @@ internal sealed class MainForm : Form
         PerformLayout();
 
         RestorePlacement();
+        UiStyle.EnableHelpKey(this, Core.Help.HelpTopics.FirstSteps);
         OnFolderChanged();
     }
 
@@ -86,10 +87,13 @@ internal sealed class MainForm : Form
         foreach (var name in Core.Vorlagen.MitgelieferteVorlagen.Namen)
             wiederherstellen.DropDownItems.Add(new ToolStripMenuItem(UiText.VorlagenName(name), null, (_, _) => VorlageWiederherstellen(name)));
         vorlagenMenu.DropDownItems.Add(wiederherstellen);
+        vorlagenMenu.DropDownItems.Add(new ToolStripSeparator());
+        vorlagenMenu.DropDownItems.Add(new ToolStripMenuItem(UiText.MenuKiAnpassen, null, (_, _) => HelpForm.Open(this, Core.Help.HelpTopics.Ki)));
 
         var aboutItem = new ToolStripMenuItem(UiText.MenuAbout, null, (_, _) =>
             MessageBox.Show(this, UiText.AboutText(AppVersion.Current), UiText.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Information));
-        var helpMenu = new ToolStripMenuItem(UiText.MenuHelp, null, aboutItem);
+        var hilfeItem = new ToolStripMenuItem(UiText.MenuHilfeOeffnen, null, (_, _) => HelpForm.Open(this, Core.Help.HelpTopics.FirstSteps)) { ShortcutKeyDisplayString = "F1" };
+        var helpMenu = new ToolStripMenuItem(UiText.MenuHelp, null, hilfeItem, new ToolStripSeparator(), aboutItem);
 
         var menu = new MenuStrip { Dock = DockStyle.Top };
         menu.Items.AddRange([fileMenu, vorlagenMenu, helpMenu]);
@@ -166,6 +170,7 @@ internal sealed class MainForm : Form
 
     private void OnFolderChanged()
     {
+        HelpForm.Folder = Folder;
         OnEinstellungenChanged();
         _rechnungen.SetFolder(Folder);
         _folderLabel.Text = UiText.FolderStatus(Folder.FolderPath);

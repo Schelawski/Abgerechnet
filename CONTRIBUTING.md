@@ -48,8 +48,11 @@ automatisch übernommen.
   Lieber „Rechnungsordner“ als „Datenverzeichnis“, und immer sagen, was der Nutzer tun kann.
 - **Hilfetexte** stehen in `src/Abgerechnet/Help/help.de.md`. Namen von Schaltflächen müssen mit der
   Oberfläche übereinstimmen.
-- **Datenschutz zuerst.** Rechnungs- und Kundendaten verlassen den Computer nicht. Keine Telemetrie, keine
-  Cloud-Anbindung.
+- **Datenschutz zuerst.** Rechnungs- und Kundendaten verlassen den Computer nicht. Abgerechnet stellt keine
+  Verbindung zum Internet her: keine Telemetrie, keine Cloud-Anbindung, keine Webschriften oder Bilder aus dem
+  Netz in den Vorlagen. Eine neue Funktion, die das ändern würde, braucht vorher ein Issue und eine Begründung.
+- **Bewusst einfach.** Abgerechnet bleibt ein kleines Werkzeug für Rechnungen – keine Buchhaltung, keine
+  Anbindung an Banken, Steuerprogramme oder andere Systeme. Lieber eine Funktion weniger als eine Einstellung mehr.
 - **Daten des Nutzers sind heilig.** Dateien werden sicher geschrieben (erst temporär, dann ersetzen),
   beschädigte Dateien werden nie überschrieben, gestellte Rechnungen werden nie gelöscht.
 - Ergänzen oder aktualisieren Sie Unit-Tests in `tests/Abgerechnet.Tests` bei Änderungen in

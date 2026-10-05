@@ -69,6 +69,7 @@ internal sealed class KundenDialog : Form
         if (start is not null)
             _list.SelectedItem = start;
         ShowSelected();
+        UiStyle.EnableHelpKey(this, Core.Help.HelpTopics.Kunden);
     }
 
     /// <summary>The customer selected when the dialog was saved, e.g. a newly created one.</summary>

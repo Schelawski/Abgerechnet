@@ -336,6 +336,16 @@ internal static class UiText
     public const string WebView2DownloadUrl = "https://developer.microsoft.com/microsoft-edge/webview2/";
     public static string WebView2Fehler(string grund) => $"Die Vorschau konnte nicht gestartet werden:\n\n{grund}";
 
+    // ----- Hilfe -----
+
+    public const string HelpTitle = "Abgerechnet – Hilfe";
+    public const string MenuHilfeOeffnen = "&Hilfe";
+    public const string MenuKiAnpassen = "Mit &KI anpassen…";
+    public const string PromptKopieren = "Prompt mit Vorlage kopieren";
+    public static string PromptKopiert(string vorlage) =>
+        $"Der Text für die KI ist zusammen mit der Vorlage „{VorlagenName(vorlage)}“ in der Zwischenablage. " +
+        "Fügen Sie ihn in Ihrer KI mit Strg+V ein und tragen Sie Ihren Wunsch ein.";
+
     // ----- About -----
 
     public static string AboutText(string version) =>

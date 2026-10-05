@@ -1,8 +1,8 @@
 # Abgerechnet
 
-Abgerechnet ist eine kleine Windows-Anwendung für Freiberufler: Rechnung anlegen, Positionen erfassen,
-PDF erzeugen – fertig. Das Aussehen der Rechnung bestimmen Sie selbst über eine HTML-Vorlage (Logo, Farben,
-Schriften). Alle Daten liegen als lesbare Dateien in einem Ordner Ihrer Wahl, ohne Datenbank und ohne Cloud.
+Mit Abgerechnet schreiben Sie Rechnungen für Ihre selbstständige Arbeit. Sie tragen ein, was Sie geleistet
+haben, und Abgerechnet macht daraus eine fertige Rechnung als PDF-Datei. Eine Liste zeigt Ihnen jederzeit,
+welche Rechnungen noch offen und welche schon bezahlt sind.
 
 > **Abgerechnet ist kostenlos.** Die einzige offizielle Quelle ist dieses Repository,
 > [github.com/Schelawski/Abgerechnet](https://github.com/Schelawski/Abgerechnet). Wenn Sie für Abgerechnet
@@ -12,85 +12,103 @@ Schriften). Alle Daten liegen als lesbare Dateien in einem Ordner Ihrer Wahl, oh
 > **Stand:** in Entwicklung. Die erste Version entsteht entlang der Issues mit dem Label
 > [`v1`](https://github.com/Schelawski/Abgerechnet/issues?q=label%3Av1).
 
+## Ihre Daten bleiben bei Ihnen
+
+Abgerechnet arbeitet nur auf Ihrem Computer. **Ihre Rechnungen, Kunden und Bankdaten werden nirgendwohin
+übertragen.** Abgerechnet stellt keine Verbindung zum Internet her. Sie brauchen kein Benutzerkonto, kein Abo
+und keine Cloud.
+
+Alles liegt in einem Ordner, den Sie selbst auswählen – als ganz normale Dateien, die Sie sehen, sichern und
+mitnehmen können. Wenn Sie Abgerechnet nicht mehr benutzen, bleiben Ihre Rechnungen als PDF-Dateien erhalten.
+
+## Bewusst einfach
+
+Abgerechnet kann nur das, was man für Rechnungen wirklich braucht. Es gibt keine Buchhaltung, keine Anbindung
+an Banken, Steuerprogramme oder andere Systeme und keine komplizierten Einstellungen. Sie sollen in wenigen
+Minuten Ihre erste Rechnung schreiben können – und am Monatsende mit ein paar Klicks die nächste.
+
 ## Download
 
 **[Abgerechnet.exe herunterladen](https://github.com/Schelawski/Abgerechnet/releases/latest/download/Abgerechnet.exe)** –
-immer die neueste Version. Keine Installation nötig: einfach starten. Alle Versionen und ihre Änderungen:
-[Releases](https://github.com/Schelawski/Abgerechnet/releases).
+immer die neueste Version. Sie müssen nichts installieren: Datei speichern und starten. Alle Versionen und ihre
+Änderungen finden Sie unter [Releases](https://github.com/Schelawski/Abgerechnet/releases).
 
-Jedes Release enthält zusätzlich `Abgerechnet.exe.sha256`. Zum Prüfen des Downloads in PowerShell
-`Get-FileHash Abgerechnet.exe` ausführen und den Wert vergleichen. Beim ersten Start zeigt Windows eventuell
-„Der Computer wurde durch Windows geschützt“ – dann „Weitere Informationen“ → „Trotzdem ausführen“.
+Beim ersten Start zeigt Windows vielleicht „Der Computer wurde durch Windows geschützt“. Klicken Sie dann auf
+„Weitere Informationen“ und „Trotzdem ausführen“.
 
-## Funktionen (geplant für Version 1)
+Wer den Download prüfen möchte: Zu jeder Version gibt es die Datei `Abgerechnet.exe.sha256`. In PowerShell zeigt
+`Get-FileHash Abgerechnet.exe` denselben Wert.
 
-- **Ein Ordner für alles:** `rechnungen.json`, `kunden.json`, `abgerechnet.json`, Vorlagen und PDFs liegen
-  in einem Rechnungsordner – ideal zum Sichern über OneDrive oder Dropbox.
-- **Meine Daten:** Absender, Steuernummer, Bankverbindung, Kleinunternehmer nach § 19 UStG, Nummernkreis.
-- **Kunden:** eine minimale Kundenliste mit Rechnungsadresse.
-- **Rechnungsliste** mit Offen, Bezahlt und Gesamt; Stornieren statt Löschen, damit der Nummernkreis
-  lückenlos bleibt.
-- **Rechnungsformular** mit Menge und Einheit, live berechneten Summen und „Als neue Rechnung kopieren“.
-- **Eigene HTML-Vorlage** mit Platzhaltern, drei mitgelieferte Vorlagen (Klassisch, Modern, Schlicht).
-- **PDF-Erzeugung** über WebView2 mit Vorschau.
-- **Erinnerung an offene Rechnungen** und schnelles Erfassen des Zahlungseingangs.
-- **Hilfe** in einfacher Sprache, inklusive Anleitung „Vorlage anpassen“ mit KI-Prompt.
-- Eine einzige, selbstständige `Abgerechnet.exe` – keine .NET-Installation nötig.
+## Was Abgerechnet kann
 
-## Ihre Daten
+- **Ihre Daten einmal eintragen:** Name, Anschrift, Steuernummer, Bankverbindung. Auch als Kleinunternehmer
+  nach § 19 UStG.
+- **Kunden** mit ihrer Anschrift speichern.
+- **Rechnungen schreiben:** Positionen mit Menge, Einheit und Preis. Die Summen rechnen sich sofort.
+- **Monatsabschluss in Sekunden:** Rechnung vom Vormonat kopieren, Stunden ändern, fertig.
+- **PDF erzeugen** – mit Vorschau und einem Hinweis, wenn eine wichtige Angabe fehlt.
+- **Überblick:** Was ist offen, was ist bezahlt? Rechnungsnummern bleiben lückenlos.
+- **Aussehen nach Wunsch:** drei fertige Vorlagen, Ihr eigenes Logo, Farben und Schriften anpassbar – auch mit
+  Hilfe einer KI, ganz ohne HTML-Kenntnisse.
+- **Hilfe in einfacher Sprache** direkt im Programm (Taste **F1**).
+- Eine einzige Datei `Abgerechnet.exe` – keine Installation, kein .NET nötig.
 
-Abgerechnet speichert alles in einem **Rechnungsordner**, den Sie beim ersten Start wählen und später über
-**Datei → Rechnungsordner wechseln…** ändern können:
+## So fangen Sie an
+
+1. `Abgerechnet.exe` starten und einen Ordner für Ihre Rechnungen wählen, zum Beispiel „Rechnungen“ in Ihren
+   Dokumenten.
+2. **Meine Daten eintragen…** klicken und Ihre Angaben ausfüllen.
+3. Unter **Datei → Kunden…** Ihre Kunden anlegen.
+4. **+ Neue Rechnung** klicken, Kunde und Positionen eintragen.
+5. **PDF erzeugen…** und **PDF speichern** – die Rechnung liegt im Ordner `PDF`. Per E-Mail an Ihren Kunden
+   schicken, fertig.
+
+Alles Weitere erklärt die Hilfe im Programm.
+
+## Wo liegen meine Daten?
+
+Alles steht in Ihrem Rechnungsordner:
 
 ```
 Rechnungsordner/
-├── abgerechnet.json      Ihre Absenderdaten und Rechnungs-Einstellungen
-├── kunden.json           Kunden
-├── rechnungen.json       Rechnungen mit ihren Positionen
-├── Vorlagen/             HTML-Vorlagen und Logo
-└── PDF/                  erzeugte Rechnungen
+├── abgerechnet.json      Ihre Angaben aus „Meine Daten“
+├── kunden.json           Ihre Kunden
+├── rechnungen.json       Ihre Rechnungen mit allen Positionen
+├── Vorlagen/             das Aussehen Ihrer Rechnungen und Ihr Logo
+└── PDF/                  die fertigen Rechnungen
 ```
 
-- Die Dateien sind lesbares JSON (Datum als `JJJJ-MM-TT`, Beträge mit Punkt) mit einem Feld `"version"`.
-- Gespeichert wird sicher: erst in eine temporäre Datei, dann wird ersetzt. Die vorige Fassung bleibt als
-  `*.bak.json` erhalten (z. B. `rechnungen.bak.json`).
-- Ist eine Datei beschädigt, meldet Abgerechnet das und verändert sie nicht.
-- Legen Sie den Ordner zum Beispiel in OneDrive oder Dropbox, dann sind Ihre Rechnungen automatisch gesichert.
+- **Sichern:** Legen Sie den Ordner in OneDrive oder Dropbox – oder kopieren Sie ihn ab und zu auf einen
+  USB-Stick. Rechnungen müssen Sie in der Regel zehn Jahre aufbewahren.
+- **Umziehen:** Ordner und `Abgerechnet.exe` auf den neuen Computer kopieren, fertig.
+- **Sicher gespeichert:** Vor jedem Speichern bleibt die vorige Fassung als `*.bak.json` erhalten. Ist eine Datei
+  beschädigt, meldet Abgerechnet das und verändert sie nicht.
 
-Ihre eigenen Angaben – Absender, Steuernummer, Bankverbindung, Kleinunternehmer-Regelung, Zahlungsziel,
-Nummernkreis und das Muster für den PDF-Dateinamen – pflegen Sie unter **Datei → Meine Daten…**. Sie stehen
-in `abgerechnet.json` in den Abschnitten `absender`, `bank`, `rechnung` und `neuePosition`.
+Abgerechnet merkt sich außerdem, welcher Ordner zuletzt offen war und wo das Fenster stand – in
+`Abgerechnet.settings.json` neben der exe (oder in `%APPDATA%\Abgerechnet\`, wenn dort nicht geschrieben werden
+darf).
 
-Ihre Kunden verwalten Sie unter **Datei → Kunden…**. Eine Rechnung merkt sich beim Erzeugen des PDFs die
-Anschrift des Kunden (Feld `empfaenger` in `rechnungen.json`), damit spätere Änderungen am Kunden bereits
-gestellte Rechnungen nicht verändern.
+## Das Aussehen der Rechnung
 
-Welcher Ordner zuletzt geöffnet war und wo das Fenster stand, merkt sich Abgerechnet in
-`Abgerechnet.settings.json` neben der exe (oder in `%APPDATA%\Abgerechnet\`, wenn der Ordner der exe
-schreibgeschützt ist).
+Wie Ihre Rechnung aussieht, bestimmt eine Vorlage im Ordner `Vorlagen`. Drei liegen bei: **Klassisch**,
+**Modern** und **Schlicht**. Ihr Logo legen Sie einfach als `logo.png` in diesen Ordner.
 
-## Rechnungsvorlage
+Eine Vorlage ist eine HTML-Datei. Farben und Schriften ändern Sie oben in der Datei. Abgerechnet setzt Ihre
+Daten an Platzhaltern wie `{{absender_firma}}` oder `{{brutto}}` ein. Die Positionen und Summen kommen als
+fertige Tabellen (`{{positionen_tabelle}}`, `{{summen_tabelle}}`), deren Aussehen Sie per CSS bestimmen.
 
-Das Aussehen der Rechnung bestimmt eine HTML-Datei im Ordner `Vorlagen/`. Mitgeliefert werden drei Vorlagen –
-**Klassisch**, **Modern** und **Schlicht** –, die beim Anlegen eines Rechnungsordners dorthin kopiert werden. Sie
-lassen sich frei anpassen (Farben und Schrift als CSS-Variablen oben in der Datei, ausführliche Kommentare); über
-**Vorlagen → Original wiederherstellen** bekommen Sie das Original zurück. Weitere eigene `.html`-Dateien im Ordner
-erscheinen automatisch in der Auswahl. Die Standardvorlage wählen Sie in **Meine Daten**, eine abweichende pro
-Rechnung im Rechnungsformular. Ein Logo legen Sie als `logo.png` in den Ordner `Vorlagen/`.
+Kein HTML-Wissen? Die Hilfe im Programm enthält unter „Vorlage mit KI anpassen“ einen fertigen Text für eine
+KI wie ChatGPT oder Claude. Ein Klick kopiert ihn zusammen mit Ihrer Vorlage. Die Vorlage enthält keine
+persönlichen Daten – nur Platzhalter.
 
-Abgerechnet setzt Platzhalter in doppelten geschweiften Klammern ein, z. B. `{{absender_firma}}`,
-`{{rechnung_nummer}}` oder `{{brutto}}`:
+Die vollständige Liste aller Platzhalter und CSS-Klassen steht in der Hilfe („Vorlage anpassen“). Geht etwas
+schief, holt **Vorlagen → Original wiederherstellen** die ursprüngliche Vorlage zurück.
 
-- **Text-Platzhalter** für Absender, Kunde, Rechnung und Beträge (`{{kunde_anschrift}}` liefert die ganze
-  Anschrift, `{{faellig_am}}` das Fälligkeitsdatum, `{{steuerhinweis}}` den § 19-Hinweis bei Kleinunternehmern).
-- **Blöcke** mit fertigem HTML: `{{positionen_tabelle}}` (Tabelle `.positionen` mit den Spalten `.pos-nr`,
-  `.pos-zeitraum`, `.pos-beschreibung` mit `.pos-detail`, `.pos-menge`, `.pos-einheit`, `.pos-preis`, `.pos-betrag`)
-  und `{{summen_tabelle}}` (Tabelle `.summen` mit den Zeilen `.netto`, `.ust`, `.brutto`). Rahmen, Abstände und
-  ausgeblendete Spalten regeln Sie per CSS.
-- Relative Pfade (z. B. `logo.png`) beziehen sich auf den Ordner der Vorlage. Platzhalter in HTML-Kommentaren
-  werden nicht ersetzt; unbekannte Platzhalter bleiben stehen und werden gemeldet.
+## Steuern
 
-Die vollständige Liste der Platzhalter steht in der Hilfe der App.
+Abgerechnet ersetzt keine Steuerberatung. Für Rechnungen zwischen Unternehmen wird in Deutschland ab 2027/2028
+schrittweise die E-Rechnung Pflicht (Kleinunternehmer sind ausgenommen). Abgerechnet erzeugt derzeit PDF-Rechnungen;
+die E-Rechnung ist für eine spätere Version geplant. Einzelheiten stehen in der Hilfe („Steuern und E-Rechnung“).
 
 ## Voraussetzungen
 

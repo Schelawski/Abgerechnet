@@ -52,6 +52,7 @@ internal sealed class MeineDatenDialog : Form
         ResumeLayout(false);
         PerformLayout();
 
+        UiStyle.EnableHelpKey(this, Core.Help.HelpTopics.MeineDaten);
         _panel.LoadFrom(folder.Einstellungen, Core.Vorlagen.MitgelieferteVorlagen.Verfuegbare(folder));
     }
 

@@ -70,6 +70,7 @@ internal sealed class VorschauForm : Form
         Controls.Add(_hinweise);
         Controls.Add(fuss);
         CancelButton = _schliessen;
+        UiStyle.EnableHelpKey(this, Core.Help.HelpTopics.Pdf);
         ResumeLayout(false);
         PerformLayout();
     }

@@ -71,6 +71,7 @@ internal sealed class RechnungForm : Form
 
         BuildLayout();
         LoadRechnung();
+        UiStyle.EnableHelpKey(this, Core.Help.HelpTopics.Rechnungen);
         ResumeLayout(false);
         PerformLayout();
     }

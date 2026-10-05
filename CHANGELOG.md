@@ -51,5 +51,10 @@ GitHub (siehe [Release erstellen](README.md#release-erstellen)). Versionen folge
   „Meine Daten“, abweichende Vorlage pro Rechnung im Rechnungsformular; eigene `.html`-Dateien erscheinen
   automatisch in der Auswahl.
 - Fenster passen sich bei hoher Bildschirmskalierung an den Bildschirm an.
+- **Hilfe** in einfacher Sprache (F1, Menü **Hilfe**): von den ersten Schritten bis „Vorlage anpassen“ mit allen
+  Platzhaltern, Probleme und Lösungen, Steuern und E-Rechnung. Gleich vorn steht, dass Ihre Daten auf Ihrem
+  Computer bleiben und Abgerechnet keine Verbindung zum Internet herstellt. **Vorlage mit KI anpassen:** ein
+  fertiger Text für eine KI, den **Prompt mit Vorlage kopieren** zusammen mit Ihrer Vorlage in die Zwischenablage
+  legt (auch über **Vorlagen → Mit KI anpassen…**).
 - Jede Rechnung merkt sich Umsatzsteuersatz und Kleinunternehmer-Regelung, damit spätere Änderungen in „Meine
   Daten“ ihre Beträge nicht verändern. Beträge werden je Position und für die Steuer kaufmännisch gerundet.

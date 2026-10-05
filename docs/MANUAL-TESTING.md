@@ -142,3 +142,15 @@ eingebettete WebView2-Bibliothek geprüft wird.
 | **Vorlagen → Original wiederherstellen → Klassisch** → **Ja**. | Meldung mit „klassisch.bak.html“; die eigene Fassung liegt als `klassisch.bak.html` daneben, `klassisch.html` ist wieder das Original. `.bak.html` erscheint nicht in der Auswahl. |
 | **Vorlagen → Vorlagen-Ordner öffnen**. | Explorer mit dem Ordner `Vorlagen`. |
 | Jahresfilter in der Liste aufklappen. | Letzter Eintrag „Alle Jahre“. |
+
+## 9. Hilfe
+
+| Schritt | Erwartet |
+|---------|----------|
+| Im Hauptfenster **F1** (oder **Hilfe → Hilfe**). | Hilfefenster mit 13 Themen links; „Erste Schritte“ ist ausgewählt. Das Fenster passt auf den Bildschirm. |
+| Thema „Was ist Abgerechnet?“. | Abschnitte „Ihre Daten bleiben bei Ihnen“ und „Bewusst einfach“. |
+| In **Meine Daten**, **Kunden**, im Rechnungsformular **F1** drücken. | Die Hilfe springt zum passenden Thema; es öffnet sich kein zweites Hilfefenster. |
+| Thema „Vorlage anpassen“, nach unten scrollen. | Liste aller Platzhalter nach Gruppen, jeweils mit Erklärung. |
+| **Vorlagen → Mit KI anpassen…** | Thema „Vorlage mit KI anpassen“; unten der Text für die KI im grauen Kasten und die Schaltfläche **Prompt mit Vorlage kopieren**. |
+| **Prompt mit Vorlage kopieren**, dann in den Editor einfügen. | Meldung nennt die Standardvorlage. Eingefügt wird der Prompt, am Ende die vollständige HTML-Vorlage (keine persönlichen Daten). |
+| Hilfe mit **Esc** schließen. | Das Fenster schließt sich. |

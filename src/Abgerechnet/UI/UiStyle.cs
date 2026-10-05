@@ -53,6 +53,36 @@ internal static class UiStyle
         form.Location = new Point(x, y);
     }
 
+    public static void FillRoundedRectangle(Graphics graphics, Color color, RectangleF bounds, float radius)
+    {
+        using var path = new System.Drawing.Drawing2D.GraphicsPath();
+        var diameter = Math.Min(radius * 2, Math.Min(bounds.Width, bounds.Height));
+        path.AddArc(bounds.X, bounds.Y, diameter, diameter, 180, 90);
+        path.AddArc(bounds.Right - diameter, bounds.Y, diameter, diameter, 270, 90);
+        path.AddArc(bounds.Right - diameter, bounds.Bottom - diameter, diameter, diameter, 0, 90);
+        path.AddArc(bounds.X, bounds.Bottom - diameter, diameter, diameter, 90, 90);
+        path.CloseFigure();
+
+        using var brush = new SolidBrush(color);
+        var previous = graphics.SmoothingMode;
+        graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+        graphics.FillPath(brush, path);
+        graphics.SmoothingMode = previous;
+    }
+
+    /// <summary>F1 in the window opens the help at <paramref name="topicId"/>.</summary>
+    public static void EnableHelpKey(Form form, string topicId)
+    {
+        form.KeyPreview = true;
+        form.KeyDown += (_, e) =>
+        {
+            if (e.KeyCode != Keys.F1)
+                return;
+            e.Handled = e.SuppressKeyPress = true;
+            HelpForm.Open(form, topicId);
+        };
+    }
+
     /// <summary>Filled blue button for the main action.</summary>
     public static void MakePrimary(Button button)
     {
