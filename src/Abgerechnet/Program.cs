@@ -1,3 +1,4 @@
+using Abgerechnet.Core;
 using Abgerechnet.UI;
 
 namespace Abgerechnet;
@@ -17,6 +18,13 @@ internal static class Program
         Application.ThreadException += (_, e) =>
             MessageBox.Show(UiText.UnexpectedError(e.Exception.Message), UiText.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-        Application.Run(new MainForm());
+        var settingsStore = new SettingsStore();
+        var settings = settingsStore.Load();
+
+        var folder = DataFolderDialogs.OpenAtStartup(settings);
+        if (folder is null)
+            return;
+
+        Application.Run(new MainForm(settingsStore, settings, folder));
     }
 }

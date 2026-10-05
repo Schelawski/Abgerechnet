@@ -9,3 +9,6 @@ GitHub (siehe [Release erstellen](README.md#release-erstellen)). Versionen folge
 ### Grundlage
 - Projektgerüst: .NET 10, WinForms, eine einzige selbstständige `Abgerechnet.exe`, automatische Builds und
   Releases über GitHub Actions.
+- Rechnungsordner: Rechnungen, Kunden und Einstellungen als lesbare JSON-Dateien in einem Ordner Ihrer Wahl,
+  mit sicherem Speichern, Sicherung der vorigen Fassung und verständlicher Meldung bei beschädigten Dateien.
+  Ordner wechseln über **Datei → Rechnungsordner wechseln…**.

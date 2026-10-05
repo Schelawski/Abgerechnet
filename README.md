@@ -37,6 +37,30 @@ Jedes Release enthält zusätzlich `Abgerechnet.exe.sha256`. Zum Prüfen des Dow
 - **Hilfe** in einfacher Sprache, inklusive Anleitung „Vorlage anpassen“ mit KI-Prompt.
 - Eine einzige, selbstständige `Abgerechnet.exe` – keine .NET-Installation nötig.
 
+## Ihre Daten
+
+Abgerechnet speichert alles in einem **Rechnungsordner**, den Sie beim ersten Start wählen und später über
+**Datei → Rechnungsordner wechseln…** ändern können:
+
+```
+Rechnungsordner/
+├── abgerechnet.json      Ihre Absenderdaten und Rechnungs-Einstellungen
+├── kunden.json           Kunden
+├── rechnungen.json       Rechnungen mit ihren Positionen
+├── Vorlagen/             HTML-Vorlagen und Logo
+└── PDF/                  erzeugte Rechnungen
+```
+
+- Die Dateien sind lesbares JSON (Datum als `JJJJ-MM-TT`, Beträge mit Punkt) mit einem Feld `"version"`.
+- Gespeichert wird sicher: erst in eine temporäre Datei, dann wird ersetzt. Die vorige Fassung bleibt als
+  `*.bak.json` erhalten (z. B. `rechnungen.bak.json`).
+- Ist eine Datei beschädigt, meldet Abgerechnet das und verändert sie nicht.
+- Legen Sie den Ordner zum Beispiel in OneDrive oder Dropbox, dann sind Ihre Rechnungen automatisch gesichert.
+
+Welcher Ordner zuletzt geöffnet war und wo das Fenster stand, merkt sich Abgerechnet in
+`Abgerechnet.settings.json` neben der exe (oder in `%APPDATA%\Abgerechnet\`, wenn der Ordner der exe
+schreibgeschützt ist).
+
 ## Voraussetzungen
 
 - Windows 10 oder 11, 64 Bit.
