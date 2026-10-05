@@ -35,7 +35,7 @@ public sealed class DataFolder
 
     public Einstellungen Einstellungen { get; private set; }
 
-    public KundenDatei Kunden { get; }
+    public KundenDatei Kunden { get; private set; }
 
     public RechnungenDatei Rechnungen { get; }
 
@@ -107,6 +107,18 @@ public sealed class DataFolder
 
     /// <exception cref="DataFileException">The file cannot be written.</exception>
     public void SaveKunden() => JsonDataFile.Save(KundenPath, Kunden);
+
+    /// <summary>
+    /// Saves changed customers and uses them from now on. If saving fails, <see cref="Kunden"/> keeps the
+    /// previous values.
+    /// </summary>
+    /// <exception cref="DataFileException">The file cannot be written.</exception>
+    public void SaveKunden(KundenDatei changed)
+    {
+        ArgumentNullException.ThrowIfNull(changed);
+        JsonDataFile.Save(KundenPath, changed);
+        Kunden = changed;
+    }
 
     /// <exception cref="DataFileException">The file cannot be written.</exception>
     public void SaveRechnungen() => JsonDataFile.Save(RechnungenPath, Rechnungen);

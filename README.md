@@ -61,6 +61,10 @@ Ihre eigenen Angaben – Absender, Steuernummer, Bankverbindung, Kleinunternehme
 Nummernkreis und das Muster für den PDF-Dateinamen – pflegen Sie unter **Datei → Meine Daten…**. Sie stehen
 in `abgerechnet.json` in den Abschnitten `absender`, `bank`, `rechnung` und `neuePosition`.
 
+Ihre Kunden verwalten Sie unter **Datei → Kunden…**. Eine Rechnung merkt sich beim Erzeugen des PDFs die
+Anschrift des Kunden (Feld `empfaenger` in `rechnungen.json`), damit spätere Änderungen am Kunden bereits
+gestellte Rechnungen nicht verändern.
+
 Welcher Ordner zuletzt geöffnet war und wo das Fenster stand, merkt sich Abgerechnet in
 `Abgerechnet.settings.json` neben der exe (oder in `%APPDATA%\Abgerechnet\`, wenn der Ordner der exe
 schreibgeschützt ist).

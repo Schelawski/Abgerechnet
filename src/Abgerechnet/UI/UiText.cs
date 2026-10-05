@@ -128,6 +128,32 @@ internal static class UiText
         "Sie haben weder eine Steuernummer noch eine USt-IdNr. eingetragen. Eine davon muss auf jeder Rechnung " +
         "stehen (§ 14 UStG).\n\nTrotzdem speichern?";
 
+    // ----- Kunden -----
+
+    public const string MenuKunden = "&Kunden…";
+    public const string KundenTitle = "Kunden";
+    public const string KundeNeu = "&Neu";
+    public const string KundeLoeschen = "&Löschen";
+    public const string KundeOhneNamen = "(ohne Firmennamen)";
+    public const string KundenLeer = "Noch keine Kunden. Mit „Neu“ legen Sie den ersten an.";
+    public const string Kurzname = "Kurzname";
+    public const string KurznameHint = "Für den PDF-Dateinamen, z. B. „Mueller“. Leer: die Firma.";
+    public const string Ansprechpartner = "Ansprechpartner";
+    public const string KundeUstIdNr = "USt-IdNr. des Kunden";
+    public const string KundeUstIdNrHint = "Optional; wird später für die E-Rechnung gebraucht.";
+    public const string AnschriftVorschau = "So steht die Anschrift auf der Rechnung:";
+
+    public const string KundeFirmaRequired = "Bitte tragen Sie für jeden Kunden die Firma bzw. den Namen ein.";
+
+    public static string KundeLoeschenFrage(string firma) => $"Den Kunden „{firma}“ löschen?";
+
+    public static string KundeWirdVerwendet(string firma) =>
+        $"Der Kunde „{firma}“ kann nicht gelöscht werden, weil es Rechnungen an ihn gibt.\n\n" +
+        "Gestellte Rechnungen müssen erhalten bleiben. Sie können den Kunden aber umbenennen oder seine Anschrift ändern – " +
+        "bereits erzeugte Rechnungen behalten die Anschrift, mit der sie gestellt wurden.";
+
+    public const string AenderungenVerwerfen = "Ihre Änderungen an den Kunden wurden nicht gespeichert. Verwerfen?";
+
     // ----- About -----
 
     public static string AboutText(string version) =>

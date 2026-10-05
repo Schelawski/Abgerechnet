@@ -55,6 +55,22 @@ public sealed class Rechnung
 
     public List<Position> Positionen { get; set; } = [];
 
+    /// <summary>
+    /// The recipient to show or print: the copy taken when the PDF was created, otherwise the current customer.
+    /// </summary>
+    public Kunde? EmpfaengerAus(KundenDatei kunden) => Empfaenger ?? kunden.Finden(KundeId);
+
+    /// <summary>
+    /// Freezes the recipient's address in the invoice (when the PDF is created), so later changes to the customer
+    /// do not change this invoice.
+    /// </summary>
+    public void EmpfaengerFestschreiben(Kunde kunde)
+    {
+        ArgumentNullException.ThrowIfNull(kunde);
+        KundeId = kunde.Id;
+        Empfaenger = kunde.Kopie();
+    }
+
     /// <summary>Replaces missing values (e.g. from an older or hand-edited file) with defaults.</summary>
     internal void Normalize()
     {

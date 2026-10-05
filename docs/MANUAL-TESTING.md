@@ -54,3 +54,16 @@ Namen von Schaltflächen und Menüs beziehen sich auf die deutsche Oberfläche.
 | Nach dem Speichern. | Fenstertitel `Schmidt IT – Abgerechnet …`, gelber Hinweis verschwunden. `abgerechnet.json` enthält die Werte lesbar (Umlaute, IBAN in Blöcken), daneben `abgerechnet.bak.json`. |
 | Dialog erneut öffnen, etwas ändern, **Abbrechen**. | Nichts geändert, `abgerechnet.json` unverändert. |
 | Dialog auf 125 % und 150 % Skalierung öffnen, Fenster verkleinern. | Bildlaufleiste erscheint, Hinweise brechen um, nichts überlappt. |
+
+## 4. Kunden
+
+| Schritt | Erwartet |
+|---------|----------|
+| **Datei → Kunden…** in einem neuen Rechnungsordner. | Leere Liste, rechts „Noch keine Kunden …“, **Löschen** ausgegraut. |
+| **Neu**, Firma `Müller & Söhne GmbH` tippen. | Der Cursor steht in **Firma**. Die Liste zeigt den Namen schon beim Tippen; **Kurzname** füllt sich mit `Mueller-Soehne`. |
+| Kurzname auf `Mueller` ändern, dann Firma weiter ändern. | Der Kurzname bleibt `Mueller` (eigene Eingabe wird nicht überschrieben). |
+| Ansprechpartner, Straße, PLZ, Ort eintragen. | Die Vorschau „So steht die Anschrift auf der Rechnung“ zeigt die Zeilen, `&` wird korrekt angezeigt. |
+| **Neu**, Firma leer lassen, **Speichern**. | Meldung, dass jeder Kunde eine Firma braucht; der leere Kunde ist ausgewählt. Firma `Beispiel AG` und Anschrift eintragen, **Speichern**. |
+| Dialog erneut öffnen. | Kunden alphabetisch sortiert; `kunden.json` enthält beide lesbar, daneben `kunden.bak.json`. |
+| Kunden auswählen, **Löschen** → **Ja**, dann **Abbrechen** → **Ja**. | Nach dem erneuten Öffnen ist der Kunde noch da – Abbrechen verwirft alle Änderungen. |
+| App schließen, in `rechnungen.json` eine Rechnung mit `"kundeId"` eines Kunden eintragen, App starten, diesen Kunden löschen. | Hinweis, dass der Kunde Rechnungen hat und nicht gelöscht werden kann. |

@@ -77,6 +77,7 @@ internal sealed class MainForm : Form
     {
         var fileMenu = new ToolStripMenuItem(UiText.MenuFile);
         fileMenu.DropDownItems.Add(new ToolStripMenuItem(UiText.MenuMeineDaten, null, (_, _) => EditMeineDaten()));
+        fileMenu.DropDownItems.Add(new ToolStripMenuItem(UiText.MenuKunden, null, (_, _) => EditKunden()));
         fileMenu.DropDownItems.Add(new ToolStripSeparator());
         fileMenu.DropDownItems.Add(new ToolStripMenuItem(UiText.MenuChangeFolder, null, (_, _) => ChangeFolder()));
         fileMenu.DropDownItems.Add(new ToolStripMenuItem(UiText.MenuOpenFolder, null, (_, _) => OpenFolderInExplorer()));
@@ -120,6 +121,12 @@ internal sealed class MainForm : Form
         using var dialog = new MeineDatenDialog(Folder);
         if (dialog.ShowDialog(this) == DialogResult.OK)
             OnEinstellungenChanged();
+    }
+
+    private void EditKunden()
+    {
+        using var dialog = new KundenDialog(Folder);
+        dialog.ShowDialog(this);
     }
 
     /// <summary>Window title and hint bar follow the sender's data.</summary>
