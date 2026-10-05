@@ -71,8 +71,15 @@ schreibgeschützt ist).
 
 ## Rechnungsvorlage
 
-Das Aussehen der Rechnung bestimmt eine HTML-Datei im Ordner `Vorlagen/`. Abgerechnet setzt Platzhalter in
-doppelten geschweiften Klammern ein, z. B. `{{absender_firma}}`, `{{rechnung_nummer}}` oder `{{brutto}}`:
+Das Aussehen der Rechnung bestimmt eine HTML-Datei im Ordner `Vorlagen/`. Mitgeliefert werden drei Vorlagen –
+**Klassisch**, **Modern** und **Schlicht** –, die beim Anlegen eines Rechnungsordners dorthin kopiert werden. Sie
+lassen sich frei anpassen (Farben und Schrift als CSS-Variablen oben in der Datei, ausführliche Kommentare); über
+**Vorlagen → Original wiederherstellen** bekommen Sie das Original zurück. Weitere eigene `.html`-Dateien im Ordner
+erscheinen automatisch in der Auswahl. Die Standardvorlage wählen Sie in **Meine Daten**, eine abweichende pro
+Rechnung im Rechnungsformular. Ein Logo legen Sie als `logo.png` in den Ordner `Vorlagen/`.
+
+Abgerechnet setzt Platzhalter in doppelten geschweiften Klammern ein, z. B. `{{absender_firma}}`,
+`{{rechnung_nummer}}` oder `{{brutto}}`:
 
 - **Text-Platzhalter** für Absender, Kunde, Rechnung und Beträge (`{{kunde_anschrift}}` liefert die ganze
   Anschrift, `{{faellig_am}}` das Fälligkeitsdatum, `{{steuerhinweis}}` den § 19-Hinweis bei Kleinunternehmern).

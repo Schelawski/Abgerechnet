@@ -134,6 +134,9 @@ public sealed class RechnungsEinstellungen
     /// <summary>Pattern for the PDF file name; see <see cref="PdfDateiname"/>.</summary>
     public string PdfDateiname { get; set; } = Model.PdfDateiname.DefaultMuster;
 
+    /// <summary>Standard template for new invoices: a name in the folder <c>Vorlagen</c> without ".html".</summary>
+    public string Vorlage { get; set; } = Vorlagen.MitgelieferteVorlagen.Standard;
+
     internal void Normalize()
     {
         KleinunternehmerHinweis ??= string.Empty;
@@ -142,6 +145,8 @@ public sealed class RechnungsEinstellungen
         if (ZahlungszielTage < 0)
             ZahlungszielTage = 0;
         NaechsteNummer ??= string.Empty;
+        if (string.IsNullOrWhiteSpace(Vorlage))
+            Vorlage = Vorlagen.MitgelieferteVorlagen.Standard;
         if (string.IsNullOrWhiteSpace(PdfDateiname))
             PdfDateiname = Model.PdfDateiname.DefaultMuster;
     }

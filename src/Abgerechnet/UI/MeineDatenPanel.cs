@@ -38,6 +38,7 @@ internal sealed class MeineDatenPanel : UserControl
     private readonly NumericUpDown _zahlungsziel = new() { Minimum = 0, Maximum = 365, Width = 70, TextAlign = HorizontalAlignment.Right };
     private readonly TextBox _naechsteNummer = new() { Width = 160 };
     private readonly TextBox _pdfDateiname = new();
+    private readonly ComboBox _vorlage = new() { DropDownStyle = ComboBoxStyle.DropDownList, Width = 200, FormattingEnabled = true };
     private readonly Label _pdfBeispiel = UiStyle.CreateCaption(string.Empty);
     private readonly TextBox _beschreibung = new() { Multiline = true, Height = 60, ScrollBars = ScrollBars.Vertical };
     private readonly ComboBox _einheit = new() { DropDownStyle = ComboBoxStyle.DropDown, Width = 120 };
@@ -64,6 +65,7 @@ internal sealed class MeineDatenPanel : UserControl
         Controls.Add(_tabs);
 
         _einheit.Items.AddRange(UiText.Einheiten);
+        _vorlage.Format += (_, e) => e.Value = UiText.VorlagenName((string)e.ListItem!);
         _kleinunternehmer.CheckedChanged += (_, _) => UpdateKleinunternehmer();
         _iban.TextChanged += (_, _) => UpdateIbanStatus();
         _iban.Leave += (_, _) =>
@@ -128,6 +130,8 @@ internal sealed class MeineDatenPanel : UserControl
         form.Add(UiText.PdfDateiname, _pdfDateiname);
         form.AddHint(_pdfBeispiel);
         form.AddHint(UiText.PdfDateinameHint(string.Join(" ", PdfDateiname.Platzhalter)));
+        form.Add(UiText.Vorlage, _vorlage);
+        form.AddHint(UiText.VorlageHint);
 
         form.AddHeading(UiText.HeadingNeuePosition);
         form.Add(UiText.Beschreibung, _beschreibung);
@@ -137,8 +141,17 @@ internal sealed class MeineDatenPanel : UserControl
     }
 
     /// <summary>Shows the values of <paramref name="einstellungen"/>.</summary>
-    public void LoadFrom(Einstellungen einstellungen)
+    /// <param name="vorlagen">The templates to choose from (see MitgelieferteVorlagen.Verfuegbare).</param>
+    public void LoadFrom(Einstellungen einstellungen, IReadOnlyList<string> vorlagen)
     {
+        _vorlage.Items.Clear();
+        foreach (var name in vorlagen)
+            _vorlage.Items.Add(name);
+        // A chosen own template that was deleted stays visible, so nothing changes unnoticed.
+        if (!vorlagen.Contains(einstellungen.Rechnung.Vorlage, StringComparer.OrdinalIgnoreCase))
+            _vorlage.Items.Add(einstellungen.Rechnung.Vorlage);
+        _vorlage.SelectedItem = _vorlage.Items.Cast<string>().First(n => string.Equals(n, einstellungen.Rechnung.Vorlage, StringComparison.OrdinalIgnoreCase));
+
         var a = einstellungen.Absender;
         _firma.Text = a.Firma;
         _unterzeile.Text = a.Unterzeile;
@@ -229,6 +242,7 @@ internal sealed class MeineDatenPanel : UserControl
         r.ZahlungszielTage = (int)_zahlungsziel.Value;
         r.NaechsteNummer = _naechsteNummer.Text.Trim();
         r.PdfDateiname = string.IsNullOrWhiteSpace(_pdfDateiname.Text) ? PdfDateiname.DefaultMuster : _pdfDateiname.Text.Trim();
+        r.Vorlage = _vorlage.SelectedItem as string ?? r.Vorlage;
 
         var b = einstellungen.Bank;
         b.Kontoinhaber = _kontoinhaber.Text.Trim();

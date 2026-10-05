@@ -117,7 +117,7 @@ eingebettete WebView2-Bibliothek geprüft wird.
 | Schritt | Erwartet |
 |---------|----------|
 | Entwurf öffnen, **PDF erzeugen…** (Alt+P). | Die Rechnung wird gespeichert, die Vorschau öffnet sich und passt auf den Bildschirm. Nach wenigen Sekunden erscheint das PDF (Seitenzahl im Viewer „1 von 1“). Fehlen Angaben (z. B. Steuernummer), steht oben ein gelber Hinweis. |
-| Unten links. | „Vorlage: schlicht (mitgeliefert)“. |
+| Unten links. | „Vorlage: klassisch.html aus dem Vorlagen-Ordner“. |
 | PDF ansehen. | DIN A4 mit Rändern, Umlaute und € korrekt, Anschrift des Kunden links, Absender rechts, Fußzeile mit Bank und Steuernummer unten. |
 | `logo.png` in den Ordner `Vorlagen` legen, Vorschau erneut öffnen. | Das Logo erscheint oben rechts. |
 | **PDF speichern** (Alt+S). | Unten „Gespeichert: …pdf“, **PDF öffnen** und **Im Ordner zeigen** erscheinen. Die Datei liegt im Ordner `PDF` mit dem Namen nach Muster. |
@@ -127,3 +127,18 @@ eingebettete WebView2-Bibliothek geprüft wird.
 | PDF in einem PDF-Programm geöffnet lassen, erneut speichern und überschreiben. | Verständliche Meldung, falls das Programm die Datei sperrt; nichts halb Geschriebenes. |
 | Eine Rechnung mit 30+ Positionen erzeugen. | Mehrere Seiten; Tabellenkopf und Fußzeile auf jeder Seite, keine Überlappung, keine Position wird zerrissen. |
 | `%LOCALAPPDATA%\Abgerechnet` ansehen. | Ordner `WebView2` (Browserdaten); im Ordner `Vorschau` bleiben nach dem Schließen keine PDFs liegen. Neben der exe liegen keine neuen Dateien außer `Abgerechnet.settings.json`. |
+
+## 8. Vorlagen
+
+| Schritt | Erwartet |
+|---------|----------|
+| Neuen leeren Rechnungsordner anlegen und öffnen. | Im Ordner `Vorlagen` liegen `klassisch.html`, `modern.html`, `schlicht.html`, aber kein Logo. |
+| Für eine Rechnung mit drei Positionen (eine mit Zusatz) nacheinander alle drei Vorlagen wählen und **PDF erzeugen…**. | Jeweils eine saubere A4-Seite; „Klassisch“ mit grauem Titelbalken, Rahmen und Zebrastreifen; „Modern“ mit blauem Rechnungsbetrag; „Schlicht“ ohne Farben. Leere Angaben (z. B. ohne Telefon) hinterlassen keine leeren Beschriftungen. |
+| Dasselbe als Kleinunternehmer (Schalter in „Meine Daten“, dann neue Rechnung). | Nur „Rechnungsbetrag“, darunter bzw. daneben der § 19-Hinweis. |
+| **Meine Daten → Rechnungen → Vorlage** auf „Modern“, neue Rechnung. | Im Rechnungsformular steht „Standard (Modern)“; die Vorschau nutzt Modern. |
+| `klassisch.html` im Editor ändern (z. B. `--titelbalken: #ffd700;`), Vorschau öffnen. | Die Änderung ist sichtbar; unten links „klassisch.html aus dem Vorlagen-Ordner“. |
+| Datei `meine.html` (Kopie einer Vorlage) in den Ordner legen. | „meine“ erscheint in beiden Auswahlfeldern. |
+| `meine.html` wählen, Datei löschen, Vorschau öffnen. | Hinweis „gibt es nicht mehr; verwendet wird Klassisch“; das PDF entsteht trotzdem. |
+| **Vorlagen → Original wiederherstellen → Klassisch** → **Ja**. | Meldung mit „klassisch.bak.html“; die eigene Fassung liegt als `klassisch.bak.html` daneben, `klassisch.html` ist wieder das Original. `.bak.html` erscheint nicht in der Auswahl. |
+| **Vorlagen → Vorlagen-Ordner öffnen**. | Explorer mit dem Ordner `Vorlagen`. |
+| Jahresfilter in der Liste aufklappen. | Letzter Eintrag „Alle Jahre“. |

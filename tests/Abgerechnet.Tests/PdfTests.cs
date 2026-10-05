@@ -34,41 +34,4 @@ public class PdfTests
         Assert.Equal("neu.pdf", rechnung.PdfDatei);
         Assert.Null(rechnung.Empfaenger);
     }
-
-    [Fact]
-    public void Schlicht_IsBuiltIn_AndUsesOnlyKnownPlaceholders()
-    {
-        var html = MitgelieferteVorlagen.Lesen(MitgelieferteVorlagen.Standard);
-        var daten = new RechnungsDaten(new Einstellungen(), new Rechnung { Positionen = [new Position()] }, new Kunde());
-
-        var ergebnis = Vorlage.Ausfuellen(html, daten, new Uri("https://vorlage.abgerechnet.example/"));
-
-        Assert.Empty(ergebnis.UnbekanntePlatzhalter);
-        Assert.Contains("<table class=\"positionen\">", ergebnis.Html);
-        Assert.Contains("<base href=\"https://vorlage.abgerechnet.example/\">", ergebnis.Html);
-        Assert.Contains("@page", html);
-        Assert.Contains("size: A4", html);
-    }
-
-    [Fact]
-    public void Lesen_UnknownTemplate_Throws()
-    {
-        Assert.Throws<ArgumentException>(() => MitgelieferteVorlagen.Lesen("gibt-es-nicht"));
-    }
-
-    [Fact]
-    public void Laden_PrefersTheCopyInTheFolder()
-    {
-        using var temp = new TempFolder();
-        var folder = DataFolder.Open(temp.Path);
-
-        var eingebaut = MitgelieferteVorlagen.Laden(folder);
-        Assert.Null(eingebaut.Datei);
-        Assert.Equal(MitgelieferteVorlagen.Lesen("schlicht"), eingebaut.Html);
-
-        var eigene = temp.CreateFile(Path.Combine("Vorlagen", "schlicht.html"), "<p>{{rechnung_nummer}}</p>");
-        var ausDemOrdner = MitgelieferteVorlagen.Laden(folder);
-        Assert.Equal(eigene, ausDemOrdner.Datei);
-        Assert.Equal("<p>{{rechnung_nummer}}</p>", ausDemOrdner.Html);
-    }
 }

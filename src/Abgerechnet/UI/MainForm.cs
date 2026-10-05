@@ -79,12 +79,20 @@ internal sealed class MainForm : Form
         fileMenu.DropDownItems.Add(new ToolStripSeparator());
         fileMenu.DropDownItems.Add(new ToolStripMenuItem(UiText.MenuExit, null, (_, _) => Close()));
 
+        var vorlagenMenu = new ToolStripMenuItem(UiText.MenuVorlagen);
+        vorlagenMenu.DropDownItems.Add(new ToolStripMenuItem(UiText.MenuVorlagenOrdner, null, (_, _) => OpenVorlagenOrdner()));
+        vorlagenMenu.DropDownItems.Add(new ToolStripSeparator());
+        var wiederherstellen = new ToolStripMenuItem(UiText.MenuOriginalWiederherstellen);
+        foreach (var name in Core.Vorlagen.MitgelieferteVorlagen.Namen)
+            wiederherstellen.DropDownItems.Add(new ToolStripMenuItem(UiText.VorlagenName(name), null, (_, _) => VorlageWiederherstellen(name)));
+        vorlagenMenu.DropDownItems.Add(wiederherstellen);
+
         var aboutItem = new ToolStripMenuItem(UiText.MenuAbout, null, (_, _) =>
             MessageBox.Show(this, UiText.AboutText(AppVersion.Current), UiText.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Information));
         var helpMenu = new ToolStripMenuItem(UiText.MenuHelp, null, aboutItem);
 
         var menu = new MenuStrip { Dock = DockStyle.Top };
-        menu.Items.AddRange([fileMenu, helpMenu]);
+        menu.Items.AddRange([fileMenu, vorlagenMenu, helpMenu]);
         MainMenuStrip = menu;
         return menu;
     }
@@ -116,6 +124,27 @@ internal sealed class MainForm : Form
         using var dialog = new MeineDatenDialog(Folder);
         if (dialog.ShowDialog(this) == DialogResult.OK)
             OnEinstellungenChanged();
+    }
+
+    private void OpenVorlagenOrdner()
+    {
+        Directory.CreateDirectory(Folder.VorlagenPath);
+        Process.Start(new ProcessStartInfo { FileName = Folder.VorlagenPath, UseShellExecute = true })?.Dispose();
+    }
+
+    private void VorlageWiederherstellen(string name)
+    {
+        if (MessageBox.Show(this, UiText.WiederherstellenFrage(name), UiText.AppTitle, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            return;
+        try
+        {
+            var sicherung = Core.Vorlagen.MitgelieferteVorlagen.Wiederherstellen(Folder, name);
+            MessageBox.Show(this, UiText.Wiederhergestellt(name, sicherung), UiText.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            MessageBox.Show(this, UiText.DataFileNotWritable(Folder.VorlagenPath, ex.Message), UiText.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
     }
 
     private void EditKunden()

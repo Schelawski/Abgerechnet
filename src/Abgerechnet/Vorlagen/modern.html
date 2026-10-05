@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<!--
+  Abgerechnet – Rechnungsvorlage „Modern“
+
+  Großzügiger Weißraum, eine Akzentfarbe, Positionen ohne senkrechte Linien und der Rechnungsbetrag hervorgehoben.
+
+  So passen Sie die Vorlage an:
+  • Die Akzentfarbe, Schrift und Größen stehen ganz oben im <style> als CSS-Variablen (:root). Für eine andere
+    Farbe ändern Sie nur --akzent und --akzent-hell, z. B. Grün: #15803d und #ecfdf3.
+  • Ihr Logo: Legen Sie eine Datei „logo.png“ in denselben Ordner wie diese Vorlage. Ohne Datei wird nichts
+    angezeigt. Ein anderer Dateiname? Ändern Sie unten src="logo.png".
+  • Platzhalter in doppelten geschweiften Klammern, z. B. {{absender_firma}}, setzt Abgerechnet beim Erzeugen
+    des PDFs ein. Die vollständige Liste steht in der Hilfe („Vorlage anpassen“).
+  • {{positionen_tabelle}} und {{summen_tabelle}} sind fertige Tabellen. Ihr Aussehen steuern die CSS-Klassen
+    weiter unten (.positionen, .pos-zeitraum, .pos-beschreibung, .pos-detail, .pos-menge, .pos-einheit,
+    .pos-preis, .pos-betrag; .summen mit den Zeilen .netto, .ust, .brutto).
+  • Zeilen mit der Klasse „wenn-gefuellt“ verschwinden, wenn ihr Wert (class="wert") leer ist.
+
+  Platzhalter in Kommentaren wie diesem werden nicht ersetzt.
+-->
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Rechnung {{rechnung_nummer}}</title>
+<style>
+  :root {
+    --akzent: #2563eb;          /* Akzentfarbe: Firma, Linien, Rechnungsbetrag */
+    --akzent-hell: #eff4ff;     /* heller Hintergrund des Zahlungskastens */
+    --schrift: "Segoe UI", Arial, sans-serif;
+    --schriftgroesse: 9.5pt;
+    --textfarbe: #1f2937;
+    --grau: #6b7280;
+    --linie: #e5e7eb;
+  }
+
+  /* DIN A4; die Ränder gelten für jede Seite. */
+  @page { size: A4; margin: 16mm 20mm 12mm 20mm; }
+
+  /* Seitenrahmen: Das tfoot der Tabelle .seitenrahmen wiederholt sich auf jeder Seite und hält unten Platz für die
+     Fußzeile frei (.fuss-platz). Wird die Fußzeile höher, .fuss-platz entsprechend vergrößern. */
+  .seitenrahmen { width: 100%; border-collapse: collapse; }
+  .seitenrahmen > tbody > tr > td, .seitenrahmen > tfoot > tr > td { padding: 0; }
+  .fuss-platz { height: 24mm; }
+
+  body { font-family: var(--schrift); font-size: var(--schriftgroesse); color: var(--textfarbe); margin: 0;
+         line-height: 1.45; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .paar { display: contents; }                       /* Bezeichnung + Wert in einem Raster; leer → beide weg */
+  .wenn-gefuellt:has(.wert:empty) { display: none; }
+  .label { font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.08em; color: var(--grau); }
+
+  /* ---------- Kopf ---------- */
+  .kopf { display: flex; justify-content: space-between; align-items: flex-start; }
+  .logo { max-width: 45mm; max-height: 18mm; margin-bottom: 3mm; display: block; }
+  .firma { font-size: 17pt; font-weight: 700; color: var(--akzent); line-height: 1.2; }
+  .unterzeile { color: var(--grau); }
+  .titel { font-size: 26pt; font-weight: 300; letter-spacing: 0.12em; color: #c7cbd3; text-transform: uppercase; }
+
+  /* ---------- Empfänger und Rechnungsdaten ---------- */
+  .adressen { display: flex; justify-content: space-between; margin-top: 16mm; }
+  .empfaenger .label { margin-bottom: 1.5mm; }
+  .daten { display: grid; grid-template-columns: auto auto; column-gap: 8mm; row-gap: 1mm; align-content: start; }
+  .daten .label { padding-top: 0.6mm; }
+  .daten .wert-gross { font-weight: 600; }
+  .projekt { margin: 12mm 0 5mm; font-size: 11pt; font-weight: 600; }
+
+  /* ---------- Positionen: ohne senkrechte Linien ---------- */
+  .positionen { width: 100%; border-collapse: collapse; }
+  .positionen th { font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.06em; color: var(--grau);
+                   font-weight: 600; text-align: left; padding: 0 2mm 2mm 0; border-bottom: 0.5mm solid var(--akzent); }
+  .positionen td { vertical-align: top; padding: 2.5mm 2mm 2.5mm 0; border-bottom: 0.2mm solid var(--linie); }
+  .positionen tr { break-inside: avoid; }
+  .pos-nr { display: none; }                         /* Positionsnummer ausgeblendet; zum Einblenden diese Zeile löschen */
+  .pos-zeitraum { width: 24mm; white-space: nowrap; color: var(--grau); }
+  .pos-beschreibung { font-weight: 500; }
+  .pos-detail { font-weight: normal; color: var(--grau); font-size: 0.9em; margin-top: 0.5mm; }
+  .pos-menge { text-align: right !important; white-space: nowrap; padding-right: 1mm !important; }
+  .pos-einheit { white-space: nowrap; }
+  .pos-preis, .pos-betrag { text-align: right !important; white-space: nowrap; }
+  .positionen th:last-child, .positionen td:last-child { padding-right: 0; }
+
+  /* ---------- Summen ---------- */
+  .summen { margin: 5mm 0 0 auto; border-collapse: collapse; min-width: 78mm; }
+  .summen th { text-align: left; font-weight: normal; color: var(--grau); padding: 1mm 8mm 1mm 3mm; }
+  .summen td { text-align: right; padding: 1mm 3mm; white-space: nowrap; }
+  .summen .brutto th, .summen .brutto td { background: var(--akzent); color: #fff; font-weight: 700;
+                                           font-size: 11pt; padding-top: 2.5mm; padding-bottom: 2.5mm; }
+  .steuerhinweis { margin-top: 4mm; color: var(--grau); text-align: right; }
+
+  /* ---------- Zahlung ---------- */
+  .zahlung { margin-top: 12mm; background: var(--akzent-hell); border-left: 1.2mm solid var(--akzent);
+             padding: 4mm 5mm; break-inside: avoid; }
+  .zahlung .bank { display: grid; grid-template-columns: auto 1fr; column-gap: 6mm; margin-top: 2.5mm; }
+  .dank { margin-top: 8mm; }
+  .nowrap { white-space: nowrap; }
+
+  /* ---------- Fußzeile: steht auf jeder Seite unten ---------- */
+  .fuss { position: fixed; bottom: 0; left: 0; right: 0; display: flex; gap: 6mm; font-size: 7.5pt;
+          color: var(--grau); border-top: 0.3mm solid var(--akzent); padding-top: 2mm; line-height: 1.4; }
+  .fuss div { flex: 1; }
+</style>
+</head>
+<body>
+
+<table class="seitenrahmen">
+<tfoot><tr><td><div class="fuss-platz"></div></td></tr></tfoot>
+<tbody><tr><td>
+
+<div class="kopf">
+  <div>
+    <img class="logo" src="logo.png" alt="" onerror="this.remove()">
+    <div class="firma">{{absender_firma}}</div>
+    <div class="unterzeile">{{absender_unterzeile}}</div>
+  </div>
+  <div class="titel">Rechnung</div>
+</div>
+
+<div class="adressen">
+  <div class="empfaenger">
+    <div class="label">Rechnung an</div>
+    <div>{{kunde_anschrift}}</div>
+  </div>
+  <div class="daten">
+    <div class="paar"><div class="label">Rechnungsnr.</div><div class="wert-gross">{{rechnung_nummer}}</div></div>
+    <div class="paar"><div class="label">Datum</div><div>{{rechnung_datum}}</div></div>
+    <div class="paar wenn-gefuellt"><div class="label">Zeitraum</div><div class="wert">{{leistungszeitraum}}</div></div>
+    <div class="paar wenn-gefuellt"><div class="label">Fällig am</div><div class="wert">{{faellig_am}}</div></div>
+  </div>
+</div>
+
+<div class="projekt">{{projekt}}</div>
+
+{{positionen_tabelle}}
+{{summen_tabelle}}
+
+<div class="steuerhinweis">{{steuerhinweis}}</div>
+
+<div class="zahlung">
+  Bitte überweisen Sie den Rechnungsbetrag von <b>{{brutto}}</b> unter Angabe der Rechnungsnummer
+  <span class="nowrap">{{rechnung_nummer}}</span><span class="wenn-gefuellt"> bis zum <span class="wert">{{faellig_am}}</span></span>.
+  <div class="bank">
+    <div class="paar"><span class="label">Kontoinhaber</span><span>{{kontoinhaber}}</span></div>
+    <div class="paar"><span class="label">IBAN</span><span>{{iban}}</span></div>
+    <div class="paar wenn-gefuellt"><span class="label">BIC</span><span class="wert">{{bic}}</span></div>
+    <div class="paar wenn-gefuellt"><span class="label">Bank</span><span class="wert">{{bank}}</span></div>
+  </div>
+</div>
+<div class="dank">Vielen Dank für die gute Zusammenarbeit.</div>
+
+</td></tr></tbody>
+</table>
+
+<div class="fuss">
+  <div>
+    {{absender_firma}}<br>
+    {{absender_name}}<br>
+    {{absender_strasse}}, {{absender_plz}} {{absender_ort}}
+  </div>
+  <div>
+    <span class="wenn-gefuellt">Tel. <span class="wert">{{absender_telefon}}</span><br></span>
+    <span class="wenn-gefuellt"><span class="wert">{{absender_email}}</span><br></span>
+    <span class="wenn-gefuellt"><span class="wert">{{absender_web}}</span></span>
+  </div>
+  <div>
+    <span class="wenn-gefuellt">Steuernummer: <span class="wert">{{steuernummer}}</span><br></span>
+    <span class="wenn-gefuellt">USt-IdNr.: <span class="wert">{{ust_idnr}}</span></span>
+  </div>
+</div>
+
+</body>
+</html>

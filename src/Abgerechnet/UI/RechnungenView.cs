@@ -12,7 +12,7 @@ internal sealed class RechnungenView : UserControl
 {
     private const int AlleJahre = 0;
 
-    private readonly ComboBox _jahrBox = new() { DropDownStyle = ComboBoxStyle.DropDownList, Width = 110 };
+    private readonly ComboBox _jahrBox = new() { DropDownStyle = ComboBoxStyle.DropDownList, Width = 110, FormattingEnabled = true };
     private readonly ComboBox _statusBox = new() { DropDownStyle = ComboBoxStyle.DropDownList, Width = 110 };
     private readonly Kachel _offen = new(UiText.KachelOffen, UiStyle.StatusOffen);
     private readonly Kachel _bezahlt = new(UiText.KachelBezahlt, UiStyle.StatusBezahlt);

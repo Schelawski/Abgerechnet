@@ -87,6 +87,16 @@ public sealed class DataFolder
         if (!rechnungen.Exists)
             folder.SaveRechnungen();
 
+        // A new folder gets the built-in templates to adapt. Without them the built-in ones are used, so a failure
+        // here (e.g. a read-only template folder) does not stop the opening.
+        try
+        {
+            Vorlagen.MitgelieferteVorlagen.InOrdnerKopieren(folder);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+        }
+
         return folder;
     }
 

@@ -111,12 +111,15 @@ internal sealed class VorschauForm : Form
 
         var rechnung = Rechnung;
         var empfaenger = rechnung.EmpfaengerAus(_folder.Kunden);
-        var vorlage = MitgelieferteVorlagen.Laden(_folder);
+        var gewuenscht = MitgelieferteVorlagen.NameFuer(rechnung, _folder.Einstellungen);
+        var vorlage = MitgelieferteVorlagen.Laden(_folder, gewuenscht);
         var ergebnis = Vorlage.Ausfuellen(vorlage.Html, new RechnungsDaten(_folder.Einstellungen, rechnung, empfaenger), new Uri($"https://{VorlagenHost}/"));
         _vorlageInfo.Text = UiText.VorlageInfo(vorlage.Name, mitgeliefert: vorlage.Datei is null);
 
         // Not blocking: the user decides whether the invoice may go out like this.
         var hinweise = Pflichtangaben.Fehlende(_folder.Einstellungen, rechnung, empfaenger).Select(UiText.Pflichtangabe).ToList();
+        if (vorlage.Ersatz)
+            hinweise.Insert(0, UiText.VorlageFehlt(gewuenscht, vorlage.Name));
         if (ergebnis.UnbekanntePlatzhalter.Count > 0)
             hinweise.Add(UiText.UnbekanntePlatzhalter(ergebnis.UnbekanntePlatzhalter));
         if (hinweise.Count > 0)

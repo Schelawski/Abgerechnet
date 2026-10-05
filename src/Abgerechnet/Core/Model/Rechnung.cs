@@ -64,6 +64,9 @@ public sealed class Rechnung
     /// <summary>Invoice of a small business (§ 19 UStG): no VAT. Taken from the settings like the rate.</summary>
     public bool Kleinunternehmer { get; set; }
 
+    /// <summary>Template for this invoice; <c>null</c> = the standard template from the settings.</summary>
+    public string? Vorlage { get; set; }
+
     public List<Position> Positionen { get; set; } = [];
 
     /// <summary>
@@ -90,6 +93,7 @@ public sealed class Rechnung
     {
         var kopie = Neu(einstellungen, vorhandene, heute, KundeId);
         kopie.Projekt = Projekt;
+        kopie.Vorlage = Vorlage;
         kopie.Positionen = Positionen.Select(p => new Position
         {
             Beschreibung = p.Beschreibung,

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<!--
+  Abgerechnet – Rechnungsvorlage „Klassisch“
+
+  Absender und Rechnungsdaten rechts oben, grauer Titelbalken, Tabelle mit Rahmen und Zebrastreifen, die Summen
+  als Fortsetzung der Tabelle, Bankverbindung und eine dreispaltige Fußzeile.
+
+  So passen Sie die Vorlage an:
+  • Farben, Schrift und Größen stehen ganz oben im <style> als CSS-Variablen (:root) – dort ändern Sie das
+    Aussehen an einer Stelle.
+  • Ihr Logo: Legen Sie eine Datei „logo.png“ in denselben Ordner wie diese Vorlage. Ohne Datei wird nichts
+    angezeigt. Ein anderer Dateiname? Ändern Sie unten src="logo.png".
+  • Platzhalter in doppelten geschweiften Klammern, z. B. {{absender_firma}}, setzt Abgerechnet beim Erzeugen
+    des PDFs ein. Die vollständige Liste steht in der Hilfe („Vorlage anpassen“).
+  • {{positionen_tabelle}} und {{summen_tabelle}} sind fertige Tabellen. Ihr Aussehen steuern die CSS-Klassen
+    weiter unten (.positionen, .pos-zeitraum, .pos-beschreibung, .pos-detail, .pos-menge, .pos-einheit,
+    .pos-preis, .pos-betrag; .summen mit den Zeilen .netto, .ust, .brutto).
+  • Zeilen mit der Klasse „wenn-gefuellt“ verschwinden, wenn ihr Wert (class="wert") leer ist – z. B. ohne
+    Telefonnummer keine „Tel.“-Zeile.
+
+  Platzhalter in Kommentaren wie diesem werden nicht ersetzt.
+-->
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Rechnung {{rechnung_nummer}}</title>
+<style>
+  :root {
+    --schrift: Arial, Helvetica, sans-serif;
+    --schriftgroesse: 9pt;
+    --textfarbe: #1e1e1e;
+    --titelbalken: #dcdcd7;     /* Hintergrund des Balkens „Rechnung Nr. …“ */
+    --zebra: #f8f8f5;           /* jede zweite Position */
+    --rahmen: #b4b4af;          /* Außenrahmen der Tabelle */
+    --trennlinie: #dcdcd7;      /* senkrechte Linien zwischen den Spalten */
+    --kopflinie: #141414;       /* Rahmen der Kopfzeile der Tabelle */
+    --fusstext: #8c8c8c;
+  }
+
+  /* DIN A4; die Ränder gelten für jede Seite. */
+  @page { size: A4; margin: 18mm 20mm 12mm 20mm; }
+
+  /* Seitenrahmen: Die Tabelle .seitenrahmen umschließt den ganzen Inhalt. Ihr tfoot wiederholt sich auf jeder
+     Seite und hält unten Platz für die Fußzeile frei (.fuss-platz). Wird die Fußzeile höher, .fuss-platz
+     entsprechend vergrößern. */
+  .seitenrahmen { width: 100%; border-collapse: collapse; }
+  .seitenrahmen > tbody > tr > td, .seitenrahmen > tfoot > tr > td { padding: 0; }
+  .fuss-platz { height: 26mm; }
+
+  body { font-family: var(--schrift); font-size: var(--schriftgroesse); color: var(--textfarbe); margin: 0;
+         line-height: 4.5mm; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .wenn-gefuellt:has(.wert:empty) { display: none; }
+
+  /* ---------- Kopf: Anschrift des Kunden links, Absender und Rechnungsdaten rechts ---------- */
+  .kopf { display: flex; justify-content: space-between; align-items: flex-start; min-height: 62mm; }
+  .empfaenger { margin-top: 20mm; }
+  .absender { text-align: right; }
+  .logo { max-width: 45mm; max-height: 20mm; margin-bottom: 3mm; }
+  .absender .firma { font-size: 14pt; font-weight: bold; line-height: 6mm; }
+  .absender .unterzeile { margin-bottom: 7mm; }
+  .absender .rechnungsdaten { margin-top: 3mm; }
+
+  /* ---------- Titelbalken und Projekt ---------- */
+  .titelbalken { background: var(--titelbalken); height: 9mm; line-height: 9mm; padding-left: 3mm;
+                 font-size: 11pt; font-weight: bold; }
+  .projekt { margin: 5mm 0 4mm; }
+  .projekt b { font-weight: bold; }
+
+  /* ---------- Positionen: Tabelle mit Rahmen, Zebrastreifen ---------- */
+  .positionen { width: 100%; border-collapse: collapse; font-size: 8.5pt; border: 0.3mm solid var(--rahmen); }
+  .positionen th { font-weight: bold; text-align: left; padding: 1.4mm 1.5mm; border: 0.3mm solid var(--kopflinie); }
+  .positionen td { vertical-align: top; padding: 1.5mm; height: 7mm; border-left: 0.3mm solid var(--trennlinie); }
+  .positionen tbody tr:nth-child(even) td { background: var(--zebra); }
+  .positionen tr { break-inside: avoid; }
+  .pos-nr { display: none; }                         /* Positionsnummer ausgeblendet; zum Einblenden diese Zeile löschen */
+  .pos-zeitraum { width: 24mm; white-space: nowrap; }
+  .pos-detail { margin-top: 0.5mm; }
+  .pos-menge { width: 13mm; text-align: right !important; white-space: nowrap; }
+  td.pos-einheit { border-left: none !important; }     /* Menge und Einheit wirken wie eine Spalte */
+  th.pos-einheit { border-left: none !important; }
+  .pos-einheit { width: 13mm; white-space: nowrap; }
+  .pos-preis { width: 20mm; text-align: right !important; white-space: nowrap; }
+  .pos-betrag { width: 24mm; text-align: right !important; white-space: nowrap; }
+
+  /* ---------- Summen: Fortsetzung der Tabelle ---------- */
+  .summen { width: 100%; border-collapse: collapse; border: 0.3mm solid var(--rahmen); border-top: none; font-size: 8.5pt; }
+  .summen th { text-align: right; font-weight: normal; padding: 1.3mm 3mm; }
+  .summen td { width: 24mm; text-align: right; padding: 1.3mm 1.5mm; border-left: 0.3mm solid var(--rahmen); white-space: nowrap; }
+  .summen .brutto th, .summen .brutto td { font-weight: bold; font-size: 9.5pt; }
+  .steuerhinweis { margin-top: 4mm; }
+
+  /* ---------- Zahlung und Bankverbindung ---------- */
+  .zahlung { margin-top: 8mm; }
+  .bank { margin-top: 5mm; border-collapse: collapse; }
+  .bank th { text-align: left; font-weight: normal; padding: 0 4mm 0 0; width: 28mm; }
+  .bank td { padding: 0; }
+  .dank { margin-top: 8mm; }
+
+  /* ---------- Fußzeile: steht auf jeder Seite unten ---------- */
+  .fuss { position: fixed; bottom: 0; left: 0; right: 0; display: flex; font-size: 7pt; line-height: 4mm;
+          color: var(--fusstext); border-top: 0.3mm solid var(--rahmen); padding-top: 1.5mm; }
+  .fuss .spalte:nth-child(1) { width: 60mm; }
+  .fuss .spalte:nth-child(2) { width: 65mm; }
+  .fuss .spalte:nth-child(3) { flex: 1; }
+  .fuss b { font-weight: bold; }
+</style>
+</head>
+<body>
+
+<table class="seitenrahmen">
+<tfoot><tr><td><div class="fuss-platz"></div></td></tr></tfoot>
+<tbody><tr><td>
+
+<div class="kopf">
+  <div class="empfaenger">{{kunde_anschrift}}</div>
+  <div class="absender">
+    <img class="logo" src="logo.png" alt="" onerror="this.remove()">
+    <div class="firma">{{absender_firma}}</div>
+    <div class="unterzeile">{{absender_unterzeile}}</div>
+    <div>{{absender_name}}</div>
+    <div>{{absender_strasse}}</div>
+    <div>{{absender_plz}} {{absender_ort}}</div>
+    <div class="wenn-gefuellt">Tel.: <span class="wert">{{absender_telefon}}</span></div>
+    <div class="wenn-gefuellt">E-Mail: <span class="wert">{{absender_email}}</span></div>
+    <div class="rechnungsdaten">
+      <div>Rechnungsnummer: {{rechnung_nummer}}</div>
+      <div class="wenn-gefuellt">Steuer-Nr.: <span class="wert">{{steuernummer}}</span></div>
+      <div class="wenn-gefuellt">USt-IdNr.: <span class="wert">{{ust_idnr}}</span></div>
+      <div>Datum: {{rechnung_datum}}</div>
+      <div class="wenn-gefuellt">Zahlbar bis: <span class="wert">{{faellig_am}}</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="titelbalken">Rechnung Nr. {{rechnung_nummer}}</div>
+<div class="projekt wenn-gefuellt"><b>Projekt</b>: <span class="wert">{{projekt}}</span></div>
+
+{{positionen_tabelle}}
+{{summen_tabelle}}
+
+<div class="steuerhinweis">{{steuerhinweis}}</div>
+
+<div class="zahlung">Bitte überweisen Sie den Rechnungsbetrag auf die nachstehend angegebene Bankverbindung.</div>
+<table class="bank">
+  <tr><th>Kontoinhaber:</th><td>{{kontoinhaber}}</td></tr>
+  <tr class="wenn-gefuellt"><th>Bank:</th><td class="wert">{{bank}}</td></tr>
+  <tr><th>IBAN:</th><td>{{iban}}</td></tr>
+  <tr class="wenn-gefuellt"><th>BIC:</th><td class="wert">{{bic}}</td></tr>
+</table>
+<div class="dank">Vielen Dank für Ihren Auftrag.</div>
+
+</td></tr></tbody>
+</table>
+
+<div class="fuss">
+  <div class="spalte">
+    <b>Anschrift</b><br>
+    {{absender_firma}}<br>
+    {{absender_strasse}}<br>
+    {{absender_plz}} {{absender_ort}}<br>
+    <span class="wenn-gefuellt">USt-IdNr.: <span class="wert">{{ust_idnr}}</span></span>
+  </div>
+  <div class="spalte">
+    <b>Kontaktdaten</b><br>
+    <span class="wenn-gefuellt">Telefon: <span class="wert">{{absender_telefon}}</span><br></span>
+    <span class="wenn-gefuellt">E-Mail: <span class="wert">{{absender_email}}</span><br></span>
+    <span class="wenn-gefuellt">Web: <span class="wert">{{absender_web}}</span></span>
+  </div>
+  <div class="spalte">
+    <b>Bankverbindung</b><br>
+    <span class="wenn-gefuellt">Bank: <span class="wert">{{bank}}</span><br></span>
+    IBAN: {{iban}}<br>
+    Kontoinhaber: {{kontoinhaber}}
+  </div>
+</div>
+
+</body>
+</html>

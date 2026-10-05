@@ -52,7 +52,7 @@ internal sealed class MeineDatenDialog : Form
         ResumeLayout(false);
         PerformLayout();
 
-        _panel.LoadFrom(folder.Einstellungen);
+        _panel.LoadFrom(folder.Einstellungen, Core.Vorlagen.MitgelieferteVorlagen.Verfuegbare(folder));
     }
 
     protected override void OnLoad(EventArgs e)

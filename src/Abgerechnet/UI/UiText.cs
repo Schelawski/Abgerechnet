@@ -280,7 +280,31 @@ internal static class UiText
     public const string PdfOeffnenButton = "PDF öffnen";
     public const string ImOrdnerZeigenButton = "Im Ordner zeigen";
     public static string VorlageInfo(string name, bool mitgeliefert) =>
-        mitgeliefert ? $"Vorlage: {name} (mitgeliefert)" : $"Vorlage: {name}.html aus dem Vorlagen-Ordner";
+        mitgeliefert ? $"Vorlage: {VorlagenName(name)} (mitgeliefert)" : $"Vorlage: {name}.html aus dem Vorlagen-Ordner";
+    public static string VorlageFehlt(string gewuenscht, string ersatz) =>
+        $"Die Vorlage „{gewuenscht}.html“ gibt es im Vorlagen-Ordner nicht mehr; verwendet wird „{VorlagenName(ersatz)}“.";
+
+    // ----- Vorlagen -----
+
+    public const string MenuVorlagen = "&Vorlagen";
+    public const string MenuVorlagenOrdner = "Vorlagen-&Ordner öffnen";
+    public const string MenuOriginalWiederherstellen = "Original &wiederherstellen";
+    public const string Vorlage = "Vorlage";
+    public const string VorlageHint = "Gilt für neue Rechnungen; pro Rechnung im Rechnungsformular änderbar. Eigene .html-Dateien im Vorlagen-Ordner erscheinen hier automatisch.";
+    public static string VorlageStandard(string name) => $"Standard ({VorlagenName(name)})";
+
+    /// <summary>"klassisch" → "Klassisch"; own templates keep their file name.</summary>
+    public static string VorlagenName(string name) =>
+        Core.Vorlagen.MitgelieferteVorlagen.IstMitgeliefert(name) && name.Length > 0
+            ? char.ToUpperInvariant(name[0]) + name[1..].ToLowerInvariant()
+            : name;
+
+    public static string WiederherstellenFrage(string name) =>
+        $"Die Vorlage „{VorlagenName(name)}“ im Vorlagen-Ordner durch das Original von Abgerechnet ersetzen?\n\n" +
+        $"Haben Sie die Datei angepasst, bleibt Ihre Fassung als „{name}.bak.html“ erhalten.";
+    public static string Wiederhergestellt(string name, string? sicherung) =>
+        $"Die Vorlage „{VorlagenName(name)}“ ist wiederhergestellt." +
+        (sicherung is null ? string.Empty : $"\n\nIhre bisherige Fassung: {Path.GetFileName(sicherung)}");
     public static string PdfGespeichert(string datei) => $"Gespeichert: {datei}";
 
     public const string HinweiseTitel = "Bitte prüfen Sie vor dem Versand:";

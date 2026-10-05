@@ -24,6 +24,7 @@ internal sealed class RechnungForm : Form
     private readonly ComboBox _kunde = new() { DropDownStyle = ComboBoxStyle.DropDownList, Width = 320 };
     private readonly Button _kundenVerwalten = UiStyle.CreateButton(UiText.KundenVerwalten);
     private readonly Label _anschrift = new() { AutoSize = true, UseMnemonic = false, ForeColor = UiStyle.MutedText, Margin = new Padding(3, 6, 3, 3) };
+    private readonly ComboBox _vorlage = new() { DropDownStyle = ComboBoxStyle.DropDownList, Width = 200, Anchor = AnchorStyles.Right };
 
     private readonly Panel _positionenHost = new() { Dock = DockStyle.Fill, AutoScroll = true };
     /// <summary>One column: the header in row 0, then one editor per line item.</summary>
@@ -136,6 +137,14 @@ internal sealed class RechnungForm : Form
         kunde.Controls.Add(_kunde, 0, 1);
         _kundenVerwalten.Margin = new Padding(6, 0, 3, 0);
         kunde.Controls.Add(_kundenVerwalten, 1, 1);
+        var vorlageCaption = UiStyle.CreateCaption(UiText.Vorlage);
+        vorlageCaption.Anchor = AnchorStyles.Left;
+        vorlageCaption.Margin = new Padding(3, 6, 3, 0);
+        var vorlageSpalte = new FlowLayoutPanel { AutoSize = true, FlowDirection = FlowDirection.TopDown, Anchor = AnchorStyles.Right | AnchorStyles.Top, Margin = Padding.Empty };
+        vorlageSpalte.Controls.Add(vorlageCaption);
+        vorlageSpalte.Controls.Add(_vorlage);
+        kunde.Controls.Add(vorlageSpalte, 2, 0);
+        kunde.SetRowSpan(vorlageSpalte, 2);
         kunde.Controls.Add(_anschrift, 0, 2);
         kunde.SetColumnSpan(_anschrift, 3);
 
@@ -215,6 +224,7 @@ internal sealed class RechnungForm : Form
         _status.ForeColor = UiStyle.StatusColor(_rechnung.Status);
         Text = UiText.RechnungTitle(_rechnung.Nummer);
         FillKunden(_rechnung.KundeId);
+        FillVorlagen();
         _loading = false;
     }
 
@@ -231,6 +241,27 @@ internal sealed class RechnungForm : Form
         UpdateAnschrift();
     }
 
+    /// <summary>An entry of the template box; <c>Name == null</c> is "Standard (…)" from the settings.</summary>
+    private sealed record VorlagenWahl(string? Name, string Anzeige)
+    {
+        public override string ToString() => Anzeige;
+    }
+
+    private void FillVorlagen()
+    {
+        _vorlage.Items.Clear();
+        _vorlage.Items.Add(new VorlagenWahl(null, UiText.VorlageStandard(_folder.Einstellungen.Rechnung.Vorlage)));
+        var namen = Core.Vorlagen.MitgelieferteVorlagen.Verfuegbare(_folder).ToList();
+        // A chosen template that no longer exists stays visible (the preview then says what is used instead).
+        if (_rechnung.Vorlage is { } gewaehlt && !namen.Contains(gewaehlt, StringComparer.OrdinalIgnoreCase))
+            namen.Add(gewaehlt);
+        foreach (var name in namen)
+            _vorlage.Items.Add(new VorlagenWahl(name, UiText.VorlagenName(name)));
+        _vorlage.SelectedItem = _vorlage.Items.Cast<VorlagenWahl>()
+            .FirstOrDefault(w => w.Name is not null && string.Equals(w.Name, _rechnung.Vorlage, StringComparison.OrdinalIgnoreCase))
+            ?? _vorlage.Items[0];
+    }
+
     /// <summary>Copies the inputs into the edited invoice.</summary>
     private void ReadInputs()
     {
@@ -239,6 +270,7 @@ internal sealed class RechnungForm : Form
         _rechnung.Zeitraum = _zeitraum.Text.Trim();
         _rechnung.Projekt = _projekt.Text.Trim();
         _rechnung.KundeId = (_kunde.SelectedItem as Kunde)?.Id;
+        _rechnung.Vorlage = (_vorlage.SelectedItem as VorlagenWahl)?.Name;
         _rechnung.Positionen = _editoren.Select(e => e.Position).ToList();
     }
 
@@ -385,7 +417,7 @@ internal sealed class RechnungForm : Form
         _readOnly = readOnly;
         _gestelltBar.Visible = readOnly;
         _nummer.ReadOnly = _zeitraum.ReadOnly = _projekt.ReadOnly = readOnly;
-        _datum.Enabled = _kunde.Enabled = _kundenVerwalten.Enabled = !readOnly;
+        _datum.Enabled = _kunde.Enabled = _kundenVerwalten.Enabled = _vorlage.Enabled = !readOnly;
         _positionHinzufuegen.Visible = !readOnly;
         _speichern.Visible = !readOnly;
         _schliessen.Text = readOnly ? UiText.Close : UiText.Cancel;
