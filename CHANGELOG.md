@@ -34,5 +34,9 @@ GitHub (siehe [Release erstellen](README.md#release-erstellen)). Versionen folge
   Änderungen. Gestellte Rechnungen öffnen schreibgeschützt; Bearbeiten nach Rückfrage.
 - **Als neue Rechnung kopieren** (Kontextmenü) für den Monatsabschluss: übernimmt Kunde, Projekt und Positionen,
   setzt neue Nummer, heutiges Datum, Vormonat und Status Entwurf.
+- **HTML-Vorlage mit Platzhaltern:** `{{name}}`-Platzhalter für Absender, Bankverbindung, Kunde, Rechnung und
+  Beträge sowie die Blöcke `{{positionen_tabelle}}` und `{{summen_tabelle}}` mit sprechenden CSS-Klassen. Werte
+  werden HTML-sicher eingesetzt, Platzhalter in HTML-Kommentaren bleiben unberührt, unbekannte Platzhalter werden
+  gemeldet, relative Pfade beziehen sich auf den Vorlagen-Ordner.
 - Jede Rechnung merkt sich Umsatzsteuersatz und Kleinunternehmer-Regelung, damit spätere Änderungen in „Meine
   Daten“ ihre Beträge nicht verändern. Beträge werden je Position und für die Steuer kaufmännisch gerundet.

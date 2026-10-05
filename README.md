@@ -69,6 +69,22 @@ Welcher Ordner zuletzt geöffnet war und wo das Fenster stand, merkt sich Abgere
 `Abgerechnet.settings.json` neben der exe (oder in `%APPDATA%\Abgerechnet\`, wenn der Ordner der exe
 schreibgeschützt ist).
 
+## Rechnungsvorlage
+
+Das Aussehen der Rechnung bestimmt eine HTML-Datei im Ordner `Vorlagen/`. Abgerechnet setzt Platzhalter in
+doppelten geschweiften Klammern ein, z. B. `{{absender_firma}}`, `{{rechnung_nummer}}` oder `{{brutto}}`:
+
+- **Text-Platzhalter** für Absender, Kunde, Rechnung und Beträge (`{{kunde_anschrift}}` liefert die ganze
+  Anschrift, `{{faellig_am}}` das Fälligkeitsdatum, `{{steuerhinweis}}` den § 19-Hinweis bei Kleinunternehmern).
+- **Blöcke** mit fertigem HTML: `{{positionen_tabelle}}` (Tabelle `.positionen` mit den Spalten `.pos-nr`,
+  `.pos-zeitraum`, `.pos-beschreibung` mit `.pos-detail`, `.pos-menge`, `.pos-einheit`, `.pos-preis`, `.pos-betrag`)
+  und `{{summen_tabelle}}` (Tabelle `.summen` mit den Zeilen `.netto`, `.ust`, `.brutto`). Rahmen, Abstände und
+  ausgeblendete Spalten regeln Sie per CSS.
+- Relative Pfade (z. B. `logo.png`) beziehen sich auf den Ordner der Vorlage. Platzhalter in HTML-Kommentaren
+  werden nicht ersetzt; unbekannte Platzhalter bleiben stehen und werden gemeldet.
+
+Die vollständige Liste der Platzhalter steht in der Hilfe der App.
+
 ## Voraussetzungen
 
 - Windows 10 oder 11, 64 Bit.
