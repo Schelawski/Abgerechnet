@@ -6,7 +6,7 @@ namespace Abgerechnet.Core.Model;
 
 /// <summary>
 /// Builds the PDF file name from the pattern in the settings, e.g. <c>{nummer}_{kunde_kurzname}_{datum}.pdf</c>
-/// → <c>111412_Mueller_2026-10-01.pdf</c>.
+/// → <c>111412_Nordlicht_2026-10-01.pdf</c>.
 /// </summary>
 public static partial class PdfDateiname
 {

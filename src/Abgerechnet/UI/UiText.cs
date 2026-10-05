@@ -135,7 +135,7 @@ internal static class UiText
     public const string KundeOhneNamen = "(ohne Firmennamen)";
     public const string KundenLeer = "Noch keine Kunden. Mit „Neu“ legen Sie den ersten an.";
     public const string Kurzname = "Kurzname";
-    public const string KurznameHint = "Für den PDF-Dateinamen, z. B. „Mueller“. Leer: die Firma.";
+    public const string KurznameHint = "Für den PDF-Dateinamen, z. B. „Nordlicht“. Leer: die Firma.";
     public const string Ansprechpartner = "Ansprechpartner";
     public const string KundeUstIdNr = "USt-IdNr. des Kunden";
     public const string KundeUstIdNrHint = "Optional; wird später für die E-Rechnung gebraucht.";

@@ -5,26 +5,26 @@ namespace Abgerechnet.Tests;
 public class PdfDateinameTests
 {
     private static readonly DateOnly Datum = new(2026, 10, 1);
-    private static readonly Kunde Mueller = new() { Firma = "Müller & Söhne GmbH", Kurzname = "Mueller" };
+    private static readonly Kunde Nordlicht = new() { Firma = "Grünwald & Söhne GmbH", Kurzname = "Nordlicht" };
 
     [Fact]
     public void DefaultPattern()
     {
-        Assert.Equal("111412_Mueller_2026-10-01.pdf", PdfDateiname.Erzeugen(PdfDateiname.DefaultMuster, "111412", Datum, Mueller));
+        Assert.Equal("111412_Nordlicht_2026-10-01.pdf", PdfDateiname.Erzeugen(PdfDateiname.DefaultMuster, "111412", Datum, Nordlicht));
     }
 
     [Fact]
     public void AllPlaceholders()
     {
-        var name = PdfDateiname.Erzeugen("{jahr}-{monat} Rechnung {nummer} {kunde}.pdf", "7", Datum, Mueller);
+        var name = PdfDateiname.Erzeugen("{jahr}-{monat} Rechnung {nummer} {kunde}.pdf", "7", Datum, Nordlicht);
 
-        Assert.Equal("2026-10 Rechnung 7 Müller & Söhne GmbH.pdf", name);
+        Assert.Equal("2026-10 Rechnung 7 Grünwald & Söhne GmbH.pdf", name);
     }
 
     [Fact]
     public void PlaceholdersIgnoreCase_AndPdfIsAppended()
     {
-        Assert.Equal("111412_Mueller.pdf", PdfDateiname.Erzeugen("{Nummer}_{KUNDE_KURZNAME}", "111412", Datum, Mueller));
+        Assert.Equal("111412_Nordlicht.pdf", PdfDateiname.Erzeugen("{Nummer}_{KUNDE_KURZNAME}", "111412", Datum, Nordlicht));
     }
 
     [Fact]

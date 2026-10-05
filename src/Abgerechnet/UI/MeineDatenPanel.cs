@@ -266,7 +266,7 @@ internal sealed class MeineDatenPanel : UserControl
     private void UpdatePdfBeispiel()
     {
         var nummer = IsEmpty(_naechsteNummer) ? "111412" : _naechsteNummer.Text.Trim();
-        var beispielKunde = new Kunde { Firma = "Müller GmbH", Kurzname = "Mueller" };
+        var beispielKunde = new Kunde { Firma = "Nordlicht GmbH", Kurzname = "Nordlicht" };
         var name = PdfDateiname.Erzeugen(_pdfDateiname.Text, nummer, DateOnly.FromDateTime(DateTime.Today), beispielKunde);
         _pdfBeispiel.Text = UiText.PdfDateinameExample(name);
     }

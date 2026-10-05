@@ -60,8 +60,8 @@ Namen von Schaltflächen und Menüs beziehen sich auf die deutsche Oberfläche.
 | Schritt | Erwartet |
 |---------|----------|
 | **Datei → Kunden…** in einem neuen Rechnungsordner. | Leere Liste, rechts „Noch keine Kunden …“, **Löschen** ausgegraut. |
-| **Neu**, Firma `Müller & Söhne GmbH` tippen. | Der Cursor steht in **Firma**. Die Liste zeigt den Namen schon beim Tippen; **Kurzname** füllt sich mit `Mueller-Soehne`. |
-| Kurzname auf `Mueller` ändern, dann Firma weiter ändern. | Der Kurzname bleibt `Mueller` (eigene Eingabe wird nicht überschrieben). |
+| **Neu**, Firma `Grünwald & Söhne GmbH` tippen. | Der Cursor steht in **Firma**. Die Liste zeigt den Namen schon beim Tippen; **Kurzname** füllt sich mit `Gruenwald-Soehne`. |
+| Kurzname auf `Gruenwald` ändern, dann Firma weiter ändern. | Der Kurzname bleibt `Gruenwald` (eigene Eingabe wird nicht überschrieben). |
 | Ansprechpartner, Straße, PLZ, Ort eintragen. | Die Vorschau „So steht die Anschrift auf der Rechnung“ zeigt die Zeilen, `&` wird korrekt angezeigt. |
 | **Neu**, Firma leer lassen, **Speichern**. | Meldung, dass jeder Kunde eine Firma braucht; der leere Kunde ist ausgewählt. Firma `Beispiel AG` und Anschrift eintragen, **Speichern**. |
 | Dialog erneut öffnen. | Kunden alphabetisch sortiert; `kunden.json` enthält beide lesbar, daneben `kunden.bak.json`. |

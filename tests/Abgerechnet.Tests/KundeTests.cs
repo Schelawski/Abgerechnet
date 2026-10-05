@@ -6,7 +6,7 @@ namespace Abgerechnet.Tests;
 public class KundeTests
 {
     [Theory]
-    [InlineData("Müller & Söhne GmbH", "Mueller-Soehne")]
+    [InlineData("Grünwald & Söhne GmbH", "Gruenwald-Soehne")]
     [InlineData("Beispiel AG", "Beispiel")]
     [InlineData("Deutsche Bahn AG", "Deutsche-Bahn")]
     [InlineData("Weiß Consulting GmbH & Co. KG", "Weiss-Consulting")]

@@ -13,10 +13,10 @@ public class JsonDataFileTests
         Zeitraum = "September 2026",
         Projekt = "Weiterentwicklung Kundenportal",
         KundeId = Guid.NewGuid(),
-        Empfaenger = new Kunde { Firma = "Müller & Söhne GmbH", Kurzname = "Mueller", Strasse = "Hauptstraße 1", Plz = "12345", Ort = "Köln" },
+        Empfaenger = new Kunde { Firma = "Grünwald & Söhne GmbH", Kurzname = "Nordlicht", Strasse = "Hauptstraße 1", Plz = "12345", Ort = "Köln" },
         Status = RechnungsStatus.Bezahlt,
         BezahltAm = new DateOnly(2026, 10, 20),
-        PdfDatei = "111412_Mueller_2026-10-01.pdf",
+        PdfDatei = "111412_Nordlicht_2026-10-01.pdf",
         Positionen =
         [
             new Position { Beschreibung = "Entwicklung", Detail = "Sprint 17", Menge = 152.5m, Einheit = "Std.", Einzelpreis = 88.10m },
@@ -55,7 +55,7 @@ public class JsonDataFileTests
         Assert.Contains("\"status\": \"bezahlt\"", json);          // readable status
         Assert.Contains("\"menge\": 152.5", json);                 // decimal as number
         Assert.Contains("\"einzelpreis\": 88.10", json);           // decimal keeps its scale
-        Assert.Contains("Müller & Söhne GmbH", json);              // umlauts not escaped
+        Assert.Contains("Grünwald & Söhne GmbH", json);              // umlauts not escaped
         Assert.Contains("Reisekosten €", json);
         Assert.Contains("\n  ", json);                             // indented
     }

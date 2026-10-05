@@ -12,7 +12,7 @@ public sealed partial class Kunde
 
     public string Firma { get; set; } = string.Empty;
 
-    /// <summary>Short name used in the PDF file name, e.g. "Mueller".</summary>
+    /// <summary>Short name used in the PDF file name, e.g. "Nordlicht".</summary>
     public string Kurzname { get; set; } = string.Empty;
 
     public string Strasse { get; set; } = string.Empty;
@@ -53,7 +53,7 @@ public sealed partial class Kunde
 
     /// <summary>
     /// Suggests a short name for the file name from the company: legal forms are dropped, umlauts written out,
-    /// at most two words. "Müller &amp; Söhne GmbH" → "Mueller-Soehne".
+    /// at most two words. "Grünwald &amp; Söhne GmbH" → "Gruenwald-Soehne".
     /// </summary>
     public static string KurznameVorschlag(string? firma)
     {
