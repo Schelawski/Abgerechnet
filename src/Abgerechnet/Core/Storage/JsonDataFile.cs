@@ -81,6 +81,15 @@ public static class JsonDataFile
         return (data, true);
     }
 
+    /// <summary>A deep copy, e.g. to edit data in a dialog that can be cancelled.</summary>
+    public static T Clone<T>(T data)
+        where T : class, IDataFile
+    {
+        var copy = JsonSerializer.Deserialize<T>(JsonSerializer.Serialize(data, Options), Options)!;
+        copy.Normalize();
+        return copy;
+    }
+
     /// <summary>Saves the data, keeping the previous file as <c>*.bak.json</c>.</summary>
     /// <exception cref="DataFileException">The file cannot be written.</exception>
     public static void Save<T>(string path, T data)

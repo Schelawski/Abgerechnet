@@ -19,6 +19,17 @@ internal sealed class MainForm : Form
         TextAlign = ContentAlignment.MiddleLeft,
         ToolTipText = UiText.FolderStatusTooltip,
     };
+    private readonly TableLayoutPanel _meineDatenBar = new()
+    {
+        Dock = DockStyle.Top,
+        AutoSize = true,
+        AutoSizeMode = AutoSizeMode.GrowAndShrink,
+        ColumnCount = 2,
+        RowCount = 1,
+        BackColor = UiStyle.HintBack,
+        Padding = new Padding(10, 6, 10, 6),
+        Visible = false,
+    };
 
     public MainForm(SettingsStore settingsStore, AppSettings settings, DataFolder folder)
     {
@@ -29,7 +40,6 @@ internal sealed class MainForm : Form
         SuspendLayout();
         AutoScaleDimensions = new SizeF(96F, 96F);
         AutoScaleMode = AutoScaleMode.Dpi;
-        Text = $"{UiText.AppTitle} {AppVersion.Current}";
         StartPosition = FormStartPosition.CenterScreen;
         ClientSize = new Size(1000, 680);
         MinimumSize = new Size(760, 500);
@@ -47,7 +57,10 @@ internal sealed class MainForm : Form
         statusStrip.Items.Add(_folderLabel);
         _folderLabel.Click += (_, _) => OpenFolderInExplorer();
 
+        BuildMeineDatenBar();
+
         Controls.Add(emptyState);
+        Controls.Add(_meineDatenBar);
         Controls.Add(statusStrip);
         Controls.Add(CreateMenu());
         ResumeLayout(false);
@@ -63,6 +76,8 @@ internal sealed class MainForm : Form
     private MenuStrip CreateMenu()
     {
         var fileMenu = new ToolStripMenuItem(UiText.MenuFile);
+        fileMenu.DropDownItems.Add(new ToolStripMenuItem(UiText.MenuMeineDaten, null, (_, _) => EditMeineDaten()));
+        fileMenu.DropDownItems.Add(new ToolStripSeparator());
         fileMenu.DropDownItems.Add(new ToolStripMenuItem(UiText.MenuChangeFolder, null, (_, _) => ChangeFolder()));
         fileMenu.DropDownItems.Add(new ToolStripMenuItem(UiText.MenuOpenFolder, null, (_, _) => OpenFolderInExplorer()));
         fileMenu.DropDownItems.Add(new ToolStripSeparator());
@@ -88,8 +103,38 @@ internal sealed class MainForm : Form
         OnFolderChanged();
     }
 
+    private void BuildMeineDatenBar()
+    {
+        _meineDatenBar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+        _meineDatenBar.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+        var text = new Label { Text = UiText.MeineDatenMissing, AutoSize = true, Anchor = AnchorStyles.Left, Margin = new Padding(3, 6, 12, 3) };
+        var button = UiStyle.CreateButton(UiText.MeineDatenButton);
+        button.Anchor = AnchorStyles.Right;
+        button.Click += (_, _) => EditMeineDaten();
+        _meineDatenBar.Controls.Add(text, 0, 0);
+        _meineDatenBar.Controls.Add(button, 1, 0);
+    }
+
+    private void EditMeineDaten()
+    {
+        using var dialog = new MeineDatenDialog(Folder);
+        if (dialog.ShowDialog(this) == DialogResult.OK)
+            OnEinstellungenChanged();
+    }
+
+    /// <summary>Window title and hint bar follow the sender's data.</summary>
+    private void OnEinstellungenChanged()
+    {
+        var absender = Folder.Einstellungen.Absender;
+        Text = absender.Anzeigename.Length > 0
+            ? $"{absender.Anzeigename} – {UiText.AppTitle} {AppVersion.Current}"
+            : $"{UiText.AppTitle} {AppVersion.Current}";
+        _meineDatenBar.Visible = !absender.IstVollstaendig;
+    }
+
     private void OnFolderChanged()
     {
+        OnEinstellungenChanged();
         _folderLabel.Text = UiText.FolderStatus(Folder.FolderPath);
         if (!string.Equals(_settings.DataFolder, Folder.FolderPath, StringComparison.OrdinalIgnoreCase))
         {

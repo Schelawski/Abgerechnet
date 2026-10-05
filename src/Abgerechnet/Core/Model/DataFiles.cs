@@ -42,15 +42,3 @@ public sealed class KundenDatei : IDataFile
             kunde.Normalize();
     }
 }
-
-/// <summary>
-/// Content of <c>abgerechnet.json</c>: sender data and invoice settings. The fields follow in issue #3.
-/// </summary>
-public sealed class Einstellungen : IDataFile
-{
-    public int Version { get; set; }
-
-    public void Normalize()
-    {
-    }
-}

@@ -33,7 +33,7 @@ public sealed class DataFolder
     /// <summary>Full path of the folder.</summary>
     public string FolderPath { get; }
 
-    public Einstellungen Einstellungen { get; }
+    public Einstellungen Einstellungen { get; private set; }
 
     public KundenDatei Kunden { get; }
 
@@ -92,6 +92,18 @@ public sealed class DataFolder
 
     /// <exception cref="DataFileException">The file cannot be written.</exception>
     public void SaveEinstellungen() => JsonDataFile.Save(EinstellungenPath, Einstellungen);
+
+    /// <summary>
+    /// Saves changed settings and uses them from now on. If saving fails, <see cref="Einstellungen"/> keeps the
+    /// previous values.
+    /// </summary>
+    /// <exception cref="DataFileException">The file cannot be written.</exception>
+    public void SaveEinstellungen(Einstellungen changed)
+    {
+        ArgumentNullException.ThrowIfNull(changed);
+        JsonDataFile.Save(EinstellungenPath, changed);
+        Einstellungen = changed;
+    }
 
     /// <exception cref="DataFileException">The file cannot be written.</exception>
     public void SaveKunden() => JsonDataFile.Save(KundenPath, Kunden);

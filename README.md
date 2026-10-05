@@ -57,6 +57,10 @@ Rechnungsordner/
 - Ist eine Datei beschädigt, meldet Abgerechnet das und verändert sie nicht.
 - Legen Sie den Ordner zum Beispiel in OneDrive oder Dropbox, dann sind Ihre Rechnungen automatisch gesichert.
 
+Ihre eigenen Angaben – Absender, Steuernummer, Bankverbindung, Kleinunternehmer-Regelung, Zahlungsziel,
+Nummernkreis und das Muster für den PDF-Dateinamen – pflegen Sie unter **Datei → Meine Daten…**. Sie stehen
+in `abgerechnet.json` in den Abschnitten `absender`, `bank`, `rechnung` und `neuePosition`.
+
 Welcher Ordner zuletzt geöffnet war und wo das Fenster stand, merkt sich Abgerechnet in
 `Abgerechnet.settings.json` neben der exe (oder in `%APPDATA%\Abgerechnet\`, wenn der Ordner der exe
 schreibgeschützt ist).

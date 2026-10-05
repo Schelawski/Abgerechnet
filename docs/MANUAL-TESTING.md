@@ -37,3 +37,20 @@ Namen von Schaltflächen und Menüs beziehen sich auf die deutsche Oberfläche.
 | In `abgerechnet.json` `"version": 1` in `"version": 99` ändern, App starten. | Meldung: Die Datei stammt von einer neueren Version, bitte die neueste Version herunterladen. Danach Wert zurücksetzen. |
 | Den Ordner `C:\Temp\Meine Rechnungen` umbenennen, App starten. | Meldung „Der Rechnungsordner wurde nicht gefunden“ mit Pfad. **Ja** öffnet die Ordnerauswahl. Den umbenannten Ordner wählen. |
 | **Datei → Rechnungsordner wechseln…**, einen zweiten leeren Ordner wählen. | Die Statusleiste zeigt den neuen Ordner, die Dateien werden darin angelegt. Nach einem Neustart ist der neue Ordner geöffnet. |
+
+## 3. Meine Daten
+
+| Schritt | Erwartet |
+|---------|----------|
+| Neuen leeren Rechnungsordner öffnen. | Gelber Hinweis oben: „Tragen Sie zuerst Ihre Daten ein …“ mit **Meine Daten eintragen…**. Fenstertitel ohne Firma. |
+| **Meine Daten eintragen…** | Dialog „Meine Daten“ mit den Reitern **Absender**, **Steuer und Bank**, **Rechnungen**. Der Cursor steht im Feld **Firma**. Alle Felder sichtbar, keine Lücken, nichts abgeschnitten. |
+| Nur **Firma** eintragen, **Speichern**. | Meldung: vollständige Anschrift fehlt; der Cursor springt ins fehlende Feld. |
+| Firma `Schmidt IT`, Name `Jörg Schmidt`, Straße, PLZ, Ort `Köln` eintragen. Reiter **Steuer und Bank**, IBAN `DE89 3704 0044 0532 0130 01` eingeben. | Neben der IBAN „✗ ungültig“ (rot). |
+| Letzte Ziffer zu `0` ändern. | „✓ gültig“ (grün). Beim Verlassen des Feldes wird die IBAN in Viererblöcken geschrieben. |
+| **Kleinunternehmer** ankreuzen. | Hinweistext wird bearbeitbar, Umsatzsteuersatz ausgegraut. |
+| Reiter **Rechnungen**: PDF-Dateiname `{nummer}_{kundenname}.pdf`. | Das Beispiel darunter ändert sich bei jeder Eingabe. |
+| **Speichern**. | Meldung: unbekannter Platzhalter `{kundenname}`. Muster zurück auf `{nummer}_{kunde_kurzname}_{datum}.pdf`. |
+| **Speichern** (ohne Steuernummer und USt-IdNr.). | Rückfrage nach § 14 UStG. **Nein** lässt den Dialog offen, **Ja** speichert. |
+| Nach dem Speichern. | Fenstertitel `Schmidt IT – Abgerechnet …`, gelber Hinweis verschwunden. `abgerechnet.json` enthält die Werte lesbar (Umlaute, IBAN in Blöcken), daneben `abgerechnet.bak.json`. |
+| Dialog erneut öffnen, etwas ändern, **Abbrechen**. | Nichts geändert, `abgerechnet.json` unverändert. |
+| Dialog auf 125 % und 150 % Skalierung öffnen, Fenster verkleinern. | Bildlaufleiste erscheint, Hinweise brechen um, nichts überlappt. |
