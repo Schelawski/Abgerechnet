@@ -161,7 +161,10 @@ internal sealed class MainForm : Form
     {
         using var dialog = new MeineDatenDialog(Folder);
         if (dialog.ShowDialog(this) == DialogResult.OK)
+        {
             OnEinstellungenChanged();
+            _rechnungen.Aktualisieren(); // the payment term decides which invoices are overdue
+        }
     }
 
     private void OpenVorlagenOrdner()

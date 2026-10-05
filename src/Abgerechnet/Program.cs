@@ -17,6 +17,7 @@ internal static class Program
         // Applies the settings from the project file (PerMonitorV2 high DPI, visual styles, default font).
         ApplicationConfiguration.Initialize();
 
+        Application.AddMessageFilter(new KontextmenueTaste());
         Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
         Application.ThreadException += (_, e) =>
             MessageBox.Show(UiText.UnexpectedError(e.Exception.Message), UiText.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);

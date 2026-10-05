@@ -62,5 +62,12 @@ GitHub (siehe [Release erstellen](README.md#release-erstellen)). Versionen folge
   Rechnung erstellen**. Auf Wunsch kopiert er Abgerechnet aus dem Download-Ordner nach `%LOCALAPPDATA%\Abgerechnet`
   und legt Verknüpfungen auf dem Desktop und im Startmenü an. Wieder erreichbar über **Datei →
   Einrichtungsassistent…**.
+- **Erinnerung an offene Rechnungen:** Ein gelber Hinweis über der Liste meldet Rechnungen, die länger als das
+  Zahlungsziel offen sind (ohne Zahlungsziel: 30 Tage), und Entwürfe, die älter als 7 Tage sind. Keine Rückfragen
+  beim Start; das Kreuz blendet den Hinweis bis zum nächsten Start aus. **Zahlungseingang erfassen…** zeigt alle
+  überfälligen Rechnungen zum Abhaken, jede mit eigenem Zahlungsdatum. **Als bezahlt markieren…** im Kontextmenü
+  (auch für mehrere Rechnungen) fragt nur nach dem Datum. Neue Spalte „Bezahlt am“; überfällige Rechnungen stehen
+  als „Offen – überfällig“ in Rot in der Liste.
+- Shift+F10 öffnet in der Rechnungsliste das Kontextmenü (bisher sprang die Menüleiste an).
 - Jede Rechnung merkt sich Umsatzsteuersatz und Kleinunternehmer-Regelung, damit spätere Änderungen in „Meine
   Daten“ ihre Beträge nicht verändern. Beträge werden je Position und für die Steuer kaufmännisch gerundet.

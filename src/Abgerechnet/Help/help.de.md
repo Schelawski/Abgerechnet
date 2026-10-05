@@ -94,7 +94,7 @@ Ihre Firma oder Ihr Name und Ihre Anschrift sind Pflicht. Telefon, E-Mail und We
 
 ## Rechnungen
 
-- **Zahlungsziel:** So viele Tage nach dem Rechnungsdatum soll Ihr Kunde bezahlen. Daraus wird das Datum „Zahlbar bis“. 0 bedeutet: kein Zahlungsziel.
+- **Zahlungsziel:** So viele Tage nach dem Rechnungsdatum soll Ihr Kunde bezahlen. Daraus wird das Datum „Zahlbar bis“. Nach dieser Zeit erinnert Abgerechnet Sie an offene Rechnungen. 0 bedeutet: kein Zahlungsziel auf der Rechnung.
 - **Nächste Rechnungsnummer:** Lassen Sie das Feld leer, zählt Abgerechnet einfach weiter (höchste Nummer plus eins). Tragen Sie eine Nummer ein, um einen neuen Nummernkreis zu beginnen. Rechnungsnummern müssen fortlaufend und eindeutig sein – Abgerechnet verhindert doppelte Nummern.
 - **PDF-Dateiname:** So heißen die PDF-Dateien. Darunter sehen Sie ein Beispiel. Platzhalter wie `{nummer}` oder `{kunde_kurzname}` setzt Abgerechnet ein.
 - **Vorlage:** Das Aussehen neuer Rechnungen (siehe „Vorlagen“).
@@ -133,7 +133,7 @@ Jede Position ist eine Zeile auf der Rechnung: was Sie geleistet haben, wie viel
 
 - **Entwurf:** Die Rechnung ist noch in Arbeit. Entwürfe können Sie jederzeit ändern oder löschen.
 - **Offen:** Das PDF wurde erzeugt. Abgerechnet setzt diesen Status automatisch.
-- **Bezahlt:** Ihr Kunde hat bezahlt. Klicken Sie mit der rechten Maustaste auf die Rechnung und wählen Sie **Status ändern → Bezahlt**.
+- **Bezahlt:** Ihr Kunde hat bezahlt. Klicken Sie mit der rechten Maustaste auf die Rechnung und wählen Sie **Als bezahlt markieren…**. Abgerechnet fragt nur nach dem Tag, an dem das Geld kam. Das geht auch für mehrere markierte Rechnungen auf einmal.
 - **Storniert:** Die Rechnung gilt nicht mehr.
 
 ## Warum kann ich gestellte Rechnungen nicht löschen?
@@ -145,6 +145,17 @@ Eine gestellte Rechnung öffnet sich schreibgeschützt. Müssen Sie doch etwas �
 ## Die Liste
 
 Oben sehen Sie, wie viel im gewählten Jahr offen und bezahlt ist. „Gesamt“ zählt nur offene und bezahlte Rechnungen, keine Entwürfe. Mit einem Klick auf eine Spaltenüberschrift sortieren Sie die Liste. Ein Doppelklick öffnet eine Rechnung.
+
+## Offene Rechnungen im Blick
+
+Oft ist eine Rechnung längst bezahlt, steht in Abgerechnet aber noch auf „Offen“. Deshalb erinnert Abgerechnet Sie daran – ohne Sie zu stören:
+
+- Ist eine Rechnung länger offen als Ihr Zahlungsziel (siehe „Meine Daten“), steht oben über der Liste ein gelber Hinweis, zum Beispiel „2 Rechnungen sind seit über 30 Tagen offen“. In der Liste steht bei diesen Rechnungen „Offen – überfällig“ in Rot.
+- Mit **Zahlungseingang erfassen…** sehen Sie alle diese Rechnungen untereinander. Haken Sie an, was bezahlt ist, und klicken Sie auf **Als bezahlt speichern**. Das Datum ist mit heute vorbelegt; Sie können es für jede Rechnung ändern. Mit **Alle markieren** haken Sie alle auf einmal an.
+- Liegt ein Entwurf länger als eine Woche, erinnert der Hinweis auch daran – vielleicht haben Sie vergessen, das PDF zu erzeugen.
+- Das Kreuz rechts blendet den Hinweis aus, bis Sie Abgerechnet das nächste Mal starten.
+
+Die Spalte „Bezahlt am“ zeigt, wann das Geld kam. Ohne Zahlungsziel erinnert Abgerechnet nach 30 Tagen.
 
 # pdf | PDF erzeugen und verschicken
 

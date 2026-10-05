@@ -8,6 +8,7 @@ public enum RechnungsSpalte
     Zeitraum,
     Datum,
     Status,
+    BezahltAm,
     Betrag,
 }
 
@@ -35,7 +36,7 @@ public sealed class RechnungsSortierung
 
         Spalte = spalte;
         // Numbers, dates and amounts start with the largest, text columns with A.
-        Absteigend = spalte is RechnungsSpalte.Nummer or RechnungsSpalte.Datum or RechnungsSpalte.Betrag;
+        Absteigend = spalte is RechnungsSpalte.Nummer or RechnungsSpalte.Datum or RechnungsSpalte.BezahltAm or RechnungsSpalte.Betrag;
     }
 
     public int Compare(Rechnung a, Rechnung b)
@@ -46,6 +47,7 @@ public sealed class RechnungsSortierung
             RechnungsSpalte.Kunde => string.Compare(KundenName(a), KundenName(b), StringComparison.CurrentCultureIgnoreCase),
             RechnungsSpalte.Zeitraum => string.Compare(a.Zeitraum, b.Zeitraum, StringComparison.CurrentCultureIgnoreCase),
             RechnungsSpalte.Status => a.Status.CompareTo(b.Status),
+            RechnungsSpalte.BezahltAm => Nullable.Compare(a.BezahltAm, b.BezahltAm),
             RechnungsSpalte.Betrag => Rechnungsbetrag.Berechnen(a).Brutto.CompareTo(Rechnungsbetrag.Berechnen(b).Brutto),
             _ => a.Datum.CompareTo(b.Datum),
         };

@@ -47,7 +47,8 @@ Wer den Download prüfen möchte: Zu jeder Version gibt es die Datei `Abgerechne
 - **Rechnungen schreiben:** Positionen mit Menge, Einheit und Preis. Die Summen rechnen sich sofort.
 - **Monatsabschluss in Sekunden:** Rechnung vom Vormonat kopieren, Stunden ändern, fertig.
 - **PDF erzeugen** – mit Vorschau und einem Hinweis, wenn eine wichtige Angabe fehlt.
-- **Überblick:** Was ist offen, was ist bezahlt? Rechnungsnummern bleiben lückenlos.
+- **Überblick:** Was ist offen, was ist bezahlt? Ein dezenter Hinweis erinnert an Rechnungen, die schon länger offen
+  sind – mit einem Klick als bezahlt erfasst. Rechnungsnummern bleiben lückenlos.
 - **Aussehen nach Wunsch:** drei fertige Vorlagen, Ihr eigenes Logo, Farben und Schriften anpassbar – auch mit
   Hilfe einer KI, ganz ohne HTML-Kenntnisse.
 - **Hilfe in einfacher Sprache** direkt im Programm (Taste **F1**).

@@ -27,14 +27,25 @@ internal sealed class RechnungenView : UserControl
         HideSelection = false,
         GridLines = false,
         BorderStyle = BorderStyle.FixedSingle,
+        ShowItemToolTips = true,
     };
     private readonly Label _leer = new() { Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleCenter, ForeColor = UiStyle.MutedText, Visible = false, BackColor = Color.White };
     private readonly ContextMenuStrip _menu = new();
     private readonly ToolStripMenuItem _pdfItem = new(UiText.MenuPdfOeffnen);
     private readonly ToolStripMenuItem _ordnerItem = new(UiText.MenuImOrdnerZeigen);
     private readonly ToolStripMenuItem _statusItem = new(UiText.MenuStatusAendern);
+    private readonly ToolStripMenuItem _bezahltItem = new(UiText.MenuAlsBezahlt);
     private readonly ToolStripMenuItem _loeschenItem = new(UiText.MenuLoeschen) { ShortcutKeyDisplayString = "Entf" };
     private readonly ToolTip _toolTip = new();
+
+    // Reminder bar (issue #17): not blocking, hidden for this session with ✕.
+    private readonly Panel _erinnerungHost = new() { Dock = DockStyle.Top, AutoSize = true, Padding = new Padding(0, 0, 0, 10), Visible = false };
+    private readonly Label _erinnerungOffen = ErinnerungsText();
+    private readonly Label _erinnerungEntwuerfe = ErinnerungsText();
+    private readonly Button _zahlungseingang = UiStyle.CreateButton(UiText.ZahlungseingangButton);
+    private readonly Button _entwuerfeOeffnen = UiStyle.CreateButton(UiText.EntwuerfeOeffnen);
+    private Erinnerung _erinnerung = new([], []);
+    private bool _erinnerungAusgeblendet;
 
     private readonly RechnungsSortierung _sortierung = new();
     private DataFolder? _folder;
@@ -52,6 +63,7 @@ internal sealed class RechnungenView : UserControl
         _list.Columns.Add(UiText.SpalteZeitraum);
         _list.Columns.Add(UiText.SpalteDatum);
         _list.Columns.Add(UiText.SpalteStatus);
+        _list.Columns.Add(UiText.SpalteBezahltAm);
         _list.Columns.Add(UiText.SpalteBetrag, 0, HorizontalAlignment.Right);
         _list.HandleCreated += (_, _) => SetColumnWidths();
         _list.DpiChangedAfterParent += (_, _) => SetColumnWidths();
@@ -129,6 +141,76 @@ internal sealed class RechnungenView : UserControl
         Controls.Add(spacer);
         Controls.Add(tiles);
         Controls.Add(filterRow);
+        Controls.Add(BuildErinnerung());
+    }
+
+    private static Label ErinnerungsText() =>
+        new() { AutoSize = true, UseMnemonic = false, Anchor = AnchorStyles.Left, Margin = new Padding(3, 7, 12, 3) };
+
+    private Control BuildErinnerung()
+    {
+        var bar = new TableLayoutPanel
+        {
+            Dock = DockStyle.Top,
+            AutoSize = true,
+            ColumnCount = 3,
+            RowCount = 2,
+            BackColor = UiStyle.HintBack,
+            Padding = new Padding(8, 4, 4, 4),
+        };
+        bar.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+        bar.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+        bar.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+        bar.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        bar.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+
+        _zahlungseingang.Anchor = _entwuerfeOeffnen.Anchor = AnchorStyles.Right;
+        _zahlungseingang.Click += (_, _) => ZahlungseingangErfassen();
+        _entwuerfeOeffnen.Click += (_, _) => EntwuerfeOeffnen();
+
+        var schliessen = new Button
+        {
+            Text = "✕",
+            FlatStyle = FlatStyle.Flat,
+            AutoSize = true,
+            AutoSizeMode = AutoSizeMode.GrowAndShrink,
+            Anchor = AnchorStyles.Top | AnchorStyles.Right,
+            Margin = new Padding(6, 3, 0, 3),
+            ForeColor = UiStyle.MutedText,
+            TabStop = false,
+        };
+        schliessen.FlatAppearance.BorderSize = 0;
+        schliessen.Click += (_, _) =>
+        {
+            _erinnerungAusgeblendet = true;
+            _erinnerungHost.Visible = false;
+        };
+        _toolTip.SetToolTip(schliessen, UiText.ErinnerungAusblenden);
+
+        bar.Controls.Add(_erinnerungOffen, 0, 0);
+        bar.Controls.Add(_zahlungseingang, 1, 0);
+        bar.Controls.Add(schliessen, 2, 0);
+        bar.SetRowSpan(schliessen, 2); // so an empty first row collapses
+        bar.Controls.Add(_erinnerungEntwuerfe, 0, 1);
+        bar.Controls.Add(_entwuerfeOeffnen, 1, 1);
+        _erinnerungHost.Controls.Add(bar);
+        return _erinnerungHost;
+    }
+
+    /// <summary>Shows the reminder for overdue open invoices and forgotten drafts of all years.</summary>
+    private void ErinnerungAktualisieren()
+    {
+        if (_folder is null)
+            return;
+
+        _erinnerung = Zahlungserinnerung.Pruefen(_folder.Rechnungen.Rechnungen, _folder.Einstellungen, DateOnly.FromDateTime(DateTime.Today));
+        var offen = _erinnerung.Ueberfaellig.Count > 0;
+        var entwuerfe = _erinnerung.VergesseneEntwuerfe.Count > 0;
+        _erinnerungOffen.Text = UiText.ErinnerungOffen(_erinnerung.Ueberfaellig.Count, Zahlungserinnerung.Tage(_folder.Einstellungen));
+        _erinnerungEntwuerfe.Text = UiText.ErinnerungEntwuerfe(_erinnerung.VergesseneEntwuerfe.Count);
+        _erinnerungOffen.Visible = _zahlungseingang.Visible = offen;
+        _erinnerungEntwuerfe.Visible = _entwuerfeOeffnen.Visible = entwuerfe;
+        _erinnerungHost.Visible = !_erinnerungAusgeblendet && !_erinnerung.IstLeer;
     }
 
     private void BuildMenu()
@@ -151,7 +233,8 @@ internal sealed class RechnungenView : UserControl
             _statusItem.DropDownItems.Add(item);
         }
         _loeschenItem.Click += (_, _) => DeleteSelected();
-        _menu.Items.AddRange([_pdfItem, _ordnerItem, new ToolStripSeparator(), _statusItem, new ToolStripSeparator(), _loeschenItem]);
+        _bezahltItem.Click += (_, _) => AlsBezahltMarkieren();
+        _menu.Items.AddRange([_pdfItem, _ordnerItem, new ToolStripSeparator(), _bezahltItem, _statusItem, new ToolStripSeparator(), _loeschenItem]);
         _menu.Opening += (_, e) =>
         {
             var selected = SelectedRechnungen();
@@ -167,6 +250,7 @@ internal sealed class RechnungenView : UserControl
             foreach (ToolStripMenuItem item in _statusItem.DropDownItems)
                 item.Enabled = selected.Any(r => r.ErlaubteStatuswechsel().Contains((RechnungsStatus)item.Tag!));
             _statusItem.Enabled = _statusItem.DropDownItems.Cast<ToolStripMenuItem>().Any(i => i.Enabled);
+            _bezahltItem.Enabled = selected.Any(r => r.Status == RechnungsStatus.Offen);
         };
     }
 
@@ -223,6 +307,8 @@ internal sealed class RechnungenView : UserControl
         _gesamt.Anzeigen(UiText.Betrag(uebersicht.Gesamt.Betrag), UiText.Anzahl(uebersicht.Gesamt.Anzahl));
         _entwuerfe.Text = UiText.Entwuerfe(uebersicht.Entwuerfe);
 
+        ErinnerungAktualisieren();
+
         _leer.Text = _folder.Rechnungen.Rechnungen.Count == 0 ? UiText.KeineRechnungen : UiText.KeineRechnungenFilter;
         _leer.Visible = sichtbar.Count == 0;
         if (_leer.Visible)
@@ -237,8 +323,19 @@ internal sealed class RechnungenView : UserControl
         item.SubItems.Add(kunde is null || kunde.Firma.Length == 0 ? UiText.KundeUnbekannt : kunde.Firma);
         item.SubItems.Add(rechnung.Zeitraum);
         item.SubItems.Add(UiText.Datum(rechnung.Datum));
-        item.SubItems.Add(UiText.StatusName(rechnung.Status)).ForeColor = UiStyle.StatusColor(rechnung.Status);
+        var status = item.SubItems.Add(UiText.StatusName(rechnung.Status));
+        status.ForeColor = UiStyle.StatusColor(rechnung.Status);
+        item.SubItems.Add(rechnung.BezahltAm is { } bezahltAm ? UiText.Datum(bezahltAm) : string.Empty);
         item.SubItems.Add(UiText.Betrag(betrag));
+
+        // Overdue: only the status cell stands out, so a long list stays calm.
+        var heute = DateOnly.FromDateTime(DateTime.Today);
+        if (Zahlungserinnerung.IstUeberfaellig(rechnung, _folder.Einstellungen, heute))
+        {
+            status.Text = UiText.StatusUeberfaellig;
+            status.ForeColor = UiStyle.Danger;
+            item.ToolTipText = UiText.UeberfaelligTooltip(Zahlungserinnerung.TageSeit(rechnung, heute));
+        }
 
         if (rechnung.Status == RechnungsStatus.Storniert)
         {
@@ -252,7 +349,7 @@ internal sealed class RechnungenView : UserControl
     /// <summary>Column widths in pixels of the current screen (list view columns are not scaled by Windows Forms).</summary>
     private void SetColumnWidths()
     {
-        int[] logical = [90, 240, 150, 105, 95, 135];
+        int[] logical = [90, 240, 150, 100, 130, 100, 135];
         for (var i = 0; i < logical.Length; i++)
             _list.Columns[i].Width = _list.LogicalToDeviceUnits(logical[i]);
         FitKundeColumn();
@@ -260,7 +357,7 @@ internal sealed class RechnungenView : UserControl
 
     private void FitKundeColumn()
     {
-        if (_list.Columns.Count < 6)
+        if (_list.Columns.Count < 7)
             return;
         var others = _list.Columns.Cast<ColumnHeader>().Where(c => c.Index != 1).Sum(c => c.Width);
         var available = _list.ClientSize.Width - others;
@@ -389,8 +486,68 @@ internal sealed class RechnungenView : UserControl
             Process.Start(new ProcessStartInfo { FileName = _folder.PdfPath, UseShellExecute = true })?.Dispose();
     }
 
+    /// <summary>"Zahlungseingang erfassen…" in the reminder bar: checklist of the overdue invoices.</summary>
+    private void ZahlungseingangErfassen()
+    {
+        if (_folder is null || _erinnerung.Ueberfaellig.Count == 0)
+            return;
+
+        using var dialog = new ZahlungseingangDialog(_erinnerung.Ueberfaellig, _folder.Kunden, DateOnly.FromDateTime(DateTime.Today));
+        if (dialog.ShowDialog(FindForm()) == DialogResult.OK)
+            AlsBezahltSpeichern(dialog.Bezahlt);
+    }
+
+    /// <summary>"Als bezahlt markieren…" (also "Status ändern → Bezahlt"): asks only for the payment date.</summary>
+    private void AlsBezahltMarkieren()
+    {
+        var offen = SelectedRechnungen().Where(r => r.Status == RechnungsStatus.Offen).ToList();
+        if (offen.Count == 0)
+        {
+            MessageBox.Show(this, UiText.BezahltNurOffene, UiText.AppTitle, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        using var dialog = new BezahltAmDialog(offen.Select(r => r.Nummer).ToList(), DateOnly.FromDateTime(DateTime.Today));
+        if (dialog.ShowDialog(FindForm()) == DialogResult.OK)
+            AlsBezahltSpeichern(offen.ToDictionary(r => r.Id, _ => dialog.BezahltAm));
+    }
+
+    private void AlsBezahltSpeichern(IReadOnlyDictionary<Guid, DateOnly> bezahlt)
+    {
+        if (bezahlt.Count == 0)
+            return;
+        Save(changed =>
+        {
+            foreach (var rechnung in changed.Rechnungen.Where(r => bezahlt.ContainsKey(r.Id) && r.Status == RechnungsStatus.Offen))
+                rechnung.StatusAendern(RechnungsStatus.Bezahlt, bezahlt[rechnung.Id]);
+        }, bezahlt.Keys.ToList());
+    }
+
+    /// <summary>"Öffnen" for forgotten drafts: one is opened, several are shown in the list.</summary>
+    private void EntwuerfeOeffnen()
+    {
+        if (_erinnerung.VergesseneEntwuerfe is [var entwurf])
+        {
+            Bearbeiten(entwurf);
+            return;
+        }
+
+        _updatingFilters = true;
+        _jahrBox.SelectedItem = AlleJahre;
+        _statusBox.SelectedIndex = 1 + (int)RechnungsStatus.Entwurf;
+        _updatingFilters = false;
+        RefreshList(_erinnerung.VergesseneEntwuerfe.Select(r => r.Id).ToHashSet());
+        _list.Focus();
+    }
+
     private void ChangeStatus(RechnungsStatus status)
     {
+        if (status == RechnungsStatus.Bezahlt)
+        {
+            AlsBezahltMarkieren();
+            return;
+        }
+
         var betroffen = SelectedRechnungen().Where(r => r.ErlaubteStatuswechsel().Contains(status)).ToList();
         if (betroffen.Count == 0)
             return;

@@ -180,3 +180,23 @@ Vorher `Abgerechnet.settings.json` neben der exe löschen (oder die exe in einen
 | Assistent nach der Ordnerseite schließen (X). | Das Hauptfenster öffnet sich mit dem gewählten Ordner; ohne Daten erscheint der gelbe Hinweis. |
 | **Datei → Einrichtungsassistent…** im Hauptfenster. | Der Assistent startet mit dem offenen Ordner („vorhandene Daten“). Ein anderer Ordner wird nach **Fertig** im Hauptfenster geöffnet. |
 | Ohne WebView2 Runtime (falls testbar). | Die Vorlagen-Seite erklärt, dass die Vorschau nicht möglich ist; Weiter funktioniert. |
+
+## 11. Erinnerung an offene Rechnungen
+
+Vorbereitung: In `rechnungen.json` (App geschlossen) bei zwei offenen Rechnungen das `datum` auf ein Datum vor mehr als
+30 Tagen setzen, bei einer dritten auf genau 30 Tage vor heute, einen Entwurf auf 8 Tage vor heute.
+
+| Schritt | Erwartet |
+|---------|----------|
+| App starten. | Keine Rückfrage. Über der Liste ein gelber Hinweis „2 Rechnungen sind seit über 30 Tagen offen. Schon bezahlt?“ mit **Zahlungseingang erfassen…** und „1 Entwurf ist älter als 7 Tage …“ mit **Öffnen**. |
+| Liste ansehen. | Die zwei Rechnungen stehen als „Offen – überfällig“ in Rot; die Rechnung von genau vor 30 Tagen nur als „Offen“. Tooltip über einer überfälligen Zeile nennt die Tage. Spalte „Bezahlt am“ vorhanden. |
+| **Öffnen** im Hinweis. | Der Entwurf öffnet sich im Formular. |
+| ✕ im Hinweis. | Der Hinweis verschwindet. Nach einem Neustart ist er wieder da. |
+| **Zahlungseingang erfassen…** | Liste der zwei Rechnungen mit Nr., Kunde, Zeitraum, Betrag, „Offen seit“ und Datum (heute). **Als bezahlt speichern** ist ausgegraut. |
+| Bei einer Rechnung das Datum ändern. | Der Haken wird automatisch gesetzt, der Knopf wird aktiv. |
+| **Alle markieren**, **Als bezahlt speichern**. | Beide Rechnungen sind „Bezahlt“, „Bezahlt am“ zeigt die gewählten Daten, der erste Satz im Hinweis verschwindet. Die Kachel „Bezahlt“ stimmt. |
+| Zwei offene Rechnungen markieren, Rechtsklick → **Als bezahlt markieren…**, gestriges Datum. | Kurzer Dialog nur mit Datum (kein Datum in der Zukunft wählbar). Danach beide „Bezahlt“ mit gestrigem Datum. |
+| Rechtsklick → **Status ändern → Bezahlt**. | Derselbe Datumsdialog. |
+| **Status ändern → Offen** bei einer bezahlten Rechnung. | „Bezahlt am“ ist wieder leer. |
+| In „Meine Daten“ das Zahlungsziel auf 14 Tage stellen, speichern. | Hinweis und Rotfärbung passen sich sofort an. |
+| Nach „Bezahlt am“ sortieren. | Neueste Zahlung oben, unbezahlte unten. |

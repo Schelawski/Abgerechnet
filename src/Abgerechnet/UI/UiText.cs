@@ -183,7 +183,7 @@ internal static class UiText
     public const string HeadingZahlung = "Zahlung und Nummern";
     public const string Zahlungsziel = "Zahlungsziel";
     public const string Tage = "Tage";
-    public const string ZahlungszielHint = "0 = kein Zahlungsziel. Nach dieser Zeit erinnert Abgerechnet an offene Rechnungen.";
+    public const string ZahlungszielHint = "Nach dieser Zeit erinnert Abgerechnet an offene Rechnungen. 0 = kein Zahlungsziel auf der Rechnung; die Erinnerung kommt dann nach 30 Tagen.";
     public const string NaechsteNummer = "Nächste Rechnungsnummer";
     public const string NaechsteNummerHint = "Leer lassen: höchste vorhandene Nummer + 1. Eintragen, um den Nummernkreis zu beginnen, z. B. „111401“ oder „RE-2026-001“.";
     public const string PdfDateiname = "PDF-Dateiname";
@@ -259,7 +259,38 @@ internal static class UiText
     public const string SpalteZeitraum = "Zeitraum";
     public const string SpalteDatum = "Datum";
     public const string SpalteStatus = "Status";
+    public const string SpalteBezahltAm = "Bezahlt am";
     public const string SpalteBetrag = "Betrag (brutto)";
+    public const string StatusUeberfaellig = "Offen – überfällig";
+    public static string UeberfaelligTooltip(int tage) => $"Seit {tage} Tagen offen. Schon bezahlt? Rechte Maustaste → Als bezahlt markieren…";
+
+    // ----- Erinnerung und Zahlungseingang (issue #17) -----
+
+    public static string ErinnerungOffen(int anzahl, int tage) =>
+        (anzahl == 1 ? "1 Rechnung ist" : $"{anzahl} Rechnungen sind") + $" seit über {tage} Tagen offen. Schon bezahlt?";
+    public static string ErinnerungEntwuerfe(int anzahl) =>
+        (anzahl == 1 ? "1 Entwurf ist" : $"{anzahl} Entwürfe sind") +
+        $" älter als {Core.Model.Zahlungserinnerung.EntwurfTage} Tage – PDF noch nicht erzeugt?";
+    public const string ZahlungseingangButton = "&Zahlungseingang erfassen…";
+    public const string EntwuerfeOeffnen = "Ö&ffnen";
+    public const string ErinnerungAusblenden = "Bis zum nächsten Start ausblenden";
+
+    public const string MenuAlsBezahlt = "Als &bezahlt markieren…";
+
+    public const string ZahlungseingangTitel = "Zahlungseingang erfassen";
+    public const string ZahlungseingangText =
+        "Haken Sie die Rechnungen an, die bezahlt sind, und tragen Sie das Datum des Zahlungseingangs ein " +
+        "(vorbelegt mit heute). Die übrigen bleiben offen.";
+    public const string AlleMarkieren = "&Alle markieren";
+    public const string AlsBezahltSpeichern = "Als &bezahlt speichern";
+    public const string SpalteSeit = "Offen seit";
+    public const string SpalteZahlungsdatum = "Bezahlt am";
+    public static string SeitTagen(int tage) => tage == 1 ? "1 Tag" : $"{tage} Tagen";
+
+    public static string BezahltFrage(IReadOnlyList<string> nummern) =>
+        nummern.Count == 1 ? $"Rechnung {nummern[0]} als bezahlt markieren." : $"{nummern.Count} Rechnungen als bezahlt markieren ({string.Join(", ", nummern)}).";
+    public const string BezahltAmLabel = "Zahlungseingang am:";
+    public const string BezahltNurOffene = "Nur offene Rechnungen können als bezahlt markiert werden.";
 
     public static string StatusName(Core.Model.RechnungsStatus status) => status switch
     {
