@@ -1,0 +1,50 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Abgerechnet</RootNamespace>
+    <AssemblyName>Abgerechnet</AssemblyName>
+
+    <Product>Abgerechnet</Product>
+    <Description>Rechnungen für Freiberufler: Positionen erfassen, PDF aus eigener HTML-Vorlage erzeugen.</Description>
+    <Version>1.0.0</Version>
+    <!-- Shown in the file properties of Abgerechnet.exe (Details tab) -->
+    <Authors>A. Schelawski</Authors>
+    <Copyright>© 2026 A. Schelawski – freie Software (GPL-3.0), offizielle Quelle: github.com/Schelawski/Abgerechnet</Copyright>
+
+    <!-- WinForms application defaults (consumed by ApplicationConfiguration.Initialize) -->
+    <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
+    <ApplicationVisualStyles>true</ApplicationVisualStyles>
+    <ApplicationUseCompatibleTextRendering>false</ApplicationUseCompatibleTextRendering>
+    <ApplicationDefaultFont>Segoe UI, 9pt</ApplicationDefaultFont>
+  </PropertyGroup>
+
+  <!-- Build a single self-contained Abgerechnet.exe with the .NET runtime embedded -->
+  <PropertyGroup>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <!-- WinForms does not support trimming -->
+    <PublishTrimmed>false</PublishTrimmed>
+    <DebugType>embedded</DebugType>
+    <!-- The UI is German: keep only the German framework resources (English is built in) -->
+    <SatelliteResourceLanguages>de</SatelliteResourceLanguages>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Abgerechnet.Tests" />
+  </ItemGroup>
+
+  <!-- Help texts in Markdown, embedded into Abgerechnet.exe (help topics follow in issue #10).
+       WithCulture=false: "help.de.md" is not a satellite resource and stays inside the exe. -->
+  <ItemGroup>
+    <EmbeddedResource Include="Help\help.*.md" LogicalName="Abgerechnet.Help.%(Filename)%(Extension)" WithCulture="false" />
+  </ItemGroup>
+
+</Project>
