@@ -44,7 +44,7 @@ GitHub (siehe [Release erstellen](README.md#release-erstellen)). Versionen folge
   die Rechnung „Offen“ und behält die Anschrift, mit der sie gestellt wurde. **PDF öffnen** und **Im Ordner
   zeigen** direkt in der Vorschau.
 - **Drei mitgelieferte Vorlagen:** „Klassisch“ (wie die Rechnungen des bisherigen Web-Tools: Titelbalken, Tabelle
-  mit Rahmen und Zebrastreifen, dreispaltige Fußzeile), „Modern“ (Akzentfarbe, viel Weißraum) und „Schlicht“
+  mit schwarzen Linien, Summen unter den Spalten, dreispaltige Fußzeile), „Modern“ (Akzentfarbe, viel Weißraum) und „Schlicht“
   (schwarzweiß). Sie liegen in einem neuen Rechnungsordner unter `Vorlagen\` zum Anpassen; Fußzeile und
   Tabellenkopf stehen auf jeder Seite; eigenes Logo als `Vorlagen\logo.png`. Menü **Vorlagen → Vorlagen-Ordner
   öffnen** und **Original wiederherstellen** (die eigene Fassung bleibt als `*.bak.html`). Standardvorlage in

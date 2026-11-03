@@ -2,8 +2,8 @@
 <!--
   Abgerechnet – Rechnungsvorlage „Klassisch“
 
-  Absender und Rechnungsdaten rechts oben, grauer Titelbalken, Tabelle mit Rahmen und Zebrastreifen, die Summen
-  als Fortsetzung der Tabelle, Bankverbindung und eine dreispaltige Fußzeile.
+  Absender und Rechnungsdaten rechts oben, grauer Titelbalken, Tabelle mit durchgehenden schwarzen Linien, die
+  Summen darunter an den Spalten ausgerichtet, Bankverbindung und eine dreispaltige Fußzeile.
 
   So passen Sie die Vorlage an:
   • Farben, Schrift und Größen stehen ganz oben im <style> als CSS-Variablen (:root) – dort ändern Sie das
@@ -30,10 +30,8 @@
     --schriftgroesse: 9pt;
     --textfarbe: #1e1e1e;
     --titelbalken: #dcdcd7;     /* Hintergrund des Balkens „Rechnung Nr. …“ */
-    --zebra: #f8f8f5;           /* jede zweite Position */
-    --rahmen: #b4b4af;          /* Außenrahmen der Tabelle */
-    --trennlinie: #dcdcd7;      /* senkrechte Linien zwischen den Spalten */
-    --kopflinie: #141414;       /* Rahmen der Kopfzeile der Tabelle */
+    --linie: #000000;           /* alle Linien der Tabellen */
+    --rahmen: #b4b4af;          /* Linie über der Fußzeile */
     --fusstext: #8c8c8c;
   }
 
@@ -52,7 +50,8 @@
   .wenn-gefuellt:has(.wert:empty) { display: none; }
 
   /* ---------- Kopf: Anschrift des Kunden links, Absender und Rechnungsdaten rechts ---------- */
-  .kopf { display: flex; justify-content: space-between; align-items: flex-start; min-height: 62mm; }
+  .kopf { display: flex; justify-content: space-between; align-items: flex-start; min-height: 62mm;
+          margin-bottom: 8mm; }   /* Abstand zum Titelbalken, auch wenn der Absenderblock höher wird */
   .empfaenger { margin-top: 20mm; }
   .absender { text-align: right; }
   .logo { max-width: 45mm; max-height: 20mm; margin-bottom: 3mm; }
@@ -66,26 +65,31 @@
   .projekt { margin: 5mm 0 4mm; }
   .projekt b { font-weight: bold; }
 
-  /* ---------- Positionen: Tabelle mit Rahmen, Zebrastreifen ---------- */
-  .positionen { width: 100%; border-collapse: collapse; font-size: 8.5pt; border: 0.3mm solid var(--rahmen); }
-  .positionen th { font-weight: bold; text-align: left; padding: 1.4mm 1.5mm; border: 0.3mm solid var(--kopflinie); }
-  .positionen td { vertical-align: top; padding: 1.5mm; height: 7mm; border-left: 0.3mm solid var(--trennlinie); }
-  .positionen tbody tr:nth-child(even) td { background: var(--zebra); }
+  /* ---------- Positionen: Tabelle mit durchgehenden Linien ----------
+     Feste Spaltenbreiten, damit die Summen darunter genau unter den Spalten stehen. Ändern Sie hier eine Breite,
+     passen Sie auch die Breiten bei den Summen an. */
+  .positionen { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 8.5pt; }
+  .positionen th, .positionen td { box-sizing: border-box; border: 0.3mm solid var(--linie); }
+  .positionen th { font-weight: bold; text-align: left; padding: 1.4mm 1.5mm; }
+  .positionen td { vertical-align: top; padding: 1.5mm; height: 7mm; }
   .positionen tr { break-inside: avoid; }
   .pos-nr { display: none; }                         /* Positionsnummer ausgeblendet; zum Einblenden diese Zeile löschen */
-  .pos-zeitraum { width: 24mm; white-space: nowrap; }
+  .pos-zeitraum { width: 24mm; }
   .pos-detail { margin-top: 0.5mm; }
-  .pos-menge { width: 13mm; text-align: right !important; white-space: nowrap; }
-  td.pos-einheit { border-left: none !important; }     /* Menge und Einheit wirken wie eine Spalte */
-  th.pos-einheit { border-left: none !important; }
-  .pos-einheit { width: 13mm; white-space: nowrap; }
-  .pos-preis { width: 20mm; text-align: right !important; white-space: nowrap; }
-  .pos-betrag { width: 24mm; text-align: right !important; white-space: nowrap; }
+  .pos-menge { width: 14mm; text-align: right !important; white-space: nowrap; border-right: none !important; }
+  .pos-einheit { width: 15mm; white-space: nowrap; border-left: none !important; }  /* Menge und Einheit wirken wie eine Spalte */
+  .pos-preis { width: 22mm; text-align: right !important; white-space: nowrap; }
+  .pos-betrag { width: 26mm; text-align: right !important; white-space: nowrap; }
 
-  /* ---------- Summen: Fortsetzung der Tabelle ---------- */
-  .summen { width: 100%; border-collapse: collapse; border: 0.3mm solid var(--rahmen); border-top: none; font-size: 8.5pt; }
-  .summen th { text-align: right; font-weight: normal; padding: 1.3mm 3mm; }
-  .summen td { width: 24mm; text-align: right; padding: 1.3mm 1.5mm; border-left: 0.3mm solid var(--rahmen); white-space: nowrap; }
+  /* ---------- Summen: Beschriftung ohne Rahmen, rechts daneben leere Zellen unter Menge und Einzelpreis ---------- */
+  .summen { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 8.5pt; }
+  .summen th { position: relative; text-align: right; font-weight: normal; padding: 1.3mm 54mm 1.3mm 0; }
+  .summen th::before, .summen th::after { content: ""; position: absolute; top: 0; bottom: -0.3mm;
+                                          border: 0.3mm solid var(--linie); border-top: none; border-right: none; }
+  .summen th::before { right: 22mm; width: 29mm; }   /* unter Menge und Einheit */
+  .summen th::after { right: 0; width: 22mm; }       /* unter Einzelpreis */
+  .summen td { box-sizing: border-box; width: 26mm; text-align: right; padding: 1.3mm 1.5mm; white-space: nowrap;
+               border: 0.3mm solid var(--linie); border-top: none; }
   .summen .brutto th, .summen .brutto td { font-weight: bold; font-size: 9.5pt; }
   .steuerhinweis { margin-top: 4mm; }
 
